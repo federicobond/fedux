@@ -1,3 +1,5 @@
 ./compila
 cd ./bin
-mcopy kernel.bin b:boot/ -o
+sudo mount ../img/tpe.img /mnt/tpe
+sudo cp kernel.bin /mnt/tpe/boot/
+sudo umount /mnt/tpe
