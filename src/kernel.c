@@ -4,12 +4,23 @@
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
 
-int tickpos=0;
+int tickpos = 0;
+
+int cursor = 0;
+
+void print(char *msg)
+{
+	char *video = (char *) 0xb8000;
+	while (*msg != 0)
+	{
+		video[cursor] = *msg++;
+		cursor += 2;
+	}
+}
 
 void timertick() {
 
-
-    char *video = (char *) 0xb8000;
+    /*char *video = (char *) 0xb8000;
     video[tickpos]= '*';
     tickpos += 2;
 
@@ -17,9 +28,10 @@ void timertick() {
     _outb((char)14, (char *)0x3D4);
     _outb((char)(tmp >> 8), (char *)0x3D5);
     _outb((char)15, (char *)0x3D4);
-    _outb((char)tmp, (char *)0x3D5);
+    _outb((char)tmp, (char *)0x3D5);*/
 
 }
+
 
 /**********************************************
 kmain() 
@@ -55,6 +67,8 @@ kmain()
         _mask_pic_2(0xFF);
         
 	_sti();
+
+	print("Welcome to Fedux!");
 
         while(1)
         {

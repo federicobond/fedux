@@ -12,9 +12,9 @@ void k_clear_screen()
 	unsigned int i=0;
 	while (i < (80*25*2))
 	{
-		vidmem[i]='7';
+		vidmem[i] = 0;
 		i++;
-		vidmem[i]=WHITE_TXT;
+		vidmem[i] = WHITE_TXT;
 		i++;
 	};
 }
