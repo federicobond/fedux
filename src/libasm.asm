@@ -1,24 +1,34 @@
 GLOBAL  _read_msw,_lidt
-GLOBAL  _int_08_hand
-GLOBAL  _mascaraPIC1,_mascaraPIC2,_Cli,_Sti
+GLOBAL  _timertick_handler
+GLOBAL  _mask_pic_2,_mask_pic_1,_cli,_sti
 GLOBAL  _debug
+GLOBAL	_outb
 
-EXTERN  int_08
+EXTERN  timertick
 
 
 SECTION .text
 
+_outb:
+	push ebp
+	mov ebp, esp
+	mov al, [ss:ebp+4]
+	mov edx, [ss:ebp+5]
+	out dx, al
+	mov esp, ebp
+	pop ebp
+	ret
 
-_Cli:
+_cli:
 	cli			; limpia flag de interrupciones
 	ret
 
-_Sti:
+_sti:
 
 	sti			; habilita interrupciones por flag
 	ret
 
-_mascaraPIC1:			; Escribe mascara del PIC 1
+_mask_pic_1:			; Escribe mascara del PIC 1
 	push    ebp
         mov     ebp, esp
         mov     ax, [ss:ebp+8]  ; ax = mascara de 16 bits
@@ -26,7 +36,7 @@ _mascaraPIC1:			; Escribe mascara del PIC 1
         pop     ebp
         retn
 
-_mascaraPIC2:			; Escribe mascara del PIC 2
+_mask_pic_2:			; Escribe mascara del PIC 2
 	push    ebp
         mov     ebp, esp
         mov     ax, [ss:ebp+8]  ; ax = mascara de 16 bits
@@ -51,14 +61,14 @@ _lidt:				; Carga el IDTR
         retn
 
 
-_int_08_hand:				; Handler de INT 8 ( Timer tick)
+_timertick_handler:				; Handler de INT 8 ( Timer tick)
         push    ds
         push    es                      ; Se salvan los registros
         pusha                           ; Carga de DS y ES con el valor del selector
         mov     ax, 10h			; a utilizar.
         mov     ds, ax
         mov     es, ax                  
-        call    int_08                 
+        call    timertick                 
         mov	al,20h			; Envio de EOI generico al PIC
 	out	20h,al
 	popa                            
@@ -66,10 +76,8 @@ _int_08_hand:				; Handler de INT 8 ( Timer tick)
         pop     ds
         iret
 
-
 ; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0
 ;
-
 
 _debug:
         push    bp

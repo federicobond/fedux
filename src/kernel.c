@@ -6,11 +6,18 @@ IDTR idtr;				/* IDTR */
 
 int tickpos=0;
 
-void int_08() {
+void timertick() {
+
 
     char *video = (char *) 0xb8000;
-    video[tickpos]='*';
+    video[tickpos]= '*';
     tickpos += 2;
+
+    unsigned int tmp = tickpos / 2;
+    _outb((char)14, (char *)0x3D4);
+    _outb((char)(tmp >> 8), (char *)0x3D5);
+    _outb((char)15, (char *)0x3D4);
+    _outb((char)tmp, (char *)0x3D5);
 
 }
 
@@ -31,7 +38,7 @@ kmain()
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 
-        setup_IDT_entry (&idt[0x08], 0x08, (dword)&_int_08_hand, ACS_INT, 0);
+        setup_idt_entry(&idt[0x08], 0x08, (dword)&_timertick_handler, ACS_INT, 0);
 	
 /* Carga de IDTR    */
 
@@ -41,13 +48,13 @@ kmain()
 	
 	_lidt (&idtr);	
 
-	_Cli();
+	_cli();
 /* Habilito interrupcion de timer tick*/
 
-        _mascaraPIC1(0xFE);
-        _mascaraPIC2(0xFF);
+        _mask_pic_1(0xFE);
+        _mask_pic_2(0xFF);
         
-	_Sti();
+	_sti();
 
         while(1)
         {

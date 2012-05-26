@@ -27,7 +27,7 @@
 
 #pragma pack (1) 		/* Alinear las siguiente estructuras a 1 byte */
 
-/* Descriptor de segmento */
+/* Segment descriptor */
 typedef struct {
   word limit,
        base_l;
@@ -38,7 +38,7 @@ typedef struct {
 } DESCR_SEG;
 
 
-/* Descriptor de interrupcion */
+/* Interrupt descriptor */
 typedef struct {
   word      offset_l,
             selector;

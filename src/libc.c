@@ -1,6 +1,5 @@
 #include "../include/kc.h"
 
-
 /***************************************************************
 *k_clear_screen
 *
@@ -11,7 +10,7 @@ void k_clear_screen()
 {
 	char *vidmem = (char *) 0xb8000;
 	unsigned int i=0;
-	while(i < (80*25*2))
+	while (i < (80*25*2))
 	{
 		vidmem[i]='7';
 		i++;
@@ -21,7 +20,7 @@ void k_clear_screen()
 }
 
 /***************************************************************
-*setup_IDT_entry
+*setup_idt_entry
 * Inicializa un descriptor de la IDT
 *
 *Recibe: Puntero a elemento de la IDT
@@ -31,7 +30,7 @@ void k_clear_screen()
 *	 Cero
 ****************************************************************/
 
-void setup_IDT_entry (DESCR_INT *item, byte selector, dword offset, byte access,
+void setup_idt_entry (DESCR_INT *item, byte selector, dword offset, byte access,
 			 byte cero) {
   item->selector = selector;
   item->offset_l = offset & 0xFFFF;
