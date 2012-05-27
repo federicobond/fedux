@@ -5,7 +5,13 @@ kasm.h
 
 #include "defs.h"
 
-void		_outb(char value, char *port);
+void		_outb(unsigned char value, unsigned short int port);
+
+
+int		_inb(unsigned short int port);
+
+
+void		_set_cursor(unsigned short int pos);
 
 unsigned int    _read_msw();
 

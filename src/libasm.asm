@@ -3,21 +3,59 @@ GLOBAL  _timertick_handler
 GLOBAL  _mask_pic_2,_mask_pic_1,_cli,_sti
 GLOBAL  _debug
 GLOBAL	_outb
+GLOBAL	_inb
+GLOBAL _set_cursor
 
 EXTERN  timertick
 
 
 SECTION .text
 
+
+_set_cursor:
+        push ebp
+        mov ebp, esp            ; Stack frame
+        mov bx, [ss:ebp+8]         ; lo que se envia
+        mov al,0x0e
+        mov dx,0x03d4
+        out dx, al
+        mov al,bh
+        mov dx,0x03d5
+        out dx, al
+        mov al,0x0f
+        mov dx,0x03d4
+        out dx, al
+        mov al,bl
+        mov dx,0x03d5
+        out dx, al
+        pop ebp
+        ret
+
 _outb:
 	push ebp
 	mov ebp, esp
-	mov al, [ss:ebp+4]
-	mov edx, [ss:ebp+5]
+	push eax
+	push edx
+	mov eax, [ss:ebp+8]
+	mov edx, [ss:ebp+12]
 	out dx, al
+	pop edx
+	pop eax
 	mov esp, ebp
 	pop ebp
 	ret
+
+_inb:
+	push ebp
+	mov ebp, esp
+	push edx
+	mov dx, [ss:ebp+8]
+	xor eax, eax
+	in al, dx
+	pop edx
+	mov esp, ebp
+	pop ebp
+
 
 _cli:
 	cli			; limpia flag de interrupciones

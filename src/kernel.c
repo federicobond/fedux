@@ -1,5 +1,6 @@
 #include "../include/kasm.h"
 #include "../include/defs.h"
+#include "../include/kc.h"
 
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
@@ -18,17 +19,54 @@ void print(char *msg)
 	}
 }
 
-void timertick() {
+void video_init()
+{
 
-    /*char *video = (char *) 0xb8000;
+
+	int reg_vrer;
+	int reg_mor;
+
+	return;
+
+	reg_mor = _inb(0x03CC);
+	reg_mor = reg_mor | 0x01;
+	_outb(reg_mor, 0x03C2);
+
+	_outb(0x11, 0x3D4);	
+	reg_vrer = _inb(0x03D5);
+
+	if (reg_vrer & 0x80)
+		print("protected");
+	else
+		print("not protected");
+
+
+	reg_vrer = reg_vrer & 0x7F;
+
+	_outb(reg_vrer, 0x03D5);
+
+
+
+}
+
+void timertick() 
+{
+
+    char *video = (char *) 0xb8000;
+
+    unsigned int tmp = tickpos / 2;
+
+/*    _set_cursor(tmp); */
+
+
+    _outb(0x0E, 0x03D4);
+    _outb(tmp >> 8, 0x03D5);
+    _outb(0x0F, 0x03D4);
+    _outb(tmp, 0x03D5);
+
     video[tickpos]= '*';
     tickpos += 2;
 
-    unsigned int tmp = tickpos / 2;
-    _outb((char)14, (char *)0x3D4);
-    _outb((char)(tmp >> 8), (char *)0x3D5);
-    _outb((char)15, (char *)0x3D4);
-    _outb((char)tmp, (char *)0x3D5);*/
 
 }
 
@@ -38,10 +76,8 @@ kmain()
 Punto de entrada de cóo C.
 *************************************************/
 
-kmain() 
+void kmain() 
 {
-
-        int i,num;
 
 /* Borra la pantalla. */ 
 
@@ -61,17 +97,25 @@ kmain()
 	_lidt (&idtr);	
 
 	_cli();
+
 /* Habilito interrupcion de timer tick*/
 
         _mask_pic_1(0xFE);
         _mask_pic_2(0xFF);
         
+/* Inicializo la placa de video */
+
+	video_init();
+
+
 	_sti();
+
 
 	print("Welcome to Fedux!");
 
         while(1)
         {
+		_outb(0xFE, 0xFEDE);
         }
 	
 }
