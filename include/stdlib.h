@@ -1,3 +1,6 @@
+#ifndef _STDLIB_H
+#define _STDLIB_H
+
 typedef struct {
     int quot;
     int rem;
@@ -17,3 +20,5 @@ long    labs(long x);
 
 div_t   div(int numerator, int denominator);
 ldiv_t  ldiv(long numerator, long denominator);
+
+#endif

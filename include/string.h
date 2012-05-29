@@ -3,7 +3,9 @@
 
 #define NULL 0
 
+#ifndef _size_t
 typedef int size_t;
+#endif
 
 char   *strcpy(char *dest, const char *src);
 char   *strncpy(char *dest, const char *src, size_t n);

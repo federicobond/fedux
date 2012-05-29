@@ -68,7 +68,7 @@ kmain()
         
 	_sti();
 
-	print("Welcome to Fedux!");
+	print("Welcome to Fedux 2.0!");
 
         while(1)
         {
