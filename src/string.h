@@ -1,7 +1,6 @@
 #ifndef _STRING_H
 #define _STRING_H
 
-#define NULL 0
 
 typedef int size_t;
 

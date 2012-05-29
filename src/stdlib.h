@@ -17,3 +17,8 @@ long    labs(long x);
 
 div_t   div(int numerator, int denominator);
 ldiv_t  ldiv(long numerator, long denominator);
+
+#define NULL 0
+
+#define TRUE (1)
+#define FALSE (0)

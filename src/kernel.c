@@ -2,6 +2,8 @@
 #include "../include/defs.h"
 #include "../include/kc.h"
 
+#include "vgatext.h"
+
 DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
 IDTR idtr;				/* IDTR */
 
@@ -11,6 +13,7 @@ int cursor = 0;
 
 void print(char *msg)
 {
+
 	char *video = (char *) 0xb8000;
 	while (*msg != 0)
 	{
@@ -105,17 +108,24 @@ void kmain()
         
 /* Inicializo la placa de video */
 
-	video_init();
-
+	/*video_init();
+	*/
 
 	_sti();
 
 
-	print("Welcome to Fedux!");
-
+	vgatext_init(80, 25, (char *) 0xB8000);
+	vgatext_cursor_set(0, 0);
+	vgatext_clear();
+	
+	/*
+	vgatext_format_set(0xFF);
+	vgatext_charfill(19, 4, 61, 21, 0);
+	vgatext_format_set(0xF0);
+	vgatext_strfill(20, 5, 60, 20, "Welcome to Fedux!");
+	*/
         while(1)
         {
-		_outb(0xFE, 0xFEDE);
         }
 	
 }
