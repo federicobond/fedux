@@ -1,6 +1,6 @@
-#include "stdio.h"
-#include "ctype.h"
-#include "sh.h"
+#include "../include/stdio.h"
+#include "../include/ctype.h"
+#include "../include/sh.h"
 
 #define PROMPT " > "
 

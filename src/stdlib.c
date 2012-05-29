@@ -1,5 +1,5 @@
-#include "errno.h"
-#include "ctype.h"
+#include "../include/errno.h"
+#include "../include/ctype.h"
 
 extern int errno;
 unsigned int rand_seed = 4;

@@ -1,4 +1,4 @@
-#include "stdio.h"
+#include "../include/stdio.h"
 
 int
 putc(int ch, FILE *stream)
