@@ -11,26 +11,6 @@ EXTERN  timertick
 
 SECTION .text
 
-
-_set_cursor:
-        push ebp
-        mov ebp, esp            ; Stack frame
-        mov bx, [ss:ebp+8]         ; lo que se envia
-        mov al,0x0e
-        mov dx,0x03d4
-        out dx, al
-        mov al,bh
-        mov dx,0x03d5
-        out dx, al
-        mov al,0x0f
-        mov dx,0x03d4
-        out dx, al
-        mov al,bl
-        mov dx,0x03d5
-        out dx, al
-        pop ebp
-        ret
-
 _outb:
 	push ebp
 	mov ebp, esp
@@ -49,7 +29,7 @@ _inb:
 	push ebp
 	mov ebp, esp
 	push edx
-	mov dx, [ss:ebp+8]
+	mov edx, [ss:ebp+8]
 	xor eax, eax
 	in al, dx
 	pop edx
