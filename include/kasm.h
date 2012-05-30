@@ -5,7 +5,11 @@ kasm.h
 
 #include "defs.h"
 
-void		_outb(char value, char *port);
+void		_outb(unsigned char value, unsigned short int port);
+int			_inb(unsigned short int port);
+
+
+
 
 unsigned int    _read_msw();
 
@@ -18,6 +22,7 @@ void		_cli(void);        /* Deshabilita interrupciones  */
 void		_sti(void);	 /* Habilita interrupciones  */
 
 void		_timertick_handler();      /* Timer tick */
+void 		_keyboard_handler();		/* Keyboard */
 
 void		_debug (void);
 

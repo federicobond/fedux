@@ -31,10 +31,11 @@ tpe-c:
 	$(CC) $(CFLAGS) -c src/stdio.c -o bin/stdio.o
 	$(CC) $(CFLAGS) -c src/stdlib.c -o bin/stdlib.o
 	$(CC) $(CFLAGS) -c src/sh.c -o bin/sh.o
+	$(CC) $(CFLAGS) -c src/vgatext.c -o bin/vgatext.o
 	$(CC) $(CFLAGS) -c src/libc.c -o bin/libc.o # should remove this because it's non-standard
 
 tpe-link:
-	ld $(LDFLAGS) -o bin/kernel.bin bin/kernel.o bin/kstart.o bin/libc.o bin/libasm.o bin/ctype.o bin/stdlib.o bin/string.o bin/stdio.o bin/sh.o
+	ld $(LDFLAGS) -o bin/kernel.bin bin/kernel.o bin/kstart.o bin/libc.o bin/libasm.o bin/ctype.o bin/stdlib.o bin/string.o bin/stdio.o bin/sh.o bin/vgatext.o
 
 clean:
 	rm -rf bin/*.o
