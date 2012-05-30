@@ -1,5 +1,6 @@
 #include "../include/stdio.h"
 #include "../include/ctype.h"
+#include "../include/string.h"
 #include "../include/sh.h"
 
 #define PROMPT " > "
@@ -71,9 +72,9 @@ sh_do_command(char buf[])
 int
 exec_laws(int argc, char **argv)
 {
-    printf("  1. A robot may not injure a human being or, through inaction, allow a human being to come to harm.");
-    printf("  2. A robot must obey the orders given to it by human beings, except where such orders would conflict with the First Law.");
-    printf("  3. A robot must protect its own existence as long as such protection does not conflict with the First or Second Laws.");
+    printf("  1. A robot may not injure a human being or, through inaction, allow a human being to come to harm.\n");
+    printf("  2. A robot must obey the orders given to it by human beings, except where such orders would conflict with the First Law.\n");
+    printf("  3. A robot must protect its own existence as long as such protection does not conflict with the First or Second Laws.\n");
 
     return 0;
 }
@@ -81,7 +82,7 @@ exec_laws(int argc, char **argv)
 int
 exec_fortune(int argc, char **argv)
 {
-    printf("No fortune cookie for you today");
+    printf("No fortune cookie for you today\n");
     
     return 0;
 }

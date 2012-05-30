@@ -37,20 +37,17 @@ void timertick() {
 kmain() 
 Punto de entrada de cóo C.
 *************************************************/
-
-kmain() 
+int
+kmain(void) 
 {
-
-        int i,num;
 
 /* Borra la pantalla. */ 
 
 	k_clear_screen();
 
-
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 
-        setup_idt_entry(&idt[0x08], 0x08, (dword)&_timertick_handler, ACS_INT, 0);
+    setup_idt_entry(&idt[0x08], 0x08, (dword)&_timertick_handler, ACS_INT, 0);
 	
 /* Carga de IDTR    */
 
@@ -61,6 +58,7 @@ kmain()
 	_lidt (&idtr);	
 
 	_cli();
+
 /* Habilito interrupcion de timer tick*/
 
         _mask_pic_1(0xFE);
@@ -68,7 +66,7 @@ kmain()
         
 	_sti();
 
-	print("Welcome to Fedux 2.0!");
+	print("Welcome to Fedux 3.0!");
 
         while(1)
         {

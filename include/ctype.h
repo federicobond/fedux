@@ -1,5 +1,5 @@
-#ifndef _ctype_h
-#define _ctype_h
+#ifndef _CTYPE_H
+#define _CTYPE_H
 
 int isdigit(int c);
 int isupper(int c);

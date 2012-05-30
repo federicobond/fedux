@@ -1,7 +1,0 @@
-./compila
-cd ./bin
-sudo mount ../img/tpe.img /mnt/tpe
-sudo cp kernel.bin /mnt/tpe/boot/
-sudo umount /mnt/tpe
-
-qemu -fda ../img/tpe.img

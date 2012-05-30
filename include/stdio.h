@@ -1,6 +1,8 @@
 #ifndef _STDIO_H
 #define _STDIO_H
 
+#include "stddef.h"
+
 #ifndef NULL
 #define NULL 0
 #endif
@@ -17,13 +19,6 @@ typedef struct {
 // FILE *stdin  = { 0 };
 // FILE *stdout = { 0 };
 // FILE *stderr = { 0 };
-
-#ifndef _size_t
-typedef unsigned int size_t;
-#endif
-#ifndef _ssize_t
-typedef int ssize_t;
-#endif
 
 int     putc(int ch, FILE *stream);
 int     getc(FILE *stream);

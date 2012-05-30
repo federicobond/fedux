@@ -1,11 +1,7 @@
 #ifndef _STRING_H
 #define _STRING_H
 
-#define NULL 0
-
-#ifndef _size_t
-typedef int size_t;
-#endif
+#include "stddef.h"
 
 char   *strcpy(char *dest, const char *src);
 char   *strncpy(char *dest, const char *src, size_t n);
