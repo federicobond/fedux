@@ -1,12 +1,16 @@
 GLOBAL  _read_msw,_lidt
+
 GLOBAL  _timertick_handler
+GLOBAL	_keyboard_handler
+
 GLOBAL  _mask_pic_2,_mask_pic_1,_cli,_sti
 GLOBAL  _debug
 GLOBAL	_outb
 GLOBAL	_inb
-GLOBAL _set_cursor
+
 
 EXTERN  timertick
+EXTERN 	keyboard
 
 
 SECTION .text
@@ -88,11 +92,28 @@ _timertick_handler:				; Handler de INT 8 ( Timer tick)
         mov     es, ax                  
         call    timertick                 
         mov	al,20h			; Envio de EOI generico al PIC
-	out	20h,al
-	popa                            
+		out	20h,al
+		popa                            
         pop     es
         pop     ds
         iret
+
+_keyboard_handler:				; Handler de INT 8 ( Timer tick)
+		;call	_debug
+        push    ds
+        push    es                      ; Se salvan los registros
+        pusha                           ; Carga de DS y ES con el valor del selector
+        mov     ax, 10h			; a utilizar.
+        mov     ds, ax
+        mov     es, ax                  
+        call    keyboard                 
+        mov	al,20h			; Envio de EOI generico al PIC
+		out	20h,al
+		popa                            
+        pop     es
+        pop     ds
+        iret
+
 
 ; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0
 ;
