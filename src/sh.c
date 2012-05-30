@@ -1,6 +1,6 @@
-#include "stdio.h"
-#include "ctype.h"
-#include "sh.h"
+#include "../include/stdio.h"
+#include "../include/ctype.h"
+#include "../include/sh.h"
 
 #define PROMPT " > "
 
@@ -21,12 +21,16 @@ void
 sh_show_prompt()
 {
     char buf[255];
-    while (1) {
+    while (1)
+    {
         printf(PROMPT);
         sh_read_command(buf);
-        if (strlen(buf) != 0) {
+        if (strlen(buf) != 0)
+        {
             sh_do_command(buf);
-        } else
+        }
+        else
+        {
             putchar('\n');
         }
     }

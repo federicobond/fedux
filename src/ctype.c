@@ -1,4 +1,4 @@
-#include "ctype.h"
+#include "../include/ctype.h"
 
 int isdigit(int c)
 {

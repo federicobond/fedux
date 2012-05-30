@@ -14,6 +14,12 @@ void show_splash_screen();
 /* Tiempo de espera */
 void wait(int time);
 
+void set_video_cursor(int value);
+
+int get_video_cursor(void);
+
+void print(char *s);
+
 /* Limpia la pantalla */
 void k_clear_screen();
 

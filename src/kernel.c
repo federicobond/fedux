@@ -136,7 +136,6 @@ void kmain()
 
 	_sti();
 
-
 	vgatext_init(80, 25, (char *) 0xB8000);
 	vgatext_cursor_setxy(0, 0);
 	vgatext_clear();

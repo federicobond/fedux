@@ -1,9 +1,9 @@
-#ifndef _sh_h
-#define _sh_c
+#ifndef _SH_H
+#define _SH_H
 
 void sh_init(void);
 void sh_show_prompt(void);
-int sh_read_command(void);
+void sh_read_command(char buf[]);
 int sh_do_command(char buf[]);
 
 int exec_laws(int argc, char **argv);
