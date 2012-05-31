@@ -51,31 +51,14 @@ unsigned char scancodes[128] =
     0,	/* F11 Key */
     0,	/* F12 Key */
     0,	/* All other keys are undefined */
-};		
-
-void print(char *msg)
-{
-
-	char *video = (char *) 0xb8000;
-	while (*msg != 0)
-	{
-		video[cursor] = *msg++;
-		cursor += 2;
-	}
-}
+};
 
 
 void timertick() 
 {
-
-
-	
-
     char *video = (char *) 0xb8000;
     video[tickpos]= '*';
     tickpos += 2;
-
-
 }
 
 void keyboard()
