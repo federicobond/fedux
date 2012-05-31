@@ -19,7 +19,7 @@ char _output_buffer[MAXBUFFERSIZE];
 
 int tty_input_write(const char * data, int size)
 {
-	return bq_write(_input_queue, data, size)
+	return bq_write(_input_queue, data, size);
 }
 
 
@@ -31,4 +31,9 @@ int tty_input_read(char * data, int size)
 int tty_output_write(const char * data, int size)
 {
 	return bq_write(_output_queue, data, size);
+}
+
+int tty_render()
+{
+	
 }
