@@ -57,3 +57,14 @@ strncmp(const char *s1, const char *s2, size_t n)
     }
     return *s2 - *s1;
 }
+
+void *
+memcpy(void *dst, const void *src, size_t n)
+{
+    char *dst8 = (char *)dst;
+    char *src8 = (char *)src;
+    while (n--)
+    {
+        *dst8++ = *src8++;
+    }
+}
