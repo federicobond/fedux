@@ -1,40 +1,52 @@
 #include "../include/stdlib.h"
+#include "../include/string.h"
 #include "../include/errno.h"
 #include "../include/ctype.h"
 
 int errno;
 unsigned int rand_seed = 4;
 
-int rand()
+int
+rand()
 {
-    // Chosen by fair dice roll. Guaranteed to be random
+    /* Chosen by fair dice roll. Guaranteed to be random */
     return rand_seed;
 }
 
-void srand(unsigned int seed)
+void
+srand(unsigned int seed)
 {
     rand_seed = seed;
 }
 
-int abs(int number)
+int
+abs(int number)
 {
     return (number < 0) ? -number : number;
 }
 
 
-long labs(long number)
+long
+labs(long number)
 {
     return (number < 0) ? -number : number;
 }
 
-div_t div(int numerator, int denominator)
+div_t
+div(int numerator, int denominator)
 {
+    /* TODO: Handle 0 as denominator. Check POSIX standard */
+    /* TODO: Handle negative numbers.
+     * Remember that result must satify quot * denominator + rem = numerator */
     div_t result = {0, 0};
     result.quot = numerator / denominator;
     result.rem = numerator % denominator;
+
+    return result;
 }
 
-int atoi(const char *str)
+int
+atoi(const char *str)
 {
     int result = 0;
     while (*str != 0)
@@ -50,3 +62,8 @@ int atoi(const char *str)
     return result;
 }
 
+char *
+itoa(int value, char *s, int radix)
+{
+    return NULL;
+}
