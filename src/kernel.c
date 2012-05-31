@@ -68,19 +68,13 @@ void print(char *msg)
 void timertick() 
 {
 
-
-	
-
     char *video = (char *) 0xb8000;
     video[tickpos]= '*';
     tickpos += 2;
-
-
 }
 
 void keyboard()
 {
-
 	char *video = (char *) 0xb8000;
 	int scancode = _inb(0x60);
 
@@ -92,7 +86,6 @@ void keyboard()
     	video[tickpos]= scancodes[scancode];
     	tickpos += 2;
 	}
-
 }
 
 
@@ -101,7 +94,7 @@ kmain()
 Punto de entrada de cóo C.
 *************************************************/
 int
-kmain(void) 
+kmain(void)
 {
 
 /* Borra la pantalla. */ 
@@ -110,8 +103,8 @@ kmain(void)
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 
-        setup_idt_entry(&idt[0x08], 0x08, (dword)&_timertick_handler, ACS_INT, 0);
-		setup_idt_entry(&idt[0x09], 0x08, (dword)&_keyboard_handler, ACS_INT, 0);
+    setup_idt_entry(&idt[0x08], 0x08, (dword)&_timertick_handler, ACS_INT, 0);
+    setup_idt_entry(&idt[0x09], 0x08, (dword)&_keyboard_handler, ACS_INT, 0);
 	
 /* Carga de IDTR    */
 
@@ -125,8 +118,8 @@ kmain(void)
 
 /* Habilito interrupcion de timer tick*/
 
-        _mask_pic_1(0xFD);
-        _mask_pic_2(0xFF);
+    _mask_pic_1(0xFD);
+    _mask_pic_2(0xFF);
         
 /* Inicializo la placa de video */
 
@@ -145,9 +138,7 @@ kmain(void)
 	vgatext_format_set(0x3F);
 	vgatext_strfill(21, 5, 29, 9, "Welcome to Fedux! This is not free software (yet), and you are not supposed to copy and distribute it!");
 	
-        while(1)
-        {
-        }
+    while(1) {}
 	
 }
 
