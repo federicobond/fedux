@@ -3,8 +3,8 @@
 
 #include "stddef.h"
 
-#ifndef NULL
-#define NULL 0
+#ifndef EOF
+#define EOF (-1)
 #endif
 
 /* Standard file descriptors. */
@@ -16,9 +16,7 @@ typedef struct {
     int fd;
 } FILE;
 
-// FILE *stdin  = { 0 };
-// FILE *stdout = { 0 };
-// FILE *stderr = { 0 };
+extern FILE *stdin, *stdout, *stderr;
 
 int     putc(int ch, FILE *stream);
 int     getc(FILE *stream);
@@ -27,8 +25,12 @@ int     putchar(int ch);
 int     getchar(void);
 int     ungetchar(int ch);
 
-char   *gets(char *str);
+/* DEPRECATED */
+/* char   *gets(char *str); */
+
 int     puts(const char *str);
+
+char   *fgets(char *s, int size, FILE *stream);
 
 int     printf(const char* fmt, ...);
 int     scanf(const char *fmt, ...);

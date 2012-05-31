@@ -5,13 +5,6 @@
 
 #define PROMPT " > "
 
-int
-main(void)
-{
-    sh_init();
-    return 0;
-}
-
 void
 sh_init(void)
 {
@@ -27,13 +20,9 @@ sh_show_prompt()
         printf(PROMPT);
         sh_read_command(buf);
         if (strlen(buf) != 0)
-        {
             sh_do_command(buf);
-        }
         else
-        {
             putchar('\n');
-        }
     }
 }
 
@@ -53,18 +42,15 @@ sh_read_command(char buf[])
 int
 sh_do_command(char buf[])
 {
-    // Do argument parsing
+    /* Do argument parsing */
     int argc = 0;
     char **argv = NULL;
 
     if (strcmp(buf, "laws"))
-    {
         return exec_laws(argc, argv);
-    }
-    else if (strcmp(buf, "fortune"))
-    {
+    if (strcmp(buf, "fortune"))
         return exec_fortune(argc, argv);
-    }
+
     printf("%s: command not found", argv[0]);
     return 0;
 }

@@ -1,7 +1,7 @@
 NASM = nasm -f aout
 
 CC = gcc
-CFLAGS = -fno-builtin -m32 -march=i386
+CFLAGS = -fno-builtin -m32 -march=i386 -ansi -Wall -pedantic
 
 SRC = src/
 BIN = bin/
@@ -10,6 +10,8 @@ ASMSOURCES = libasm.asm kstart.asm loader.asm
 CSOURCES = kernel.c ctype.c string.c stdio.c stdlib.c libc.c
 
 LDFLAGS = -T src/link.ld -m elf_i386 
+
+.PHONY: tests
 
 all: tpe-asm tpe-c tpe-link
 	sudo mount img/tpe.img /mnt/tpe
@@ -37,6 +39,9 @@ tpe-c:
 
 tpe-link:
 	ld $(LDFLAGS) -o bin/kernel.bin bin/kernel.o bin/kstart.o bin/libc.o bin/libasm.o bin/ctype.o bin/stdlib.o bin/string.o bin/stdio.o bin/sh.o bin/vgatext.o bin/bq.o
+
+tests:
+	$(CC) -g tests/string.c src/string.c -o tests/string.test && tests/string.test && rm tests/string.test
 
 clean:
 	rm -rf bin/*.o
