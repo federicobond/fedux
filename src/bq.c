@@ -1,4 +1,3 @@
-
 #include "../include/stddef.h"
 #include "../include/bq.h"
 

@@ -1,130 +1,110 @@
-GLOBAL  _read_msw,_lidt
+GLOBAL      _read_msw,_lidt
 
-GLOBAL  _timertick_handler
-GLOBAL	_keyboard_handler
+GLOBAL      _timertick_handler
+GLOBAL      _keyboard_handler
 
-GLOBAL  _mask_pic_2,_mask_pic_1,_cli,_sti
-GLOBAL  _debug
-GLOBAL	_outb
-GLOBAL	_inb
+GLOBAL      _mask_pic_2,_mask_pic_1,_cli,_sti
+GLOBAL      _outb
+GLOBAL      _inb
 
-
-EXTERN  timertick
-EXTERN 	keyboard
-
+EXTERN      timertick_handler
+EXTERN      keyboard_handler
 
 SECTION .text
 
 _outb:
-	push ebp
-	mov ebp, esp
-	push eax
-	push edx
-	mov eax, [ss:ebp+8]
-	mov edx, [ss:ebp+12]
-	out dx, al
-	pop edx
-	pop eax
-	mov esp, ebp
-	pop ebp
-	ret
+    push    ebp
+    mov     ebp, esp
+    push    eax
+    push    edx
+    mov     eax, [ss:ebp+8]
+    mov     edx, [ss:ebp+12]
+    out     dx, al
+    pop     edx
+    pop     eax
+    mov     esp, ebp
+    pop     ebp
+    ret
 
 _inb:
-	push ebp
-	mov ebp, esp
-	push edx
-	mov edx, [ss:ebp+8]
-	xor eax, eax
-	in al, dx
-	pop edx
-	mov esp, ebp
-	pop ebp
-
+    push    ebp
+    mov     ebp, esp
+    push    edx
+    mov     edx, [ss:ebp+8]
+    xor     eax, eax
+    in      al, dx
+    pop     edx
+    mov     esp, ebp
+    pop     ebp
 
 _cli:
-	cli			; limpia flag de interrupciones
-	ret
+    cli
+    ret
 
 _sti:
+    sti
+    ret
 
-	sti			; habilita interrupciones por flag
-	ret
+_mask_pic_1:
+    push    ebp
+    mov     ebp, esp
+    mov     ax, [ss:ebp+8]          ; ax = 16 bit mask
+    out     21h,al
+    pop     ebp
+    retn
 
-_mask_pic_1:			; Escribe mascara del PIC 1
-	push    ebp
-        mov     ebp, esp
-        mov     ax, [ss:ebp+8]  ; ax = mascara de 16 bits
-        out	21h,al
-        pop     ebp
-        retn
-
-_mask_pic_2:			; Escribe mascara del PIC 2
-	push    ebp
-        mov     ebp, esp
-        mov     ax, [ss:ebp+8]  ; ax = mascara de 16 bits
-        out	0A1h,al
-        pop     ebp
-        retn
+_mask_pic_2:
+    push    ebp
+    mov     ebp, esp
+    mov     ax, [ss:ebp+8]          ; ax = 16 bit mask
+    out     0A1h,al
+    pop     ebp
+    retn
 
 _read_msw:
-        smsw    ax		; Obtiene la Machine Status Word
-        retn
+    smsw    ax                      ; Get machine status word
+    retn
 
 
-_lidt:				; Carga el IDTR
-        push    ebp
-        mov     ebp, esp
-        push    ebx
-        mov     ebx, [ss: ebp + 6] ; ds:bx = puntero a IDTR 
-	rol	ebx,16		    	
-	lidt    [ds: ebx]          ; carga IDTR
-        pop     ebx
-        pop     ebp
-        retn
+_lidt:                              ; Load the IDTR
+    push    ebp
+    mov     ebp, esp
+    push    ebx
+    mov     ebx, [ss:ebp+6]         ; ds:bx = IDTR pointer 
+    rol     ebx,16
+    lidt    [ds:ebx]                ; Load IDTR
+    pop     ebx
+    pop     ebp
+    retn
 
 
-_timertick_handler:				; Handler de INT 8 ( Timer tick)
-        push    ds
-        push    es                      ; Se salvan los registros
-        pusha                           ; Carga de DS y ES con el valor del selector
-        mov     ax, 10h			; a utilizar.
-        mov     ds, ax
-        mov     es, ax                  
-        call    timertick                 
-        mov	al,20h			; Envio de EOI generico al PIC
-		out	20h,al
-		popa                            
-        pop     es
-        pop     ds
-        iret
+_timertick_handler:                 ; INT 0x08 Handler (Timertick)
+    push    ds
+    push    es                      ; Save registers
+    pusha                       
+    mov     ax, 10h
+    mov     ds, ax                  ; Load DS and ES with the selector value
+    mov     es, ax                  
+    call    timertick_handler
+    mov     al, 20h                 ; Send generic EOI to PIC
+    out     20h, al
+    popa                            
+    pop     es
+    pop     ds
+    iret
 
-_keyboard_handler:				; Handler de INT 8 ( Timer tick)
-		;call	_debug
-        push    ds
-        push    es                      ; Se salvan los registros
-        pusha                           ; Carga de DS y ES con el valor del selector
-        mov     ax, 10h			; a utilizar.
-        mov     ds, ax
-        mov     es, ax                  
-        call    keyboard                 
-        mov	al,20h			; Envio de EOI generico al PIC
-		out	20h,al
-		popa                            
-        pop     es
-        pop     ds
-        iret
+_keyboard_handler:                  ; INT 0x09 Handler (Keyboard)
+    push    ds
+    push    es                      ; Save registers
+    pusha                       
+    mov     ax, 10h
+    mov     ds, ax                  ; Load DS and ES with the selector value
+    mov     es, ax                  
+    call    keyboard_handler
+    mov     al, 20h                 ; Send generic EOI to PIC
+    out     20h, al
+    popa                            
+    pop     es
+    pop     ds
+    iret
 
-
-; Debug para el BOCHS, detiene la ejecució; Para continuar colocar en el BOCHSDBG: set $eax=0
-;
-
-_debug:
-        push    bp
-        mov     bp, sp
-        push	ax
-vuelve:	mov     ax, 1
-        cmp	ax, 0
-	jne	vuelve
-	pop	ax
-	pop     bp
-        retn
