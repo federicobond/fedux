@@ -1,14 +1,13 @@
 #include "../include/stddef.h"
 #include "../include/bq.h"
 
-
 void bq_init(byte_queue * queue, char * buff, unsigned int size)
 {
 	queue->buff = buff;
 	queue->size = size;
 	queue->write = 0;
 	queue->read = 0;
-	queue->full = FALSE;
+	queue->full = false;
 }
 
 int bq_used(byte_queue * queue)
@@ -39,7 +38,7 @@ int bq_write_lossless(byte_queue * queue, const char * data, unsigned int size)
 		queue->write = (queue->write + size) % queue->size;
 
 		if (queue->write == queue->read)
-			queue->full = TRUE;
+			queue->full = true;
 
 		written = size;
 	}
@@ -59,7 +58,7 @@ int bq_write(byte_queue * queue, const char * data, unsigned int size)
 
 	if (size + bq_used(queue) >= queue->size)
 	{
-		queue->full = TRUE;
+		queue->full = false;
 		queue->read = queue->write;
 	}
 
@@ -74,7 +73,7 @@ int bq_read(byte_queue * queue, char * data, unsigned int size)
 
 	if (read)
 	{
-		queue->full = FALSE;
+		queue->full = false;
 		queue->read = queue->read + size % queue->size;
 	}
 

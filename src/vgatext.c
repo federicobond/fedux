@@ -73,13 +73,13 @@ void vgatext_addrpos(char * addr, int *x, int *y)
 	}
 }
 
-int vgatext_init(int width, int height, char * memory_start)
+bool vgatext_init(int width, int height, char * memory_start)
 {
 	_width = width;
 	_height = height;
 	_memory_start = memory_start;
 	_memory_end = memory_start + width*height*2 - 1;
-	return TRUE;
+	return true;
 }
 
 

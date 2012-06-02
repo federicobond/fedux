@@ -7,7 +7,7 @@ typedef struct byte_queue
 	char * buff;
 	unsigned int write;
 	unsigned int read;
-	char full;
+	bool full;
 	char lossless;
 
 } byte_queue;

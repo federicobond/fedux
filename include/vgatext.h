@@ -1,7 +1,9 @@
 #ifndef _VGATEXT_H
 #define _VGATEXT_H
 
-int  vgatext_init(int width, int height, char * memory_start);
+#include "stddef.h"
+
+bool vgatext_init(int width, int height, char * memory_start);
 
 int vgatext_rawprint(int linear, char * text);
 
