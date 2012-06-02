@@ -283,12 +283,12 @@ void
 keyboard_handler(void)
 {
     unsigned int scancode = _inb(0x60);
-    char key;
+    char key = 0;
 
     if (!(scancode & 0x80))
     {
         key = kbd_keymap_get(scancode);
-        bq_write(&bq, (char *)&key, 1);
+        /*bq_write(&bq, (char *)&key, 1);*/
     }
 
 #ifdef TTY_DEBUG
