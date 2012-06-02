@@ -1,5 +1,6 @@
 
 
+#include "../include/ttybox.h"
 #include "../include/tty.h"
 #include "../include/string.h"
 
@@ -28,10 +29,11 @@ void tty_input_read(TTY *tty, char *data, int size)
 	bq_write(tty->output_queue, data, size);
 }
 
-
-
 void tty_display(TTY *tty)
 {
+
+	char outchar;
+
 	/* Shallow copy of the output queue to work with rotating indexes */
 	byte_queue tmp_output_queue = *(tty->output_queue);
 
@@ -40,72 +42,16 @@ void tty_display(TTY *tty)
 
 	/* Temporary video buffer to store display data */
 	char video_buffer[MAXBUFFSIZE];
-	byte_queue video_queue;
-	
 
-	char outchar;
-	char format = 0x0F;
+	TTYBOX ttybox;
 
-	bq_init(&video_queue, video_buffer, tty->height*tty->width*2);
+	ttybox_init(&ttybox, tty->x, tty->y, tty->width, tty->height, video_buffer);
+	ttybox_format_set(&ttybox, 0x0F);
 
-	for (outchar = 0; outchar < 32; outchar++)
-		video_buffer[outchar] = 0;
-
-	
-	while (bq_read(&tmp_output_queue, &outchar, 1))
-	{
-		switch (outchar)
-		{
-		case '\n':
-			outchar = '\0';
-			bq_write(&video_queue, &outchar, 1);
-			while (bq_used(&video_queue) % (tty->width*2))
-				bq_write(&video_queue, &outchar, 1);
-			break;
-		case '\t':
-			outchar = '\0';
-			bq_write(&video_queue, &outchar, 1);
-			while (bq_used(&video_queue) % (TABSIZE*2))
-				bq_write(&video_queue, &outchar, 1);
-			break;
-		default:
-			bq_write(&video_queue, &outchar, 1);
-			bq_write(&video_queue, &format, 1);
-		}
-	}
-
-	
-
-	/* Echo */
 	while (bq_read(&tmp_input_queue, &outchar, 1))
-	{
-		switch (outchar)
-		{
-		case '\n':
-			outchar = '\0';
-			bq_write(&video_queue, &outchar, 1);
-			while (bq_get_write(&video_queue) % (tty->width*2))
-				bq_write(&video_queue, &outchar, 1);
-			break;
-		case '\t':
-			outchar = '\0';
-			bq_write(&video_queue, &outchar, 1);
-			while (bq_used(&video_queue) % (TABSIZE*2))
-				bq_write(&video_queue, &outchar, 1);
-			break;
-		default:
-			bq_write(&video_queue, &outchar, 1);
-			bq_write(&video_queue, &format, 1);
-		}
-	}
+		ttybox_putchar(&ttybox, outchar);
 
-	outchar = '\0';
-	while (bq_get_write(&video_queue) % (tty->width*2))
-				bq_write(&video_queue, &outchar, 1);
-
-
-	vgatext_writebq(&video_queue, tty->x, tty->y, tty->width);
-
-	
+	ttybox_display(&ttybox);
+	ttybox_update_cursor(&ttybox);
 	
 }

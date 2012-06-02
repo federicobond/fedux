@@ -111,12 +111,3 @@ int bq_get_read(byte_queue *queue)
 	return queue->read;
 }
 
-int bq_pop(byte_queue *queue, char *data, unsigned int size)
-{
-	
-}
-
-int bq_rpeek(byte_queue *queue, char *data, unsigned int size)
-{
-	
-}

@@ -4,9 +4,7 @@
 #include "../include/kasm.h"
 #include "../include/bq.h"
 
-#define INVALID_POSITION (-1)
 
-#define DEFAULT_FORMAT 0x0F
 
 int _width, _height;
 char _current_format;
@@ -190,6 +188,24 @@ void vgatext_writebq(byte_queue *bq, int dest_x, int dest_y, int width)
 		i++;	
 	}
 	
+}
+
+void vgatext_write(char * buffer, int dest_x, int dest_y, int width, int height)
+{
+	int x, y;
+	char * posaddr;
+
+	for (y = 0; y < height; y++)
+		for (x = 0; x < width; x++)
+		{
+			if ((posaddr = vgatext_posaddr(x + dest_x, y + dest_y)))
+			{
+				posaddr[0] = buffer[0];
+				posaddr[1] = buffer[1];
+			}
+
+			buffer += 2;		
+		}
 }
 
 void vgatext_format_set(int format)
