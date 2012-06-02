@@ -41,8 +41,6 @@ void tty_display(TTY *tty)
 	/* Temporary video buffer to store display data */
 	char video_buffer[MAXBUFFSIZE];
 	byte_queue video_queue;
-
-	char line_buffer[MAXBUFFSIZE];
 	
 
 	char outchar;
