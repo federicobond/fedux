@@ -111,3 +111,36 @@ int bq_get_read(byte_queue *queue)
 	return queue->read;
 }
 
+
+int bq_rpeek(byte_queue *queue, char *data, unsigned int size)
+{
+	int i;
+
+	if (size > bq_used(queue))
+		size = bq_used(queue);
+
+	
+	if (data != NULL)
+		for (i = 0; i < size; i++)
+			data[i] = queue->buff[(i - size + queue->write - 1) % queue->size];
+
+	return size;
+}
+
+int bq_rread(byte_queue *queue, char *data, unsigned int size)
+{
+	int read;
+
+	read = bq_rpeek(queue, data, size);
+
+	if (read)
+	{
+		queue->full = false;
+		queue->write = (queue->write - size) % queue->size;
+	}
+
+	return read; 
+
+}
+
+

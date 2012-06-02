@@ -65,7 +65,7 @@ kmain(void)
 	vgatext_format_set(0x70);
 	vgatext_charfill(20, 4, 31, 11, 0);
 	vgatext_format_set(0x3F);
-	vgatext_strfill(21, 5, 29, 9, "Welcome to Fedux! This is not free software (yet), and you are not supposed to copy and distribute it!");
+	vgatext_strfill(21, 5, 29, 9, "Welcome to Fedux! Press spacebar to get the prompt... (It's not buggy, it's just the way it's done)");
 
     sh_init();
 	

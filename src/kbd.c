@@ -291,7 +291,9 @@ keyboard_handler(void)
 			bq_init(&_input_queue, _input_buffer, MAXBUFFSIZE);
 			bq_init(&_output_queue, _output_buffer, MAXBUFFSIZE);
 			tty_init(&_tty, &_input_queue, &_output_queue, 0, 25-3, 80, 3);
-			tty_initialized += 1;
+			tty_output_write(&_tty, "root # ", 7);	
+			tty_display(&_tty);
+			tty_initialized += 1;	
 		}
 
 		tty_input_write(&_tty, &key, 1);
