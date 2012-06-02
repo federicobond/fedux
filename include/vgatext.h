@@ -1,9 +1,13 @@
 #ifndef _VGATEXT_H
 #define _VGATEXT_H
 
+#include "../include/bq.h"
+
 int  vgatext_init(int width, int height, char * memory_start);
 
-int vgatext_rawprint(int linear, char * text);
+int vgatext_print(int linear, char * text);
+
+void vgatext_writebq(byte_queue *bq, int dest_x, int dest_y, int width);
 
 void vgatext_clear();
 
@@ -26,5 +30,9 @@ void vgatext_cursor_enable();
 
 char * vgatext_posaddr(int x, int y);
 void vgatext_addrpos(char * addr, int *x, int *y);
+
+
+int vgatext_putcharxy(int x, int y, char chr);
+int vgatext_putcharl(int linear, char chr);
 
 #endif

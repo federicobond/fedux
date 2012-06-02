@@ -2,6 +2,7 @@
 #include "../include/stddef.h"
 #include "../include/vgatext.h"
 #include "../include/kasm.h"
+#include "../include/bq.h"
 
 #define INVALID_POSITION (-1)
 
@@ -83,21 +84,16 @@ int vgatext_init(int width, int height, char * memory_start)
 }
 
 
-int vgatext_rawprint(int linear, char * text)
+int vgatext_print(int linear, char * text)
 {
-	char * print_addr = vgatext_linearaddr(linear);
 
-	if (print_addr)
+	while (*text && vgatext_putcharl(linear, *text))
 	{
-		while (print_addr <= (_memory_end-1) && *text)
-		{
-			print_addr[0] = *text;
-			print_addr[1] = _current_format;
-			print_addr += 2;
-		}
+		text++;
+		linear++;
 	}
-
-	return vgatext_addrlinear(print_addr); 		/* Return final linear address */
+	
+	return linear; 		/* Return final linear address */
 }
 
 
@@ -109,26 +105,43 @@ void vgatext_clear()
 	vgatext_format_set(format);
 }
 
+int vgatext_putcharxy(int x, int y, char chr)
+{
+	char * posaddr = vgatext_posaddr(x, y);
+	
+	if (posaddr)
+	{
+		posaddr[0] = chr;
+		posaddr[1] = _current_format;
+	}
+
+	return (posaddr != NULL);
+}
+
+int vgatext_putcharl(int linear, char chr)
+{
+	char * posaddr = vgatext_linearaddr(linear);
+	
+	if (posaddr)
+	{
+		posaddr[0] = chr;
+		posaddr[1] = _current_format;
+	}
+
+	return (posaddr != NULL);
+}
+
 
 void vgatext_charfill(int start_x, int start_y, int width, int height, char fillchar)
 {
 	int x, y;
 	int end_x, end_y;
-	char * posaddr;
-
 	end_x = start_x + width;
 	end_y = start_y + height;
 
-
 	for (y = start_y; y <= end_y; y++)
 		for (x = start_x; x <= end_x; x++)
-		{
-			if ((posaddr = vgatext_posaddr(x, y)))
-			{
-				posaddr[0] = fillchar;
-				posaddr[1] = _current_format;
-			}
-		}
+			vgatext_putcharxy(x, y, fillchar);
 }
 
 
@@ -137,24 +150,16 @@ void vgatext_strfill(int start_x, int start_y, int width, int height, char * str
 
 	int x, y;
 	int end_x, end_y;
-	char * posaddr;
 
 	end_x = start_x + width;
 	end_y = start_y + height;
 
 
 	for (y = start_y; y <= end_y; y++)
-		for (x = start_x; x <= end_x; x++)		
+		for (x = start_x; x <= end_x; x++)
 		{
 
-			/* Output text and format only
-			   if position is valid.
-			*/
-			if ((posaddr = vgatext_posaddr(x, y)))
-			{
-				posaddr[0] = *str;
-				posaddr[1] = _current_format;
-			}
+			vgatext_putcharxy(x, y, *str);
 
 			/*
 			 Continue exploring text only if it has not finished
@@ -162,6 +167,28 @@ void vgatext_strfill(int start_x, int start_y, int width, int height, char * str
 			if (*str)
 				str++;
 		}	
+	
+}
+
+void vgatext_writebq(byte_queue *bq, int dest_x, int dest_y, int width)
+{
+	byte_queue tmp_bq = *bq;
+
+	int i = 0;	
+	char * posaddr;
+	
+	while (bq_used(&tmp_bq))
+	{
+		posaddr = vgatext_posaddr((i % width) + dest_x, (i / width) + dest_y);
+		
+		/*	Read 2 bytes from queue.
+			Note: If posaddr is NULL then bq makes a fake read,
+				  so it is as if the character appears off screen.
+		*/
+		bq_read(&tmp_bq, posaddr, 2);
+
+		i++;	
+	}
 	
 }
 

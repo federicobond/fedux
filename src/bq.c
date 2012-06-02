@@ -2,7 +2,7 @@
 #include "../include/bq.h"
 
 
-void bq_init(byte_queue * queue, char * buff, unsigned int size)
+void bq_init(byte_queue *queue, char *buff, unsigned int size)
 {
 	queue->buff = buff;
 	queue->size = size;
@@ -11,7 +11,7 @@ void bq_init(byte_queue * queue, char * buff, unsigned int size)
 	queue->full = FALSE;
 }
 
-int bq_used(byte_queue * queue)
+int bq_used(byte_queue *queue)
 {
 	int used;
 
@@ -27,7 +27,7 @@ int bq_used(byte_queue * queue)
 	return used;
 }
 
-int bq_write_lossless(byte_queue * queue, const char * data, unsigned int size)
+int bq_write_lossless(byte_queue *queue, const char *data, unsigned int size)
 {
 	int i, written = 0;
 
@@ -48,25 +48,28 @@ int bq_write_lossless(byte_queue * queue, const char * data, unsigned int size)
 	return written;
 }
 
-int bq_write(byte_queue * queue, const char * data, unsigned int size)
+int bq_write(byte_queue *queue, const char *data, unsigned int size)
 {
 	int i;
 
 	for (i = 0; i < size; i++)
 		queue->buff[(i + queue->write) % queue->size] = data[i];
 	
-	queue->write = (queue->write + size) % queue->size;
-
 	if (size + bq_used(queue) >= queue->size)
 	{
 		queue->full = TRUE;
+		queue->write = (queue->write + size) % queue->size;
 		queue->read = queue->write;
+	}
+	else
+	{
+		queue->write = (queue->write + size) % queue->size;
 	}
 
 	return size;
 }
 
-int bq_read(byte_queue * queue, char * data, unsigned int size)
+int bq_read(byte_queue *queue, char *data, unsigned int size)
 {
 	int read;
 
@@ -75,7 +78,7 @@ int bq_read(byte_queue * queue, char * data, unsigned int size)
 	if (read)
 	{
 		queue->full = FALSE;
-		queue->read = queue->read + size % queue->size;
+		queue->read = (queue->read + size) % queue->size;
 	}
 
 	return read; 
@@ -83,17 +86,37 @@ int bq_read(byte_queue * queue, char * data, unsigned int size)
 }
 
 
-int bq_peek(byte_queue * queue, char * data, unsigned int size)
+int bq_peek(byte_queue *queue, char *data, unsigned int size)
 {
 	int i;
 
 	if (size > bq_used(queue))
 		size = bq_used(queue);
 
-
-	for (i = 0; i < size; i++)
-		data[i] = queue->buff[(i + queue->read) % queue->size];
+	
+	if (data != NULL)
+		for (i = 0; i < size; i++)
+			data[i] = queue->buff[(i + queue->read) % queue->size];
 
 	return size;
 }
 
+int bq_get_write(byte_queue *queue)
+{
+	return queue->write;
+}
+
+int bq_get_read(byte_queue *queue)
+{
+	return queue->read;
+}
+
+int bq_pop(byte_queue *queue, char *data, unsigned int size)
+{
+	
+}
+
+int bq_rpeek(byte_queue *queue, char *data, unsigned int size)
+{
+	
+}

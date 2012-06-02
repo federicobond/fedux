@@ -1,5 +1,28 @@
 #include "../include/kasm.h"
 
+
+#define TTY_DEBUG
+
+#ifdef TTY_DEBUG
+
+#include "../include/bq.h"
+#include "../include/tty.h"
+
+
+char _input_buffer[MAXBUFFSIZE];
+char _output_buffer[MAXBUFFSIZE];
+
+byte_queue _input_queue;
+byte_queue _output_queue;
+
+TTY _tty;
+
+int tty_initialized = 0;
+
+
+#endif
+
+
 unsigned char scancodes[128] =
 {
 	0,  27,
@@ -46,16 +69,33 @@ static int tickpos = 0;
 
 void keyboard_handler()
 {
-	char *video = (char *) 0xb8000;
 	int scancode = _inb(0x60);
+	char decoded = 0;
 
 	/* Only when pressed */
 
 	if (!(scancode & 0x80))
+    	decoded = scancodes[scancode];
+
+#ifdef TTY_DEBUG
+	if (decoded)
 	{
-		scancode &= 0x7F;
-    	video[tickpos]= scancodes[scancode];
-    	tickpos += 2;
+		if (!tty_initialized)
+		{
+			bq_init(&_input_queue, _input_buffer, MAXBUFFSIZE);
+			bq_init(&_output_queue, _output_buffer, MAXBUFFSIZE);
+			tty_init(&_tty, &_input_queue, &_output_queue, 0, 0, 80, 3);
+			tty_initialized += 1;
+			vgatext_print(80*25-160, "Initialized");
+		}
+
+		tty_input_write(&_tty, &decoded, 1);
+		tty_display(&_tty);
+
+		vgatext_print(80*25-80, _input_buffer);
 	}
+
+
+#endif
 }
 
