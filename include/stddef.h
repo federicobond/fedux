@@ -5,10 +5,9 @@
 #define NULL  0
 #endif
 
-#define TRUE  1
-#define FALSE 0
-
 typedef unsigned int size_t;
 typedef int ssize_t;
+
+typedef enum { false, true } bool;
 
 #endif

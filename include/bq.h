@@ -1,13 +1,15 @@
 #ifndef _BQ_H
 #define _BQ_H
 
+#include "../include/stddef.h"
+
 typedef struct byte_queue
 {
 	unsigned int size;
 	char * buff;
 	unsigned int write;
 	unsigned int read;
-	char full;
+	bool full;
 	char lossless;
 
 } byte_queue;

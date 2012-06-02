@@ -2,8 +2,9 @@
 #define _VGATEXT_H
 
 #include "../include/bq.h"
+#include "stddef.h"
 
-int  vgatext_init(int width, int height, char * memory_start);
+bool vgatext_init(int width, int height, char * memory_start);
 
 int vgatext_print(int linear, char * text);
 

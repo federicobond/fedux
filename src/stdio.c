@@ -1,6 +1,11 @@
 #include "../include/stdio.h"
 #include "../include/string.h"
 
+/*
+#include "../include/kbd.h"
+#include "../include/vgatext.h"
+*/
+
 FILE _stdin = { STDIN_FILENO };
 FILE _stdout = { STDOUT_FILENO };
 FILE _stderr = { STDERR_FILENO };
@@ -79,8 +84,7 @@ fgets(char *s, int size, FILE *stream)
 int
 printf(const char* fmt, ...)
 {
-    /* TODO: Code */
-    return 0;
+    return puts(fmt);
 }
 
 int

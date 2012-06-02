@@ -35,11 +35,6 @@ int isalnum(int c)
     return isalpha(c) || isdigit(c);
 }
 
-int isascii(int c)
-{
-    return c >= 0 && c <= 127;
-}
-
 int iscntrl(int c)
 {
     return c == 0x7F || (c >= 0x00 && c <= 0x1F);
@@ -47,5 +42,15 @@ int iscntrl(int c)
 
 int isspace(int c)
 {
-    return c == ' ' || c == '\t' || c == '\r' || c == '\n';
+    return c == ' ' || c == '\f' || c == '\t' || c == '\r' || c == '\n' || c == '\v';
+}
+
+int isprint(int c)
+{
+    return !iscntrl(c);
+}
+
+int isxdigit(int c)
+{
+    return isdigit(c) || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
 }
