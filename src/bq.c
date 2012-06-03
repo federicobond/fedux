@@ -41,6 +41,11 @@ int bq_used(byte_queue *queue)
 	return used;
 }
 
+int bq_avail(byte_queue *queue)
+{
+	return queue->size - bq_used(queue);
+}
+
 int bq_write_lossless(byte_queue *queue, const char *data, unsigned int size)
 {
 	int i, written = 0;
@@ -81,6 +86,29 @@ int bq_write(byte_queue *queue, const char *data, unsigned int size)
 	}
 
 	return size;
+}
+
+int bq_move(byte_queue *src, byte_queue *dest, unsigned int count)
+{
+	char datum;
+
+	while (count-- && bq_used(src))
+	{
+		bq_read(src, &datum, sizeof(char));
+		bq_write(dest, &datum, sizeof(char));
+	}
+}
+
+int bq_copy(byte_queue *src, byte_queue *dest, unsigned int count)
+{
+	char datum;
+	byte_queue tmp_src = *src;
+
+	while (count-- && bq_used(&tmp_src))
+	{
+		bq_read(&tmp_src, &datum, sizeof(char));
+		bq_write(dest, &datum, sizeof(char));
+	}
 }
 
 int bq_read(byte_queue *queue, char *data, unsigned int size)

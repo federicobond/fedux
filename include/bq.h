@@ -33,6 +33,11 @@ void bq_init(byte_queue *queue, char *buff, unsigned int size);
 
 int bq_used(byte_queue *queue);
 
+/*	bq_avail
+	Returns number of bytes available in the queue.
+*/
+int bq_avail(byte_queue *queue);
+
 /*	bq_get_write
 	Returns write index position.
 */
@@ -79,6 +84,8 @@ int bq_rread(byte_queue *queue, char *data, unsigned int size);
 int bq_rpeek(byte_queue *queue, char *data, unsigned int size);
 
 
+int bq_move(byte_queue *src, byte_queue *dest, unsigned int count);
+int bq_copy(byte_queue *src, byte_queue *dest, unsigned int count);
 
 
 #endif

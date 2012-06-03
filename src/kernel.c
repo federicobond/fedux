@@ -82,6 +82,8 @@ Punto de entrada de cóo C.
 int kmain(multiboot_info_t *mbi, unsigned long int magic)
 {
 
+	char datum;
+
 	_cli();
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
@@ -162,8 +164,8 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 
 	maintty = tty_create(0, 10, 80, 15);
 	
-	tty_output_write(maintty, "root # ", 7);
-	tty_display(maintty);
+	
+	
 
 /* End of critical initializations: Re-enable interrupts */
 	_sti();
@@ -175,9 +177,15 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 	
 	
     
-
+	
 	while(1)
-		_hlt();
+	{
+		tty_output_write(maintty, "root # ", 7);
+		tty_display(maintty);
+		datum = 0;
+		while (datum != '\n')
+			tty_input_read(maintty, &datum, sizeof(char));
+	}
 
 	return 0;
 	
