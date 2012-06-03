@@ -254,32 +254,24 @@ kbd_shifted(void)
 }
 
 bool
-
-
 kdb_capslocked(void)
 {
     return mask & CAPSLOCK;
 }
 
 char
-
-
 kbd_keymap_get(unsigned int scancode)
 {
     return kbd[scancode & 0x7F][kbd_shifted()];
 }
 
 int
-
-
 kbd_read(char *buf, int size)
 {
     return bq_read(&bq, buf, size);
 }
 
 void
-
-
 keyboard_handler(void)
 {
     unsigned int scancode = _inb(0x60);
@@ -298,15 +290,12 @@ keyboard_handler(void)
 		{
 			bq_init(&_input_queue, _input_buffer, MAXBUFFSIZE);
 			bq_init(&_output_queue, _output_buffer, MAXBUFFSIZE);
-			tty_init(&_tty, &_input_queue, &_output_queue, 0, 0, 80, 3);
+			tty_init(&_tty, &_input_queue, &_output_queue, 0, 25-3, 80, 3);
 			tty_initialized += 1;
-			vgatext_print(80*25-160, "Initialized");
 		}
 
 		tty_input_write(&_tty, &key, 1);
 		tty_display(&_tty);
-
-		vgatext_print(80*25-80, _input_buffer);
 	}
 
 

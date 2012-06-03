@@ -4,11 +4,15 @@
 #include "../include/bq.h"
 #include "stddef.h"
 
+#define INVALID_POSITION (-1)
+#define DEFAULT_FORMAT 0x0F
+
 bool vgatext_init(int width, int height, char * memory_start);
 
 int vgatext_print(int linear, char * text);
 
 void vgatext_writebq(byte_queue *bq, int dest_x, int dest_y, int width);
+void vgatext_write(char * buffer, int dest_x, int dest_y, int width, int height);
 
 void vgatext_clear();
 
