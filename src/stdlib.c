@@ -102,3 +102,45 @@ itoa(int value, char *s, int radix)
     }
     return len;
 }
+
+long
+ltoa(long value, char *s, int radix)
+{
+    char *buf = s;
+    long rem;
+    int len;
+    char tmp;
+
+    /* Only supports 10 radix. Parameter is for maintaining a compatible api */
+    radix = 10;
+
+    if (value < 0)
+    {
+        *buf++ = '-';
+        value = -value;
+        s++;
+    }
+    do
+    {
+        rem = value % radix;
+        value = value / radix;
+
+        *buf++ = rem + '0';
+    }
+    while (value > 0);
+
+    *buf = 0;
+    len = buf - s;
+
+    buf--;
+    while (buf > s)
+    {
+        tmp = *buf;
+        *buf = *s;
+        *s = tmp;
+
+        s++;
+        buf--;
+    }
+    return len;
+}

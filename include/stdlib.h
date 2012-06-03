@@ -16,6 +16,7 @@ int     atoi(const char *nptr);
 long    atol(const char *nptr);
 
 int     itoa(int value, char *buf, int radix);
+long    ltoa(long value, char *buf, int radix);
 
 int     abs(int x);
 long    labs(long x);
