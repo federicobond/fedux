@@ -26,6 +26,8 @@ int
 kmain(void)
 {
 
+	_cli();
+
 /* Borra la pantalla. */ 
 
 	k_clear_screen();
@@ -42,8 +44,6 @@ kmain(void)
 	idtr.limit = sizeof(idt)-1;
 	
 	_lidt (&idtr);	
-
-	_cli();
 
 /* Habilito interrupcion de timer tick*/
 
@@ -63,13 +63,14 @@ kmain(void)
 	
 	
 	vgatext_format_set(0x70);
-	vgatext_charfill(20, 4, 31, 11, 0);
+	vgatext_charfill(0, 0, 79, 6, 0);
 	vgatext_format_set(0x3F);
-	vgatext_strfill(21, 5, 29, 9, "Welcome to Fedux! Press spacebar to get the prompt... (It's not buggy, it's just the way it's done)");
+	vgatext_strfill(1, 1, 77, 4, "Welcome to Fedux! Press spacebar to get the prompt... (It's not buggy, it's just the way it's done)");
 
-    sh_init();
-	
-    while(1) {}
+    /*sh_init();
+	*/
+    while(1)
+		_hlt();
 	
 }
 

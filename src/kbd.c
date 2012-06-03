@@ -299,7 +299,8 @@ keyboard_handler(void)
 		tty_input_write(&_tty, &key, 1);
 		tty_display(&_tty);
 	}
-
+	
+	vgatext_print(0,"Initialized");
 
 #endif
 }

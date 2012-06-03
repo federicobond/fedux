@@ -8,6 +8,7 @@ kasm.h
 void		_outb(unsigned char value, unsigned short int port);
 int			_inb(unsigned short int port);
 
+void		_hlt(void);
 
 
 
