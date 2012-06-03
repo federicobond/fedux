@@ -14,6 +14,10 @@ typedef struct byte_queue
 
 } byte_queue;
 
+byte_queue * bq_create(unsigned int size);
+
+
+void bq_destroy(byte_queue * bq);
 
 /*	bq_init
 	Initializes a queue.
@@ -73,5 +77,8 @@ int bq_rread(byte_queue *queue, char *data, unsigned int size);
 
 
 int bq_rpeek(byte_queue *queue, char *data, unsigned int size);
+
+
+
 
 #endif

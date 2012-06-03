@@ -6,13 +6,13 @@
 
 
 
-int _width, _height;
-char _current_format;
+static int _width, _height;
+static char _current_format;
 
-int _cursor_x, _cursor_y;
+static int _cursor_x, _cursor_y;
 
-char * _memory_start;
-char * _memory_end;
+static char * _memory_start;
+static char * _memory_end;
 
 
 int vgatext_poslinear(int x, int y)

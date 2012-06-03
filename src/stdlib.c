@@ -63,7 +63,26 @@ atoi(const char *str)
 }
 
 char *
-itoa(int value, char *s, int radix)
+itoa(int value, char *s, int base)
 {
-    return NULL;
+	int numeral, i = 0;
+
+	if (base >= 2 && base <= 36)
+	{
+		do
+		{
+			numeral = value % base;
+			value = value/base;
+			if (numeral >= 0 && numeral <= 9)		
+				s[i] = '0' + numeral;
+			else
+				s[i] = 'A' + numeral - 10;
+			i++;
+		}
+		while (value);
+	}
+
+	s[i] = '\0';
+	
+    return strrev(s);
 }

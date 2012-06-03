@@ -11,15 +11,21 @@
 
 #define TABSIZE 5
 
+#include "ttybox.h"
+
 typedef struct TTY
 {
 	byte_queue *input_queue;
 	byte_queue *output_queue;
+	TTYBOX *ttybox;
 	unsigned int x, y, width, height;
 } TTY;
 
 
-void tty_init(TTY *tty,  byte_queue *input_queue, byte_queue *output_queue,
+void tty_init(TTY *tty,  
+			  byte_queue *input_queue, 
+			  byte_queue *output_queue,
+			  TTYBOX *ttybox,
 			  int x, int y, int width, int height);
 
 

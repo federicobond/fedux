@@ -1,30 +1,10 @@
 #include "../include/kasm.h"
 #include "../include/ctype.h"
 #include "../include/string.h"
-#include "../include/bq.h"
+#include "../include/kbd.h"
 
-#define TTY_DEBUG
+static char kbd_status[KEYCOUNT];
 
-#ifdef TTY_DEBUG
-
-#include "../include/bq.h"
-#include "../include/tty.h"
-
-
-char _input_buffer[MAXBUFFSIZE];
-char _output_buffer[MAXBUFFSIZE];
-
-byte_queue _input_queue;
-byte_queue _output_queue;
-
-TTY _tty;
-
-int tty_initialized = 0;
-
-
-#endif
-
-#define NPRTBL 0
 
 static unsigned int kbd_EN[][2] = { { NPRTBL, NPRTBL },/*000*/
     { NPRTBL, NPRTBL },/*001 ESCAPE*/
@@ -216,22 +196,15 @@ static unsigned int (*kbd)[2] = kbd_EN;
 
 static int mask = 0;
 
-static byte_queue bq;
-static char buf[255];
+kbd_callback_t _event_callback;
 
-#define LSHIFT (1<<1)
-#define RSHIFT (1<<2)
-#define CAPSLOCK (1<<3)
-
-void
-kbd_init(void)
+void kbd_init(kbd_callback_t event_callback)
 {
-    bq_init(&bq, buf, 255);
+    _event_callback = event_callback;
 }
 
 
-int
-kbd_set_keymap(char *code)
+int kbd_set_keymap(char *code)
 {
     if (strcmp(code, "ES") == 0)
     {
@@ -247,60 +220,32 @@ kbd_set_keymap(char *code)
 }
 
 
-bool
-kbd_shifted(void)
+bool kbd_shifted(void)
 {
     return mask & (LSHIFT || RSHIFT);
 }
 
-bool
-kdb_capslocked(void)
+bool kdb_capslocked(void)
 {
     return mask & CAPSLOCK;
 }
 
-char
-kbd_keymap_get(unsigned int scancode)
+char kbd_keymap_get(unsigned int scancode)
 {
     return kbd[scancode & 0x7F][kbd_shifted()];
 }
 
-int
-kbd_read(char *buf, int size)
-{
-    return bq_read(&bq, buf, size);
-}
-
-void
-keyboard_handler(void)
+void keyboard_handler(void)
 {
     unsigned int scancode = _inb(0x60);
     char key = 0;
 
+	kbd_status[scancode & 0x7F] = !(scancode & 0x80);
+
     if (!(scancode & 0x80))
     {
         key = kbd_keymap_get(scancode);
-        /*bq_write(&bq, (char *)&key, 1);*/
+        _event_callback(key, kbd_status);
     }
-
-#ifdef TTY_DEBUG
-	if (key)
-	{
-		if (!tty_initialized)
-		{
-			bq_init(&_input_queue, _input_buffer, MAXBUFFSIZE);
-			bq_init(&_output_queue, _output_buffer, MAXBUFFSIZE);
-			tty_init(&_tty, &_input_queue, &_output_queue, 0, 10, 80, 25-10);
-			tty_output_write(&_tty, "root # ", 7);	
-			tty_display(&_tty);
-			tty_initialized += 1;	
-		}
-
-		tty_input_write(&_tty, &key, 1);
-		tty_display(&_tty);
-	}
-	
-
-#endif
 }
 

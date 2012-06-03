@@ -1,6 +1,20 @@
 #include "../include/stddef.h"
 #include "../include/bq.h"
+#include "../include/mm.h"
 
+byte_queue * bq_create(unsigned int size)
+{
+	byte_queue * newbq = mm_malloc(sizeof(byte_queue));
+	char *buff = mm_malloc(size*sizeof(char));
+	bq_init(newbq, buff, size);
+	return newbq;
+}
+
+void bq_destroy(byte_queue * bq)
+{
+	mm_free(bq->buff);
+	mm_free(bq);
+}
 
 void bq_init(byte_queue *queue, char *buff, unsigned int size)
 {
