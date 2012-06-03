@@ -2,6 +2,7 @@
 
 #include "../include/ttybox.h"
 #include "../include/stdio.h"
+#include "../include/mm.h"
 
 char * ttybox_linearaddr(TTYBOX *ttybox, int linear)
 {
@@ -27,19 +28,40 @@ void ttybox_newline(TTYBOX *ttybox)
 
 }
 
+TTYBOX * ttybox_create(int x, int y, int width, int height)
+{
+	char *buffer = mm_malloc(width*height*2);
+	TTYBOX *ttybox = mm_malloc(sizeof(TTYBOX));
+	ttybox_init(ttybox, x, y, width, height, buffer);
+	return ttybox;
+}
+
+void ttybox_destroy(TTYBOX *ttybox)
+{
+	mm_free(ttybox->buffer);
+	mm_free(ttybox);
+}
+
 void ttybox_init(TTYBOX *ttybox, int x, int y, int width, int height, char * buffer)
 {
-
-	int i; 
-	char * posptr;
-
 	ttybox->x = x;
 	ttybox->y = y;
 	ttybox->width = width;
 	ttybox->height = height;
 	ttybox->length = width*height;
-	ttybox->pos = 0;
 	ttybox->buffer = buffer;
+	
+
+	ttybox_clear(ttybox);
+}
+
+
+void ttybox_clear(TTYBOX *ttybox)
+{
+	int i; 
+	char * posptr;
+	
+	ttybox->pos = 0;
 	ttybox->format = DEFAULT_FORMAT;
 
 	for (i = 0; i < ttybox->length; i++)
@@ -53,6 +75,12 @@ void ttybox_init(TTYBOX *ttybox, int x, int y, int width, int height, char * buf
 void ttybox_format_set(TTYBOX *ttybox, char format)
 {
 	ttybox->format = format;
+}
+
+void ttybox_puts(TTYBOX *ttybox, char * str)
+{
+	while (*str)
+		ttybox_putchar(ttybox, *(str++));
 }
 
 void ttybox_putchar(TTYBOX *ttybox, char chr)

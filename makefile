@@ -38,10 +38,11 @@ tpe-c:
 	$(CC) $(CFLAGS) -c src/kbd.c -o bin/kbd.o
 	$(CC) $(CFLAGS) -c src/tty.c -o bin/tty.o
 	$(CC) $(CFLAGS) -c src/ttybox.c -o bin/ttybox.o
-	$(CC) $(CFLAGS) -c src/libc.c -o bin/libc.o # should remove this because it's non-standard
-
+	$(CC) $(CFLAGS) -c src/kpanic.c -o bin/kpanic.o
+	$(CC) $(CFLAGS) -c src/mm.c -o bin/mm.o
+	
 tpe-link:
-	ld $(LDFLAGS) -o bin/kernel.bin bin/kernel.o bin/kstart.o bin/libc.o bin/libasm.o bin/ctype.o bin/stdlib.o bin/string.o bin/stdio.o bin/sh.o bin/vgatext.o bin/bq.o bin/kbd.o bin/tty.o bin/ttybox.o
+	ld $(LDFLAGS) -o bin/kernel.bin bin/kernel.o bin/kstart.o bin/libasm.o bin/ctype.o bin/stdlib.o bin/string.o bin/stdio.o bin/sh.o bin/vgatext.o bin/bq.o bin/kbd.o bin/tty.o bin/ttybox.o bin/kpanic.o bin/mm.o
 
 tests:
 	$(CC) -g tests/string.c src/string.c -o tests/string.test && tests/string.test && rm tests/string.test

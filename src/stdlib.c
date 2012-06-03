@@ -62,85 +62,27 @@ atoi(const char *str)
     return result;
 }
 
-int
-itoa(int value, char *s, int radix)
+char *
+itoa(int value, char *s, int base)
 {
-    char *buf = s;
-    int rem, len;
-    char tmp;
+	int numeral, i = 0;
 
-    /* Only supports 10 radix. Parameter is for maintaining a compatible api */
-    radix = 10;
+	if (base >= 2 && base <= 36)
+	{
+		do
+		{
+			numeral = value % base;
+			value = value/base;
+			if (numeral >= 0 && numeral <= 9)		
+				s[i] = '0' + numeral;
+			else
+				s[i] = 'A' + numeral - 10;
+			i++;
+		}
+		while (value);
+	}
 
-    if (value < 0)
-    {
-        *buf++ = '-';
-        value = -value;
-        s++;
-    }
-    do
-    {
-        rem = value % radix;
-        value = value / radix;
-
-        *buf++ = rem + '0';
-    }
-    while (value > 0);
-
-    *buf = 0;
-    len = buf - s;
-
-    buf--;
-    while (buf > s)
-    {
-        tmp = *buf;
-        *buf = *s;
-        *s = tmp;
-
-        s++;
-        buf--;
-    }
-    return len;
-}
-
-long
-ltoa(long value, char *s, int radix)
-{
-    char *buf = s;
-    long rem;
-    int len;
-    char tmp;
-
-    /* Only supports 10 radix. Parameter is for maintaining a compatible api */
-    radix = 10;
-
-    if (value < 0)
-    {
-        *buf++ = '-';
-        value = -value;
-        s++;
-    }
-    do
-    {
-        rem = value % radix;
-        value = value / radix;
-
-        *buf++ = rem + '0';
-    }
-    while (value > 0);
-
-    *buf = 0;
-    len = buf - s;
-
-    buf--;
-    while (buf > s)
-    {
-        tmp = *buf;
-        *buf = *s;
-        *s = tmp;
-
-        s++;
-        buf--;
-    }
-    return len;
+	s[i] = '\0';
+	
+    return strrev(s);
 }

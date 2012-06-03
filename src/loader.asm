@@ -18,7 +18,7 @@ MultiBootHeader:
 	dd CHECKSUM
 
 	; reserve initial kernel stack space
-	STACKSIZE equ 0x4000		; that's 16k.
+	STACKSIZE equ 0x8000		; that's 32k.
 
 	_loader:
 	mov esp, stack+STACKSIZE; set up the stack
@@ -32,4 +32,4 @@ eokl	dd STACKSIZE + stack
 	section .bss
 	align 32
 	stack:
-	resb STACKSIZE		; reserve 16k stack on a quadword boundary
+	resb STACKSIZE		; reserve 32k stack on a quadword boundary

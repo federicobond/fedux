@@ -1,12 +1,17 @@
 #ifndef _KBD_H
 #define _KBD_H
 
-void kbd_init(void);
-int  kbd_set_keymap(char *code);
-int  kbd_read(char *buf, int size);
-bool kbd_shifted(void);
-bool kdb_capslocked(void);
-char kbd_keymap_get(unsigned int scancode);
-void keyboard_handler(void);
+#include "scancode.h"
+
+#define NPRTBL 0
+#define KEYCOUNT 128
+
+#define LSHIFT (1<<1)
+#define RSHIFT (1<<2)
+#define CAPSLOCK (1<<3)
+
+typedef void (*kbd_callback_t)(char, char *);
+
+void kbd_init(kbd_callback_t event_callback);
 
 #endif
