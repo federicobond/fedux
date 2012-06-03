@@ -44,15 +44,52 @@ sh_do_command(char buf[])
 {
     /* Do argument parsing */
     int argc = 0;
-    char **argv = NULL;
+    char *argv[255];
 
-    if (strcmp(buf, "laws"))
-        return exec_laws(argc, argv);
-    if (strcmp(buf, "fortune"))
-        return exec_fortune(argc, argv);
+    sh_tokenize(buf, &argc, argv);
+
+    if (strcmp(argv[0], "laws"))
+        return exec_laws(argc, (char **)argv);
+    if (strcmp(argv[0], "fortune"))
+        return exec_fortune(argc, (char **)argv);
+    if (strcmp(argv[0], "echo"))
+        return exec_fortune(argc, (char **)argv);
 
     printf("%s: command not found", argv[0]);
     return 0;
+}
+
+void
+sh_tokenize(char buf[], int *argc, char *argv[])
+{
+    char ch;
+    enum state { SPACE, TOKEN } state = SPACE;
+
+    while ((ch = *buf) != '\0')
+    {
+        switch (state)
+        {
+            case SPACE:
+                if (ch == '"')
+                {
+                    state = TOKEN;
+                }
+                else if (!isspace(ch))
+                {
+                    state = TOKEN;
+                    argv[(*argc)++] = buf;
+                }
+                break;
+            case TOKEN:
+                if (ch == '"' || isspace(ch))
+                {
+                    state = SPACE;
+                    *buf = '\0';
+                }
+                break;
+        }
+        buf++;
+    }
 }
 
 int
@@ -70,6 +107,18 @@ exec_fortune(int argc, char **argv)
 {
     printf("No fortune cookie for you today\n");
     
+    return 0;
+}
+
+int
+exec_echo(int argc, char **argv)
+{
+    while (--argc)
+    {
+        printf("%s ", *++argv);
+    }
+    putchar('\n');
+
     return 0;
 }
 
