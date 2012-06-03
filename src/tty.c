@@ -69,15 +69,14 @@ void tty_input_write(TTY *tty, char *data, int size)
 		}
 }
 
-void tty_input_read(TTY *tty, char *data, int size)
+int tty_input_read(TTY *tty, char *data, int size)
 {
-	while (!bq_read(tty->input_queue, data, size))
-		_hlt();
+	return bq_read(tty->input_queue, data, size);
 }
 
-void tty_output_write(TTY *tty, char *data, int size)
+int tty_output_write(TTY *tty, char *data, int size)
 {
-	bq_write(tty->output_queue, data, size);
+	return bq_write(tty->output_queue, data, size);
 }
 
 void tty_display(TTY *tty)

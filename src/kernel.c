@@ -10,6 +10,7 @@
 #include "../include/mm.h"
 
 #include "../include/tty.h"
+#include "../include/ttyman.h"
 #include "../include/ttybox.h"
 
 void setup_mm(multiboot_info_t * mbi);
@@ -23,8 +24,6 @@ int cursor = 0;
 
 
 TTYBOX * firstbox = NULL;
-
-TTY * maintty = NULL;
 
 /***************************************************************
 *setup_idt_entry
@@ -66,11 +65,6 @@ void keyboard_callback(char ascii, char * keyboard_status)
 		keyboard_status[SCANCODE_CHAR_LALT])
 			linear = vgatext_print(linear,"ALT+F1");
 
-	if (maintty)
-	{
-		tty_input_write(maintty, &ascii, sizeof(char));
-		tty_display(maintty);
-	}
 }
 
 
@@ -104,9 +98,14 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
     _mask_pic_1(0xFD);
     _mask_pic_2(0xFF);
 
+/* Initialize memory management */
+
+	setup_mm(mbi);
+
 
 /* Initialize keyboard driver */
-	kbd_init(keyboard_callback);
+/*	kbd_init(keyboard_callback);*/
+
         
 /* Initialize video driver */
 
@@ -118,12 +117,11 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 	vgatext_clear();
 
 
-/* Initialize memory management */
+/* Initialize TTY manager */
 
-	setup_mm(mbi);
+	ttyman_init(0, 10, 80, 15);
 
-
-/* Initialize first TTY */
+/* Initialize basic ttybox output */
 
 	firstbox = ttybox_create(0, 10, 80, 15);
 	
@@ -160,9 +158,6 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 	vgatext_print(vgatext_poslinear(1, 6), "   \\ \\_\\\\ \\____\\\\ \\___,_\\\\ \\____/ /\\_/\\_\\");
 	vgatext_print(vgatext_poslinear(1, 7), "    \\/_/ \\/____/ \\/__,_ / \\/___/  \\//\\/_/     Welcome to Fedux Kernel 0.0.1!");
 	vgatext_format_set(0x0F);
-
-
-	maintty = tty_create(0, 10, 80, 15);
 	
 	
 	
@@ -173,18 +168,16 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 	print_memory_map(vgatext_poslinear(0, 9),mbi);
 
 	_hlt();
-
 	
 	
     
 	
 	while(1)
 	{
-		tty_output_write(maintty, "root # ", 7);
-		tty_display(maintty);
+		ttyman_write("root # ", 7);
 		datum = 0;
 		while (datum != '\n')
-			tty_input_read(maintty, &datum, sizeof(char));
+			ttyman_read(&datum, sizeof(char));
 	}
 
 	return 0;
