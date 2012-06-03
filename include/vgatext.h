@@ -36,8 +36,12 @@ void vgatext_cursor_enable();
 char * vgatext_posaddr(int x, int y);
 void vgatext_addrpos(char * addr, int *x, int *y);
 
+int vgatext_poslinear(int x, int y);
+void vgatext_linearpos(int linear, int *x, int *y);
 
 int vgatext_putcharxy(int x, int y, char chr);
 int vgatext_putcharl(int linear, char chr);
+
+
 
 #endif

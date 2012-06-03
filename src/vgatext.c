@@ -137,8 +137,8 @@ void vgatext_charfill(int start_x, int start_y, int width, int height, char fill
 	end_x = start_x + width;
 	end_y = start_y + height;
 
-	for (y = start_y; y <= end_y; y++)
-		for (x = start_x; x <= end_x; x++)
+	for (y = start_y; y < end_y; y++)
+		for (x = start_x; x < end_x; x++)
 			vgatext_putcharxy(x, y, fillchar);
 }
 
@@ -153,8 +153,8 @@ void vgatext_strfill(int start_x, int start_y, int width, int height, char * str
 	end_y = start_y + height;
 
 
-	for (y = start_y; y <= end_y; y++)
-		for (x = start_x; x <= end_x; x++)
+	for (y = start_y; y < end_y; y++)
+		for (x = start_x; x < end_x; x++)
 		{
 
 			vgatext_putcharxy(x, y, *str);
