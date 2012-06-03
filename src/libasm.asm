@@ -6,6 +6,7 @@ GLOBAL      _keyboard_handler
 GLOBAL      _mask_pic_2,_mask_pic_1,_cli,_sti
 GLOBAL      _outb
 GLOBAL      _inb
+GLOBAL		_hlt
 
 EXTERN      timertick_handler
 EXTERN      keyboard_handler
@@ -36,6 +37,11 @@ _inb:
     pop     edx
     mov     esp, ebp
     pop     ebp
+	ret
+
+_hlt:
+	hlt
+	ret
 
 _cli:
     cli

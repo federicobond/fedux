@@ -27,6 +27,8 @@ void tty_input_write(TTY *tty, char *data, int size);
 
 void tty_input_read(TTY *tty, char *data, int size);
 
+void tty_output_write(TTY *tty, char *data, int size);
+
 void tty_display(TTY *tty);
 
 

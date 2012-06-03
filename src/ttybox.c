@@ -72,10 +72,12 @@ void ttybox_putchar(TTYBOX *ttybox, char chr)
 		break;
 
 	case '\b':
-		ttybox->pos--;
-		if ((posptr = ttybox_linearaddr(ttybox, ttybox->pos)))
-			posptr[0] = '\0';
-		
+		if (ttybox->pos > 0)
+		{
+			ttybox->pos--;
+			if ((posptr = ttybox_linearaddr(ttybox, ttybox->pos)))
+				posptr[0] = '\0';
+		}
 		break;
 	default:
 

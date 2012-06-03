@@ -18,7 +18,12 @@ void tty_init(TTY *tty,  byte_queue *input_queue, byte_queue *output_queue,
 
 void tty_input_write(TTY *tty, char *data, int size)
 {
-	bq_write(tty->input_queue, data, size);
+	int i;
+	for (i = 0; i < size; i++)
+		if (data[i] == '\b')
+			bq_rread(tty->input_queue, NULL, 1);
+		else	
+			bq_write(tty->input_queue, data, size);
 }
 
 void tty_input_read(TTY *tty, char *data, int size)
@@ -26,6 +31,11 @@ void tty_input_read(TTY *tty, char *data, int size)
 	bq_read(tty->input_queue, data, size);
 	
 	/* Echo */
+	bq_write(tty->output_queue, data, size);
+}
+
+void tty_output_write(TTY *tty, char *data, int size)
+{
 	bq_write(tty->output_queue, data, size);
 }
 
@@ -48,6 +58,9 @@ void tty_display(TTY *tty)
 	ttybox_init(&ttybox, tty->x, tty->y, tty->width, tty->height, video_buffer);
 	ttybox_format_set(&ttybox, 0x0F);
 
+	while (bq_read(&tmp_output_queue, &outchar, 1))
+		ttybox_putchar(&ttybox, outchar);
+	
 	while (bq_read(&tmp_input_queue, &outchar, 1))
 		ttybox_putchar(&ttybox, outchar);
 

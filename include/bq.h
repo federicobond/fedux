@@ -69,4 +69,9 @@ int bq_peek(byte_queue *queue, char *data, unsigned int size);
 
 
 
+int bq_rread(byte_queue *queue, char *data, unsigned int size);
+
+
+int bq_rpeek(byte_queue *queue, char *data, unsigned int size);
+
 #endif
