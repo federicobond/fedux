@@ -290,7 +290,7 @@ keyboard_handler(void)
 		{
 			bq_init(&_input_queue, _input_buffer, MAXBUFFSIZE);
 			bq_init(&_output_queue, _output_buffer, MAXBUFFSIZE);
-			tty_init(&_tty, &_input_queue, &_output_queue, 0, 25-3, 80, 3);
+			tty_init(&_tty, &_input_queue, &_output_queue, 0, 10, 80, 25-10);
 			tty_output_write(&_tty, "root # ", 7);	
 			tty_display(&_tty);
 			tty_initialized += 1;	
@@ -300,7 +300,6 @@ keyboard_handler(void)
 		tty_display(&_tty);
 	}
 	
-	vgatext_print(0,"Initialized");
 
 #endif
 }

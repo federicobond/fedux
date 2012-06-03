@@ -61,12 +61,41 @@ kmain(void)
 	vgatext_cursor_setxy(0, 0);
 	vgatext_clear();
 	
-	
-	vgatext_format_set(0x70);
-	vgatext_charfill(0, 0, 79, 6, 0);
-	vgatext_format_set(0x3F);
-	vgatext_strfill(1, 1, 77, 4, "Welcome to Fedux! Press spacebar to get the prompt... (It's not buggy, it's just the way it's done)");
+	/*
+ ____             __                     
+/\  _`\          /\ \                    
+\ \ \L\_\  __    \_\ \   __  __   __  _  
+ \ \  _\//'__`\  /'_` \ /\ \/\ \ /\ \/'\ 
+  \ \ \//\  __/ /\ \L\ \\ \ \_\ \\/>  </ 
+   \ \_\\ \____\\ \___,_\\ \____/ /\_/\_\
+    \/_/ \/____/ \/__,_ / \/___/  \//\/_/
 
+
+*/
+	vgatext_format_set(0x70);
+	vgatext_charfill(0, 0, 80, 1, 205);
+	vgatext_charfill(0, 8, 80, 1, 205);
+	vgatext_charfill(0, 0, 1, 8, 186);
+	vgatext_charfill(79, 0, 1, 8, 186);
+
+	vgatext_charfill(79, 0, 1, 1, 187);
+	vgatext_charfill(0, 8, 1, 1, 200);
+	vgatext_charfill(0, 0, 1, 1, 201);
+	vgatext_charfill(79, 8, 1, 1, 188);
+
+	vgatext_format_set(0x9F);
+	vgatext_charfill(1, 1, 78, 7, 0);
+	vgatext_print(vgatext_poslinear(1, 1), " ____             __ ");
+	vgatext_print(vgatext_poslinear(1, 2), "/\\  _`\\          /\\ \\                    ");
+	vgatext_print(vgatext_poslinear(1, 3), "\\ \\ \\L\\_\\  __    \\_\\ \\   __  __   __  _  ");
+	vgatext_print(vgatext_poslinear(1, 4), " \\ \\  _\\//'__`\\  /'_` \\ /\\ \\/\\ \\ /\\ \\/'\\ ");
+	vgatext_print(vgatext_poslinear(1, 5), "  \\ \\ \\//\\  __/ /\\ \\L\\ \\\\ \\ \\_\\ \\\\/>  </ ");
+	vgatext_print(vgatext_poslinear(1, 6), "   \\ \\_\\\\ \\____\\\\ \\___,_\\\\ \\____/ /\\_/\\_\\");
+	vgatext_print(vgatext_poslinear(1, 7), "    \\/_/ \\/____/ \\/__,_ / \\/___/  \\//\\/_/     Welcome to Fedux Kernel 0.0.1!");
+
+/*
+	vgatext_strfill(1, 1, 77, 4, "Welcome to Fedux! Press spacebar to get the prompt... (It's not buggy, it's just the way it's done)");
+*/
     /*sh_init();
 	*/
     while(1)
