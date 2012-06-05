@@ -14,6 +14,8 @@ typedef struct byte_queue
 
 } byte_queue;
 
+typedef byte_queue byte_queue_t;
+
 byte_queue * bq_create(unsigned int size);
 
 

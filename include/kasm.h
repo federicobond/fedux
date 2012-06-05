@@ -10,7 +10,7 @@ int			_inb(unsigned short int port);
 
 void		_hlt(void);
 
-
+int		_syscall(int number, int param1, int param2, int param3, int param4, int param5);
 
 unsigned int    _read_msw();
 
@@ -24,6 +24,8 @@ void		_sti(void);	 /* Habilita interrupciones  */
 
 void		_timertick_handler();      /* Timer tick */
 void 		_keyboard_handler();		/* Keyboard */
+void		_syscall_handler();			/* Syscalls */
+
 
 void		_debug (void);
 

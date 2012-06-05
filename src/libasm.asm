@@ -4,6 +4,8 @@ GLOBAL      _timertick_handler
 GLOBAL      _keyboard_handler
 GLOBAL		_syscall_handler
 
+GLOBAL 		_syscall
+
 GLOBAL      _mask_pic_2,_mask_pic_1,_cli,_sti
 GLOBAL      _outb
 GLOBAL      _inb
@@ -104,14 +106,14 @@ _timertick_handler:                 ; INT 0x08 Handler (Timertick)
 _keyboard_handler:                  ; INT 0x09 Handler (Keyboard)
     push    ds
     push    es                      ; Save registers
-    pusha                       
+    pusha
     mov     ax, 10h
     mov     ds, ax                  ; Load DS and ES with the selector value
-    mov     es, ax                  
+    mov     es, ax
     call    keyboard_handler
     mov     al, 20h                 ; Send generic EOI to PIC
     out     20h, al
-    popa                            
+    popa
     pop     es
     pop     ds
     iret
@@ -119,19 +121,22 @@ _keyboard_handler:                  ; INT 0x09 Handler (Keyboard)
 _syscall_handler:					; INT 0x80 Handler (Syscall)
     push    ds
     push    es                      ; Save registers
-    pusha      
+
 	push	eax                 
     mov     ax, 10h
     mov     ds, ax                  ; Load DS and ES with the selector value
     mov     es, ax                  
 	pop		eax
 
+	push	ebp						; Not a parameter, just avoiding to
+									; modify it unintentionally
+
 	push	edi						; Call syscall handler with parameters
 	push	esi
 	push 	edx
 	push	ecx
 	push	ebx
-	push	eax    
+	push	eax
 	call    syscall_handler
 	pop		ebx						; Discard EAX push. It's used as retval
 	pop		ebx
@@ -140,10 +145,44 @@ _syscall_handler:					; INT 0x80 Handler (Syscall)
 	pop		esi
 	pop		edi
 
+	pop		ebp
+
+	push	eax
     mov     al, 20h                 ; Send generic EOI to PIC
     out     20h, al
-    popa                            
+	pop		eax
+
     pop     es
     pop     ds
     iret
+
+_syscall:
+    push    ebp
+    mov     ebp, esp
+
+	push	edi						; Manually save registers
+	push 	esi						; Note: EAX is used for return value
+	push	edx
+	push	ecx
+	push	ebx
+    pushf
+
+    mov     edi, [ss:ebp+28]
+    mov     esi, [ss:ebp+24]
+    mov     edx, [ss:ebp+20]
+    mov     ecx, [ss:ebp+16]
+    mov     ebx, [ss:ebp+12]
+    mov     eax, [ss:ebp+8]
+    int     80h
+
+    popf
+    pop		ebx
+	pop		ecx
+	pop		edx
+	pop		esi
+	pop		edi
+
+    mov     esp, ebp
+    pop     ebp
+    ret
 
