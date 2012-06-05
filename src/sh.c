@@ -53,7 +53,7 @@ sh_do_command(char buf[])
     if (strcmp(argv[0], "fortune"))
         return exec_fortune(argc, (char **)argv);
     if (strcmp(argv[0], "echo"))
-        return exec_fortune(argc, (char **)argv);
+        return exec_echo(argc, (char **)argv);
 
     printf("%s: command not found", argv[0]);
     return 0;
