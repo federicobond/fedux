@@ -5,6 +5,7 @@
 #include "../include/vgatext.h"
 #include "../include/kbd.h"
 #include "../include/multiboot.h"
+#include "../include/kpanic.h"
 
 #include "../include/stdlib.h"
 #include "../include/mm.h"
