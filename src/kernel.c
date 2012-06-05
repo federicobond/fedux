@@ -17,7 +17,7 @@
 void setup_mm(multiboot_info_t * mbi);
 void print_memory_map(int linear, multiboot_info_t *mbi);
 
-DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
+DESCR_INT idt[0x100];	/* IDT de 256 entradas*/
 IDTR idtr;				/* IDTR */
 
 int tickpos = 0;
@@ -85,6 +85,7 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 
     setup_idt_entry(&idt[0x08], 0x08, (dword)&_timertick_handler, ACS_INT, 0);
     setup_idt_entry(&idt[0x09], 0x08, (dword)&_keyboard_handler, ACS_INT, 0);
+	setup_idt_entry(&idt[0x80], 0x08, (dword)&_syscall_handler, ACS_INT, 0);
 	
 /* Carga de IDTR    */
 
