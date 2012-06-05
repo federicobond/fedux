@@ -2,6 +2,7 @@ GLOBAL      _read_msw,_lidt
 
 GLOBAL      _timertick_handler
 GLOBAL      _keyboard_handler
+GLOBAL      _serial_handler
 GLOBAL		_syscall_handler
 
 GLOBAL 		_syscall
@@ -13,6 +14,7 @@ GLOBAL		_hlt
 
 EXTERN      timertick_handler
 EXTERN      keyboard_handler
+EXTERN      serial_handler
 EXTERN		syscall_handler
 
 SECTION .text
@@ -111,6 +113,21 @@ _keyboard_handler:                  ; INT 0x09 Handler (Keyboard)
     mov     ds, ax                  ; Load DS and ES with the selector value
     mov     es, ax
     call    keyboard_handler
+    mov     al, 20h                 ; Send generic EOI to PIC
+    out     20h, al
+    popa
+    pop     es
+    pop     ds
+    iret
+
+_serial_handler:                    ; INT 0x09 Handler (Keyboard)
+    push    ds
+    push    es                      ; Save registers
+    pusha
+    mov     ax, 10h
+    mov     ds, ax                  ; Load DS and ES with the selector value
+    mov     es, ax
+    call    serial_handler
     mov     al, 20h                 ; Send generic EOI to PIC
     out     20h, al
     popa

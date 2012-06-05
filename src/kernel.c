@@ -91,6 +91,7 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 
     setup_idt_entry(&idt[0x08], 0x08, (dword)&_timertick_handler, ACS_INT, 0);
     setup_idt_entry(&idt[0x09], 0x08, (dword)&_keyboard_handler, ACS_INT, 0);
+    setup_idt_entry(&idt[0x0C], 0x08, (dword)&_serial_handler, ACS_INT, 0);
 	setup_idt_entry(&idt[0x80], 0x08, (dword)&_syscall_handler, ACS_INT, 0);
 	
 /* Carga de IDTR    */
