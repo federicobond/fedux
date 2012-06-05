@@ -102,15 +102,33 @@ _timertick_handler:                 ; INT 0x08 Handler (Timertick)
 _keyboard_handler:                  ; INT 0x09 Handler (Keyboard)
     push    ds
     push    es                      ; Save registers
-    pusha                       
+    pusha
     mov     ax, 10h
     mov     ds, ax                  ; Load DS and ES with the selector value
-    mov     es, ax                  
+    mov     es, ax
     call    keyboard_handler
     mov     al, 20h                 ; Send generic EOI to PIC
     out     20h, al
-    popa                            
+    popa
     pop     es
     pop     ds
     iret
+
+_syscall:
+    push    ebp
+    mov     ebp, esp
+    pusha
+    pushf
+    mov     eax, [ss:ebp+28]
+    mov     ebx, [ss:ebp+24]
+    mov     ecx, [ss:ebp+20]
+    mov     edx, [ss:ebp+16]
+    mov     esx, [ss:ebp+12]
+    mov     edi, [ss:ebp+8]
+    int     80h
+    popf
+    popa
+    mov     esp, ebp
+    pop     ebp
+    ret
 
