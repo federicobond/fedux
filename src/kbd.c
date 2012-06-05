@@ -194,7 +194,9 @@ static unsigned int kbd_ES[][2] = { { NPRTBL, NPRTBL },/*000*/
 
 static unsigned int (*kbd)[2] = kbd_EN;
 
-static int mask = 0;
+static bool lshift = false;
+static bool rshift = false;
+static bool capslock = false;
 
 kbd_callback_t _event_callback;
 
@@ -222,17 +224,22 @@ int kbd_set_keymap(char *code)
 
 bool kbd_shifted(void)
 {
-    return mask & (LSHIFT || RSHIFT);
+    return lshift || rshift;
 }
 
-bool kdb_capslocked(void)
+bool kbd_capitalized(void)
 {
-    return mask & CAPSLOCK;
+    return ((lshift || rshift) && !capslock) || (!(lshift || rshift) && capslock);
 }
 
 char kbd_keymap_get(unsigned int scancode)
 {
-    return kbd[scancode & 0x7F][kbd_shifted()];
+    char key = kbd[scancode & 0x7F][kbd_shifted()];
+    if (isalpha(key))
+    {
+        key = (kbd_capitalized()) ? toupper(key) : tolower(key);
+    }
+    return key;
 }
 
 void keyboard_handler(void)
@@ -241,6 +248,32 @@ void keyboard_handler(void)
     char key = 0;
 
 	kbd_status[scancode & 0x7F] = !(scancode & 0x80);
+
+    if (scancode == 0x2A)
+    {
+        lshift = true;
+        return;
+    }
+    if (scancode == 0xAA)
+    {
+        lshift = false;
+        return;
+    }
+    if (scancode == 0x36)
+    {
+        rshift = true;
+        return;
+    }
+    if (scancode == 0x36)
+    {
+        rshift = false;
+        return;
+    }
+    if (scancode == 0x3A)
+    {
+        capslock = !capslock;
+        return;
+    }
 
     if (!(scancode & 0x80))
     {
