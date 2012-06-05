@@ -173,6 +173,7 @@ _syscall:
     mov     ecx, [ss:ebp+16]
     mov     ebx, [ss:ebp+12]
     mov     eax, [ss:ebp+8]
+
     int     80h
 
     popf

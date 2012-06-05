@@ -54,3 +54,9 @@ int isxdigit(int c)
 {
     return isdigit(c) || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f');
 }
+
+int isvowel(int c)
+{
+    c = toupper(c);
+    return (c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U');
+}

@@ -12,5 +12,6 @@ int iscntrl(int c);
 int isspace(int c);
 int isprint(int c);
 int isxdigit(int c);
+int isvowel(int c);
 
 #endif
