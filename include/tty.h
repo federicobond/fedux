@@ -7,8 +7,6 @@
 #define MAXBUFFSIZE 80*25*2*2
 #define TTYCOUNT 4
 
-#define DEFAULT_FORMAT 
-
 #define TABSIZE 5
 
 #include "ttybox.h"
