@@ -30,6 +30,13 @@ strncpy(char *dest, const char *src, size_t n)
     return ret;
 }
 
+
+char *
+strcat(char *dest, const char *src)
+{
+	return strcpy(dest + strlen(dest), src);
+}
+
 size_t
 strlen(const char *s)
 {
@@ -53,7 +60,8 @@ strcmp(const char *s1, const char *s2)
         i++;
     }
 	
-    return *s1 - *s2;
+	
+    return s1[i] - s2[i];
 }
 
 int

@@ -203,7 +203,7 @@ static bool capslock = false;
 
 kbd_callback_t _event_callback;
 
-int kbd_set_keymap(char *code)
+int kbd_set_keymap(const char *code)
 {
     if (strcmp(code, "ES") == 0)
     {
@@ -218,6 +218,21 @@ int kbd_set_keymap(char *code)
     }
 
     return 0;
+}
+
+
+const char * kbd_get_keymap()
+{
+	const char * retstr;
+
+	if (kbd == kbd_ES)
+		retstr = "ES";
+	else if (kbd == kbd_EN)
+		retstr = "EN";
+	else
+		retstr = NULL;
+
+	return retstr;
 }
 
 void kbd_init(kbd_callback_t event_callback)
