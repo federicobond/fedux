@@ -2,6 +2,7 @@
 #define _STDIO_H
 
 #include "stddef.h"
+#include <stdarg.h>
 
 #ifndef EOF
 #define EOF (-1)
@@ -32,7 +33,8 @@ int     puts(const char *str);
 
 char   *fgets(char *s, int size, FILE *stream);
 
-int     printf(const char* fmt, ...);
+int     printf(const char *fmt, ...);
+int     vprintf(const char *fmt, va_list ap);
 int     scanf(const char *fmt, ...);
 int     sscanf(char *buf, const char *fmt, ...);
 
