@@ -243,6 +243,22 @@ char kbd_keymap_get(unsigned int scancode)
     {
         key = (kbd_capitalized()) ? toupper(key) : tolower(key);
     }
+    if (acute)
+    {
+        /* TODO: May need to disable for english keyboard */
+        if (key == 'a')
+            key = 160; /* á */
+        else if (key == 'e')
+            key = 130; /* é */
+        else if (key == 'i')
+            key = 161; /* í */
+        else if (key == 'o')
+            key = 162; /* ó */
+        else if (key == 'u')
+            key = 163; /* ú */
+
+        acute = false;
+    }
     return key;
 }
 
@@ -281,11 +297,19 @@ void keyboard_handler(void)
         rctrl = !(scancode & SCANCODE_EXT);
         return;
     }
+    if ((scancode & ~SCANCODE_EXT) == SCANCODE_CHAR_APOSTROPHE && !acute)
+    {
+        if (!(scancode & SCANCODE_EXT))
+        {
+            acute = true;
+        }
+        return;
+    }
 
     if (!(scancode & 0x80))
     {
         key = kbd_keymap_get(scancode);
-        _event_callback(key, kbd_status);
     }
+    _event_callback(key, kbd_status);
 }
 

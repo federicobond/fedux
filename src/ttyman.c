@@ -18,7 +18,7 @@ void ttyman_keyboard_callback(char key_ascii, char * keyboard_status)
 	{
 		ttyman_switch(key_ascii - '1');
 	}
-	else if (_active_tty)
+	else if (_active_tty && key_ascii)
 	{
 		tty_input_write(_active_tty, &key_ascii, sizeof(char));
 		tty_display(_active_tty);
