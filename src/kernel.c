@@ -169,10 +169,7 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 	print_memory_map(vgatext_poslinear(0, 9),mbi);
 
 	_hlt();
-	
-	
-    
-	
+
 	while(1)
 	{
 		ttyman_write("root # ", 7);
