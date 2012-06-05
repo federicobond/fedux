@@ -210,11 +210,13 @@ int kbd_set_keymap(char *code)
         kbd = kbd_ES;
         return 1;
     }
+
     if (strcmp(code, "EN") == 0)
     {
         kbd = kbd_EN;
         return 1;
     }
+
     return 0;
 }
 
@@ -250,11 +252,6 @@ void keyboard_handler(void)
     char key = 0;
 
 	kbd_status[scancode & 0x7F] = !(scancode & 0x80);
-
-    char buf[25];
-    itoa(scancode, buf, 16);
-    vgatext_print(0, buf);
-
 
     if ((scancode & ~SCANCODE_EXT) == SCANCODE_CHAR_LSHIFT)
     {
