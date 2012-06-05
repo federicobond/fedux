@@ -22,11 +22,11 @@ time_t
 time(time_t *time)
 {
     /* TODO: check update flag, fix overflow * */
-    unsigned char sec = read_cmos_register(0x00);
-    unsigned char min = read_cmos_register(0x02);
+    unsigned char sec  = read_cmos_register(0x00);
+    unsigned char min  = read_cmos_register(0x02);
     unsigned char hour = read_cmos_register(0x04);
-    unsigned char day = read_cmos_register(0x04);
-    unsigned char mon = read_cmos_register(0x04);
+    unsigned char day  = read_cmos_register(0x04);
+    unsigned char mon  = read_cmos_register(0x04);
     unsigned char year = read_cmos_register(0x04);
     /* the century register may not be available*/
     unsigned char century = read_cmos_register(0x04);
