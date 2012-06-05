@@ -234,18 +234,18 @@ void print_memory_map(int linear, multiboot_info_t *mbi)
 {
 	int i = 0;
 	char print_buffer[64];	
-	multiboot_memory_map_t* mmap = mbi->mmap_addr;
+	multiboot_memory_map_t *mmap = (multiboot_memory_map_t *)mbi->mmap_addr;
 
 	ttybox_puts(firstbox, "kmain starts at ");
 
-	itoa(kmain, print_buffer, 16);
+	itoa((int)kmain, print_buffer, 16);
 	ttybox_puts(firstbox, print_buffer);
 	ttybox_putchar(firstbox, '\n');
 
 
 	ttybox_puts(firstbox, "Memory allocation starts at ");
 
-	itoa(mm_get_start(), print_buffer, 16);
+	itoa((int)mm_get_start(), print_buffer, 16);
 	ttybox_puts(firstbox, print_buffer);
 	ttybox_putchar(firstbox, '\n');
 
@@ -256,7 +256,7 @@ void print_memory_map(int linear, multiboot_info_t *mbi)
 	ttybox_puts(firstbox, print_buffer);
 	ttybox_putchar(firstbox, '\n');
 	
-	while(mmap < mbi->mmap_addr + mbi->mmap_length) {
+	while((int)mmap < mbi->mmap_addr + mbi->mmap_length) {
 		ttybox_puts(firstbox, "MM entry number ");
 		itoa(i, print_buffer, 16);
 		ttybox_puts(firstbox, print_buffer);
