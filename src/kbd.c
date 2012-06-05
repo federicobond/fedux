@@ -203,6 +203,7 @@ kbd_callback_t _event_callback;
 void kbd_init(kbd_callback_t event_callback)
 {
     _event_callback = event_callback;
+	kbd_set_keymap("ES");
 }
 
 
@@ -213,11 +214,13 @@ int kbd_set_keymap(char *code)
         kbd = kbd_ES;
         return 1;
     }
+
     if (strcmp(code, "EN") == 0)
     {
         kbd = kbd_EN;
         return 1;
     }
+
     return 0;
 }
 
