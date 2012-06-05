@@ -1,5 +1,7 @@
+#include "../include/stdlib.h"
 #include "../include/stdio.h"
 #include "../include/string.h"
+#include <stdarg.h>
 
 /*
 #include "../include/kbd.h"
@@ -82,9 +84,76 @@ fgets(char *s, int size, FILE *stream)
 }
 
 int
-printf(const char* fmt, ...)
+printf(const char *fmt, ...)
 {
-    return puts(fmt);
+    va_list ap;
+    int res;
+
+    va_start(ap, fmt);
+    res = vprintf(fmt, ap);
+    va_end(ap);
+
+    return res;
+}
+
+int
+print_string(char *str)
+{
+    int i = 0;
+    while (str[i] != '\0')
+    {
+        putchar(str[i++]);
+    }
+    return i;
+}
+
+int
+print_int(int i)
+{
+    char buf[32];
+    itoa(i, buf, 10);
+    return print_string(buf);
+}
+
+int
+vprintf(const char *fmt, va_list ap)
+{
+    int i = 0;
+    int acum = 0;
+
+    while (fmt[i] != '\0')
+    {
+        if (fmt[i] == '%')
+        {
+            i++;
+            switch (fmt[i])
+            {
+                case 's':
+                    acum += print_string(va_arg(ap, char *));
+                    break;
+                case 'd':
+                    acum += print_int(va_arg(ap, int));
+                    break;
+                case 'c':
+                    putchar(va_arg(ap, int));
+                    acum++;
+                    break;
+                case '%':
+                    putchar('%');
+                    acum++;
+                    break;
+                default:
+                    return -1;
+            }
+        }
+        else
+        {
+            putchar(fmt[i]);
+        }
+        acum++;
+        i++;
+    }
+    return acum;
 }
 
 int
