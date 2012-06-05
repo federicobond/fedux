@@ -12,7 +12,7 @@ int isupper(int c)
 
 int islower(int c)
 {
-    return c >= 'a' && c <= 'Z';
+    return c >= 'a' && c <= 'z';
 }
 
 int toupper(int c)
