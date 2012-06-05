@@ -123,7 +123,7 @@ _syscall:
     mov     ebx, [ss:ebp+24]
     mov     ecx, [ss:ebp+20]
     mov     edx, [ss:ebp+16]
-    mov     esx, [ss:ebp+12]
+    mov     esi, [ss:ebp+12]
     mov     edi, [ss:ebp+8]
     int     80h
     popf
