@@ -194,17 +194,14 @@ static unsigned int kbd_ES[][2] = { { NPRTBL, NPRTBL },/*000*/
 
 static unsigned int (*kbd)[2] = kbd_EN;
 
+static bool acute = false;
+static bool lctrl = false;
+static bool rctrl = false;
 static bool lshift = false;
 static bool rshift = false;
 static bool capslock = false;
 
 kbd_callback_t _event_callback;
-
-void kbd_init(kbd_callback_t event_callback)
-{
-    _event_callback = event_callback;
-}
-
 
 int kbd_set_keymap(char *code)
 {
@@ -219,6 +216,11 @@ int kbd_set_keymap(char *code)
         return 1;
     }
     return 0;
+}
+
+void kbd_init(kbd_callback_t event_callback)
+{
+    _event_callback = event_callback;
 }
 
 
@@ -249,29 +251,37 @@ void keyboard_handler(void)
 
 	kbd_status[scancode & 0x7F] = !(scancode & 0x80);
 
-    if (scancode == 0x2A)
+    char buf[25];
+    itoa(scancode, buf, 16);
+    vgatext_print(0, buf);
+
+
+    if ((scancode & ~SCANCODE_EXT) == SCANCODE_CHAR_LSHIFT)
     {
-        lshift = true;
+        lshift = !(scancode & SCANCODE_EXT);
         return;
     }
-    if (scancode == 0xAA)
+    if ((scancode & ~SCANCODE_EXT) == SCANCODE_CHAR_RSHIFT)
     {
-        lshift = false;
+        rshift = !(scancode & SCANCODE_EXT);
         return;
     }
-    if (scancode == 0x36)
+    if ((scancode & ~SCANCODE_EXT) == SCANCODE_CHAR_CAPSLOCK)
     {
-        rshift = true;
+        if (!(scancode & SCANCODE_EXT))
+        {
+            capslock = !capslock;
+        }
         return;
     }
-    if (scancode == 0x36)
+    if ((scancode & ~SCANCODE_EXT) == SCANCODE_CHAR_LCTRL)
     {
-        rshift = false;
+        lctrl = !(scancode & SCANCODE_EXT);
         return;
     }
-    if (scancode == 0x3A)
+    if ((scancode & ~SCANCODE_EXT) == SCANCODE_CHAR_RCTRL)
     {
-        capslock = !capslock;
+        rctrl = !(scancode & SCANCODE_EXT);
         return;
     }
 
