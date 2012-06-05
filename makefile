@@ -1,7 +1,7 @@
 NASM = nasm -f aout
 
 CC = gcc
-CFLAGS = -fno-builtin -m32 -march=i386 -ansi -Wall -pedantic -fno-stack-protector
+CFLAGS = -m32 -march=i386 -fno-stack-protector -fno-builtin
 
 SRC = src/
 BIN = bin/
