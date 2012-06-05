@@ -246,6 +246,7 @@ char kbd_keymap_get(unsigned int scancode)
     if (acute)
     {
         /* TODO: May need to disable for english keyboard */
+        /* TODO: Driver is sending wrong char for second acute press */
         if (key == 'a')
             key = 160; /* á */
         else if (key == 'e')
