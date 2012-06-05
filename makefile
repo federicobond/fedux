@@ -47,6 +47,7 @@ tpe-link:
 
 tests:
 	$(CC) -g tests/string.c src/string.c -o tests/string.test && tests/string.test && rm tests/string.test
+	$(CC) -g tests/ctype.c src/ctype.c -o tests/ctype.test && tests/ctype.test && rm tests/ctype.test
 
 clean:
 	rm -rf bin/*.o
