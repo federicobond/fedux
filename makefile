@@ -41,9 +41,10 @@ tpe-c:
 	$(CC) $(CFLAGS) -c src/ttyman.c -o bin/ttyman.o
 	$(CC) $(CFLAGS) -c src/kpanic.c -o bin/kpanic.o
 	$(CC) $(CFLAGS) -c src/mm.c -o bin/mm.o
+	$(CC) $(CFLAGS) -c src/serial.c -o bin/serial.o
 	
 tpe-link:
-	ld $(LDFLAGS) -o bin/kernel.bin bin/kernel.o bin/kstart.o bin/libasm.o bin/ctype.o bin/stdlib.o bin/string.o bin/stdio.o bin/sh.o bin/vgatext.o bin/bq.o bin/kbd.o bin/tty.o bin/ttybox.o bin/ttyman.o bin/kpanic.o bin/mm.o
+	ld $(LDFLAGS) -o bin/kernel.bin bin/kernel.o bin/kstart.o bin/libasm.o bin/ctype.o bin/stdlib.o bin/string.o bin/stdio.o bin/sh.o bin/vgatext.o bin/bq.o bin/kbd.o bin/tty.o bin/ttybox.o bin/ttyman.o bin/kpanic.o bin/mm.o bin/serial.o
 
 tests:
 	$(CC) -g tests/string.c src/string.c -o tests/string.test && tests/string.test && rm tests/string.test

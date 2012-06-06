@@ -24,6 +24,7 @@ void		_sti(void);	 /* Habilita interrupciones  */
 
 void		_timertick_handler();      /* Timer tick */
 void 		_keyboard_handler();		/* Keyboard */
+void 		_serial_handler();		/* Serial port */
 
 void		_debug (void);
 
