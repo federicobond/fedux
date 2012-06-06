@@ -20,14 +20,9 @@
 
 #include "../include/stdio.h"
 
-void setup_mm(multiboot_info_t * mbi);
-void print_memory_map(int linear, multiboot_info_t *mbi);
 
 DESCR_INT idt[0x100];	/* IDT de 256 entradas*/
 IDTR idtr;				/* IDTR */
-
-int tickpos = 0;
-int cursor = 0;
 
 
 TTYBOX * firstbox = NULL;
@@ -56,11 +51,7 @@ void setup_idt_entry (DESCR_INT *item, byte selector, dword offset, byte access,
 
 void timertick_handler() 
 {
-    char *video = (char *) 0xb8000;
-    video[tickpos]= '*';
-    tickpos += 2;
 }
-
 
 void keyboard_callback(char ascii, char * keyboard_status)
 {
@@ -82,8 +73,6 @@ Punto de entrada de cóo C.
 *************************************************/
 int kmain(multiboot_info_t *mbi, unsigned long int magic)
 {
-
-	char datum;
 
 	critical_enter();
 
@@ -109,7 +98,7 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 
 /* Initialize memory management */
 
-	setup_mm(mbi);
+	mm_setup(mbi);
 
 
 /* Initialize keyboard driver */
@@ -171,73 +160,12 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 /* End of critical initializations: Re-enable interrupts */
 	critical_leave();
 
-	print_memory_map(vgatext_poslinear(0, 9),mbi);
-
 	_hlt();
 
-	while(1)
-	{
-		ttyman_write("root # ", 7);
-		datum = 0;
-
-
-		while (datum != '\n')
-		{
-			/*ttyman_read(&datum, sizeof(char));*/
-			/*if (ttyman_read(&datum, sizeof(char)))
-				ttyman_write(&datum, sizeof(char));*/
-			if (_syscall(SYSCALL_READ, STDIN_FILENO, (int)&datum, sizeof(char), 0, 0))
-				_syscall(SYSCALL_WRITE, STDOUT_FILENO, (int)&datum, sizeof(char), 0, 0);
-		}
-			/*ttyman_read(&datum, sizeof(char));*/
-	}
+    sh_init();
 
 	return 0;
 	
-}
-
-
-void setup_mm(multiboot_info_t * mbi)
-{
-
-	/* 1 MB Safe distance */
-	#define SAFE_DISTANCE (1024*1024)
-	#define MINIMUM_LEN   (1024*1024)
-
-	unsigned long int largest_len = 0;
-	void * largest_addr;
-	void * safe_addr = (unsigned long int)kmain + SAFE_DISTANCE + 1;
-
-	multiboot_memory_map_t* mmap = mbi->mmap_addr;
-
-	while(mmap < mbi->mmap_addr + mbi->mmap_length)
-	{
-		if (mmap->len > largest_len)
-		{
-			/* Heuristics to determine a ensure a safe distance from kernel code. */
-			
-			if (mmap->addr > safe_addr) 
-			{
-				largest_len = mmap->len;
-				largest_addr = mmap->addr;
-			}
-			else if ((safe_addr - mmap->addr) > mmap->len)
-			{
-				largest_len = mmap->len - ((unsigned long int)safe_addr - mmap->addr);
-				largest_addr = safe_addr;
-			}
-		}
-
-		mmap = (multiboot_memory_map_t*) ( (unsigned int)mmap + mmap->size + sizeof(unsigned int) );
-	}
-
-	
-	if (largest_len < MINIMUM_LEN)
-		kpanic("setup_mm - Could not find any suitable memory map");
-
-
-	mm_init(largest_addr, largest_len);
-
 }
 
 

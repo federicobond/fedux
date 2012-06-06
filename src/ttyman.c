@@ -1,3 +1,4 @@
+#include "../include/ttyman.h"
 #include "../include/tty.h"
 #include "../include/kbd.h"
 #include "../include/stdlib.h"

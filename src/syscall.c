@@ -1,8 +1,5 @@
-
-
 #include "../include/syscall.h"
-#include "../include/stdlib.h"
-#include "../include/string.h"
+#include "../include/io.h"
 
 int syscall_handler(int number,
 					int param1,

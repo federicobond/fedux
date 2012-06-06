@@ -19,6 +19,7 @@ typedef struct TTY
 	unsigned int x, y, width, height;
 } TTY;
 
+TTY * tty_create(int x, int y, int width, int height);
 
 void tty_init(TTY *tty,  
 			  byte_queue *input_queue, 
