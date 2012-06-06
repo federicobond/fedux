@@ -3,6 +3,10 @@
 #include "../include/string.h"
 #include "../include/sh.h"
 
+int exec_laws(int argc, char **argv);
+int exec_fortune(int argc, char **argv);
+int exec_echo(int argc, char **argv);
+
 #define PROMPT "fedux # "
 
 void
@@ -116,85 +120,6 @@ sh_tokenize(char buf[], int *argc, char *argv[])
                 break;
         }
         buf++;
-    }
-}
-
-int
-exec_laws(int argc, char **argv)
-{
-    args_shift(1, &argc, &argv);
-
-    if (argc == 1 && strcmp(argv[0], "--version") == 0)
-    {
-        printf("laws 1.0 (Fedux release 1.0)\n");
-        printf("Copyright (C) 2012 Federico Pomar & Federico Bond\n");
-        return 0;
-    }
-
-    printf("  1. A robot may not injure a human being or, through inaction, allow a human being to come to harm.\n");
-    printf("  2. A robot must obey the orders given to it by human beings, except where such orders would conflict with the First Law.\n");
-    printf("  3. A robot must protect its own existence as long as such protection does not conflict with the First or Second Laws.\n");
-
-    return 0;
-}
-
-int
-exec_fortune(int argc, char **argv)
-{
-    args_shift(1, &argc, &argv);
-
-    if (argc == 1 && strcmp(argv[0], "--version") == 0)
-    {
-        printf("fortune 1.0 (Fedux release 1.0)\n");
-        printf("Copyright (C) 2012 Federico Pomar & Federico Bond\n");
-        return 0;
-    }
-
-    printf("No fortune cookie for you today\n");
-    
-    return 0;
-}
-
-int
-exec_echo(int argc, char **argv)
-{
-    bool nl = true;
-
-    args_shift(1, &argc, &argv);
-
-    if (argc == 1 && strcmp(argv[0], "--version") == 0)
-    {
-        printf("echo 1.0 (Fedux release 1.0)\n");
-        printf("Copyright (C) 2012 Federico Pomar & Federico Bond\n");
-        return 0;
-    }
-
-    if (argc > 0 && strcmp(argv[0], "-n") == 0)
-    {
-        nl = false;
-        args_shift(1, &argc, &argv);
-    }
-
-    while (argc)
-    {
-        printf("%s", *argv++);
-        if (--argc != 0)
-            putchar(' ');
-    }
-
-    if (nl)
-        putchar('\n');
-
-    return 0;
-}
-
-int
-args_shift(int n, int *argc, char ***argv)
-{
-    if (*argc >= n)
-    {
-        *argc -= n;
-        *argv += n;
     }
 }
 

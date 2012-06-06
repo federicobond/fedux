@@ -46,13 +46,12 @@ void
 serial_send(int serial_fd, char *data, int size)
 {
     write(serial_fd, data, size);
-    
 }
 
 int
 serial_read(int serial_fd, char *data, int size, int timeout_usec)
 {
-    read(serial_fd, data, size);
+    return read(serial_fd, data, size);
 }
 
 void

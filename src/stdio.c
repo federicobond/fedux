@@ -40,7 +40,6 @@ int
 puts(const char *str)
 {
     int res;
-    char nl = '\n';
     while (*str != '\0')
     {
         res = putchar(*str);

@@ -16,6 +16,7 @@ int io_write(int fd, char * data, unsigned int size)
 		break;
 	}
 
+    return retval;
 }
 
 int io_read(int fd, char * data, unsigned int size)
@@ -25,11 +26,13 @@ int io_read(int fd, char * data, unsigned int size)
 	switch (fd)
 	{
 	case STDIN_FILENO:
-		ttyman_read(data, size);
+		retval = ttyman_read(data, size);
 		break;
 	case STDOUT_FILENO:
 	case STDERR_FILENO:
 		retval = 0;
 		break;
 	}
+
+    return retval;
 }

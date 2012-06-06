@@ -58,7 +58,7 @@ void ttyman_switch(int tty_idx)
 }
 
 
-void ttyman_update_info_text()
+void ttyman_update_info_text(void)
 {
 	critical_enter();
 

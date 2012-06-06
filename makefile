@@ -45,9 +45,13 @@ tpe-c:
 	$(CC) $(CFLAGS) -c src/syscall.c -o bin/syscall.o
 	$(CC) $(CFLAGS) -c src/critical.c -o bin/critical.o
 	$(CC) $(CFLAGS) -c src/serial.c -o bin/serial.o
+	$(CC) $(CFLAGS) -c src/software/commons.c -o bin/software/commons.o
+	$(CC) $(CFLAGS) -c src/software/laws.c -o bin/software/laws.o
+	$(CC) $(CFLAGS) -c src/software/fortune.c -o bin/software/fortune.o
+	$(CC) $(CFLAGS) -c src/software/echo.c -o bin/software/echo.o
 	
 tpe-link:
-	ld $(LDFLAGS) -o bin/kernel.bin bin/kernel.o bin/kstart.o bin/libasm.o bin/ctype.o bin/stdlib.o bin/string.o bin/stdio.o bin/sh.o bin/vgatext.o bin/bq.o bin/kbd.o bin/tty.o bin/ttybox.o bin/ttyman.o bin/kpanic.o bin/mm.o bin/io.o bin/syscall.o bin/critical.o bin/serial.o
+	ld $(LDFLAGS) -o bin/kernel.bin bin/kernel.o bin/kstart.o bin/libasm.o bin/ctype.o bin/stdlib.o bin/string.o bin/stdio.o bin/sh.o bin/vgatext.o bin/bq.o bin/kbd.o bin/tty.o bin/ttybox.o bin/ttyman.o bin/kpanic.o bin/mm.o bin/io.o bin/syscall.o bin/critical.o bin/serial.o bin/software/laws.o bin/software/echo.o bin/software/fortune.o bin/software/commons.o
 
 tests:
 	$(CC) -g tests/string.c src/string.c -o tests/string.test && tests/string.test && rm tests/string.test
