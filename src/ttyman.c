@@ -4,6 +4,8 @@
 #include "../include/string.h"
 #include "../include/kasm.h"
 
+#include "../include/critical.h"
+
 #define TTY_COUNT 4
 
 static TTY * _ttys[TTY_COUNT];
@@ -12,7 +14,7 @@ static TTY * _active_tty = NULL;
 
 void ttyman_keyboard_callback(char key_ascii, char * keyboard_status)
 {
-	_cli();
+	critical_enter();
 		
 	if (keyboard_status[SCANCODE_CHAR_LALT])
 	{
@@ -24,19 +26,22 @@ void ttyman_keyboard_callback(char key_ascii, char * keyboard_status)
 		tty_display(_active_tty);
 	}
 	
-	_sti();
+	critical_leave();
 }
 
 
 void ttyman_switch(int tty_idx)
 {
-	_cli();
+
+	critical_enter();
+
 	if (tty_idx >= 0 && tty_idx < TTY_COUNT)
 	{
 		_active_tty = _ttys[tty_idx];
 		tty_display(_active_tty);
 	}
-	_sti();
+	
+	critical_leave();
 }
 
 void ttyman_init(int x, int y, int width, int height)
@@ -45,7 +50,7 @@ void ttyman_init(int x, int y, int width, int height)
 	char print_buffer[64];
 	char * print_string;
 
-	_cli();
+	critical_enter();
 
 	for (i = 0; i < TTY_COUNT; i++)
 	{
@@ -63,7 +68,7 @@ void ttyman_init(int x, int y, int width, int height)
 
 	kbd_init(ttyman_keyboard_callback);
 
-	_sti();
+	critical_leave();
 	
 }
 
@@ -71,16 +76,29 @@ void ttyman_init(int x, int y, int width, int height)
 int ttyman_write(char * data, int size)
 {
 	int written;
-	_cli();
+
+	critical_enter();
+
 	written = tty_output_write(_active_tty, data, size);
 	tty_display(_active_tty);
-	_sti();
+	
+	critical_leave();
+
 	return written;
 }
 
 int ttyman_read(char * data, int size)
 {
-	while (!tty_input_read(_active_tty, data, size))
-		_hlt();
+
+	int retval;
+
+	critical_enter();
+
+	retval = tty_input_read(_active_tty, data, size);
+
+	critical_leave();
+
+	return retval;
+
 }
 

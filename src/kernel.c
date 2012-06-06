@@ -14,10 +14,16 @@
 #include "../include/ttyman.h"
 #include "../include/ttybox.h"
 
+#include "../include/syscall.h"
+
+#include "../include/critical.h"
+
+#include "../include/stdio.h"
+
 void setup_mm(multiboot_info_t * mbi);
 void print_memory_map(int linear, multiboot_info_t *mbi);
 
-DESCR_INT idt[0xA];			/* IDT de 10 entradas*/
+DESCR_INT idt[0x100];	/* IDT de 256 entradas*/
 IDTR idtr;				/* IDTR */
 
 int tickpos = 0;
@@ -79,13 +85,14 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 
 	char datum;
 
-	_cli();
+	critical_enter();
 
 /* CARGA DE IDT CON LA RUTINA DE ATENCION DE IRQ0    */
 
     setup_idt_entry(&idt[0x08], 0x08, (dword)&_timertick_handler, ACS_INT, 0);
     setup_idt_entry(&idt[0x09], 0x08, (dword)&_keyboard_handler, ACS_INT, 0);
     setup_idt_entry(&idt[0x0C], 0x08, (dword)&_serial_handler, ACS_INT, 0);
+	setup_idt_entry(&idt[0x80], 0x08, (dword)&_syscall_handler, ACS_INT, 0);
 	
 /* Carga de IDTR    */
 
@@ -165,7 +172,7 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 	
 
 /* End of critical initializations: Re-enable interrupts */
-	_sti();
+	critical_leave();
 
 	print_memory_map(vgatext_poslinear(0, 9),mbi);
 
@@ -175,8 +182,17 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 	{
 		ttyman_write("root # ", 7);
 		datum = 0;
+
+
 		while (datum != '\n')
-			ttyman_read(&datum, sizeof(char));
+		{
+			/*ttyman_read(&datum, sizeof(char));*/
+			/*if (ttyman_read(&datum, sizeof(char)))
+				ttyman_write(&datum, sizeof(char));*/
+			if (_syscall(SYSCALL_READ, STDIN_FILENO, (int)&datum, sizeof(char), 0, 0))
+				_syscall(SYSCALL_WRITE, STDOUT_FILENO, (int)&datum, sizeof(char), 0, 0);
+		}
+			/*ttyman_read(&datum, sizeof(char));*/
 	}
 
 	return 0;
@@ -234,40 +250,40 @@ void print_memory_map(int linear, multiboot_info_t *mbi)
 	char print_buffer[64];	
 	multiboot_memory_map_t *mmap = (multiboot_memory_map_t *)mbi->mmap_addr;
 
-	ttybox_puts(firstbox, "kmain starts at ");
+	ttybox_puts(firstbox, "kmain starts at ", OWNER_CLIENT);
 
 	itoa((int)kmain, print_buffer, 16);
-	ttybox_puts(firstbox, print_buffer);
-	ttybox_putchar(firstbox, '\n');
+	ttybox_puts(firstbox, print_buffer, OWNER_CLIENT);
+	ttybox_putchar(firstbox, '\n', OWNER_CLIENT);
 
 
-	ttybox_puts(firstbox, "Memory allocation starts at ");
+	ttybox_puts(firstbox, "Memory allocation starts at ", OWNER_CLIENT);
 
 	itoa((int)mm_get_start(), print_buffer, 16);
-	ttybox_puts(firstbox, print_buffer);
-	ttybox_putchar(firstbox, '\n');
+	ttybox_puts(firstbox, print_buffer, OWNER_CLIENT);
+	ttybox_putchar(firstbox, '\n', OWNER_CLIENT);
 
 
-	ttybox_puts(firstbox, "Memory Map starts at ");
+	ttybox_puts(firstbox, "Memory Map starts at ", OWNER_CLIENT);
 
 	itoa(mbi->mmap_addr, print_buffer, 16);
-	ttybox_puts(firstbox, print_buffer);
-	ttybox_putchar(firstbox, '\n');
+	ttybox_puts(firstbox, print_buffer, OWNER_CLIENT);
+	ttybox_putchar(firstbox, '\n', OWNER_CLIENT);
 	
 	while((int)mmap < mbi->mmap_addr + mbi->mmap_length) {
-		ttybox_puts(firstbox, "MM entry number ");
+		ttybox_puts(firstbox, "MM entry number ", OWNER_CLIENT);
 		itoa(i, print_buffer, 16);
-		ttybox_puts(firstbox, print_buffer);
-		ttybox_puts(firstbox, " : ");
+		ttybox_puts(firstbox, print_buffer, OWNER_CLIENT);
+		ttybox_puts(firstbox, " : ", OWNER_CLIENT);
 		itoa(mmap->addr, print_buffer, 16);
-		ttybox_puts(firstbox, print_buffer);
-		ttybox_puts(firstbox, " - ");
+		ttybox_puts(firstbox, print_buffer, OWNER_CLIENT);
+		ttybox_puts(firstbox, " - ", OWNER_CLIENT);
 		itoa(mmap->addr + mmap->len, print_buffer, 16);
-		ttybox_puts(firstbox, print_buffer);
-		ttybox_puts(firstbox, " (");
+		ttybox_puts(firstbox, print_buffer, OWNER_CLIENT);
+		ttybox_puts(firstbox, " (", OWNER_CLIENT);
 		itoa(mmap->len, print_buffer, 16);
-		ttybox_puts(firstbox, print_buffer);
-		ttybox_puts(firstbox, ")\n");
+		ttybox_puts(firstbox, print_buffer, OWNER_CLIENT);
+		ttybox_puts(firstbox, ")\n", OWNER_CLIENT);
 		mmap = (multiboot_memory_map_t*) ( (unsigned int)mmap + mmap->size + sizeof(unsigned int) );
 		i++;
 	}

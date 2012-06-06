@@ -26,6 +26,11 @@ void ttybox_newline(TTYBOX *ttybox)
 			posptr[1] = DEFAULT_FORMAT;
 		}
 
+	ttybox->client_pos -= ttybox->width;
+
+	if (ttybox->client_pos < 0)
+		ttybox->client_pos = -1;
+
 }
 
 TTYBOX * ttybox_create(int x, int y, int width, int height)
@@ -72,56 +77,80 @@ void ttybox_clear(TTYBOX *ttybox)
 		}
 }
 
+void ttybox_pos_set(TTYBOX *ttybox, int pos, char owner)
+{
+	if (pos >= ttybox->length)
+	{
+		ttybox_newline(ttybox);
+		pos = ttybox->length - ttybox->width;
+	}
+
+	ttybox->pos = pos;
+	if (owner == OWNER_CLIENT)
+		ttybox->client_pos = pos;
+}
+
+int ttybox_pos_get(TTYBOX *ttybox)
+{
+	return ttybox->pos;
+}
+
 void ttybox_format_set(TTYBOX *ttybox, char format)
 {
 	ttybox->format = format;
 }
 
-void ttybox_puts(TTYBOX *ttybox, char * str)
+void ttybox_puts(TTYBOX *ttybox, char * str, char owner)
 {
 	while (*str)
-		ttybox_putchar(ttybox, *(str++));
+		ttybox_putchar(ttybox, *(str++), owner);
 }
 
-void ttybox_putchar(TTYBOX *ttybox, char chr)
+void ttybox_write(TTYBOX *ttybox, char * data, int size, char owner)
+{
+	while (size--)
+		ttybox_putchar(ttybox, *(data++), owner);
+}
+
+
+int ttybox_erasable(TTYBOX *ttybox, int pos, char owner)
+{
+	return (pos > 0 &&
+			pos < ttybox->length &&
+			(owner == OWNER_CLIENT ||
+			(owner == OWNER_SERVER && pos > ttybox->client_pos)));
+}
+
+void ttybox_putchar(TTYBOX *ttybox, char chr, char owner)
 {
 	char * posptr;
 
 	switch (chr)
 	{
 	case '\n':
-		if (ttybox->pos/ttybox->width == (ttybox->height-1))
-			ttybox_newline(ttybox);
-		else
-			ttybox->pos += ttybox->width;
+		ttybox_pos_set(ttybox, ttybox_pos_get(ttybox) + ttybox->width, owner);
 
 	case '\r':
-		ttybox->pos = ttybox->pos - (ttybox->pos % ttybox->width);
+		ttybox_pos_set(ttybox, (ttybox_pos_get(ttybox)/ttybox->width)*ttybox->width, owner);
 		break;
 
 	case '\b':
-		if (ttybox->pos > 0)
+		if (ttybox_erasable(ttybox, ttybox_pos_get(ttybox), owner))
 		{
-			ttybox->pos--;
-			if ((posptr = ttybox_linearaddr(ttybox, ttybox->pos)))
+			ttybox_pos_set(ttybox, ttybox_pos_get(ttybox)-1, owner);
+			if ((posptr = ttybox_linearaddr(ttybox, ttybox_pos_get(ttybox))))
 				posptr[0] = '\0';
 		}
 		break;
 	default:
 
-		if ((posptr = ttybox_linearaddr(ttybox, ttybox->pos)))
+		if ((posptr = ttybox_linearaddr(ttybox, ttybox_pos_get(ttybox))))
 		{
 			posptr[0] = chr;
 			posptr[1] = ttybox->format;
 		}
 
-		ttybox->pos++;
-
-		if (ttybox->pos >= ttybox->length)
-		{
-			ttybox->pos--;
-			ttybox_putchar(ttybox, '\n');
-		}
+		ttybox_pos_set(ttybox, ttybox_pos_get(ttybox) + 1, owner);
 	}
 }
 

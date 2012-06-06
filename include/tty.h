@@ -15,7 +15,6 @@ typedef struct TTY
 {
 	byte_queue *input_queue;
 	byte_queue *input_display_queue;
-	byte_queue *output_queue;
 	TTYBOX *ttybox;
 	unsigned int x, y, width, height;
 } TTY;
@@ -24,7 +23,6 @@ typedef struct TTY
 void tty_init(TTY *tty,  
 			  byte_queue *input_queue, 
 			  byte_queue *input_display_queue,
-			  byte_queue *output_queue,
 			  TTYBOX *ttybox,
 			  int x, int y, int width, int height);
 

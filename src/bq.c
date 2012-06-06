@@ -101,14 +101,8 @@ int bq_move(byte_queue *src, byte_queue *dest, unsigned int count)
 
 int bq_copy(byte_queue *src, byte_queue *dest, unsigned int count)
 {
-	char datum;
 	byte_queue tmp_src = *src;
-
-	while (count-- && bq_used(&tmp_src))
-	{
-		bq_read(&tmp_src, &datum, sizeof(char));
-		bq_write(dest, &datum, sizeof(char));
-	}
+	bq_move(&tmp_src, dest, count);
 }
 
 int bq_read(byte_queue *queue, char *data, unsigned int size)

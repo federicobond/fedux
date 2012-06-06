@@ -1,5 +1,6 @@
 
 #include "../include/stddef.h"
+#include "../include/vgatext.h"
 
 #define KM_NORMAL 0
 
@@ -34,6 +35,12 @@ void * mm_malloc(size_t size)
 
 	if (_next_alloc - _memory_start > _memory_length)
 		kpanic("@kmalloc - Out of memory");
+
+
+	char print_buffer[64];
+	itoa(_next_alloc, print_buffer, 16);
+	vgatext_print(9*80, "        ");
+	vgatext_print(9*80, print_buffer);	
 
 	return (((char *)_next_alloc) - size);
 }

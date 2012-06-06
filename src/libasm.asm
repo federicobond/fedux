@@ -3,6 +3,9 @@ GLOBAL      _read_msw,_lidt
 GLOBAL      _timertick_handler
 GLOBAL      _keyboard_handler
 GLOBAL      _serial_handler
+GLOBAL		_syscall_handler
+
+GLOBAL 		_syscall
 
 GLOBAL      _mask_pic_2,_mask_pic_1,_cli,_sti
 GLOBAL      _outb
@@ -12,6 +15,7 @@ GLOBAL		_hlt
 EXTERN      timertick_handler
 EXTERN      keyboard_handler
 EXTERN      serial_handler
+EXTERN		syscall_handler
 
 SECTION .text
 
@@ -131,20 +135,71 @@ _serial_handler:                    ; INT 0x09 Handler (Keyboard)
     pop     ds
     iret
 
+_syscall_handler:					; INT 0x80 Handler (Syscall)
+    push    ds
+    push    es                      ; Save registers
+
+	push	eax                 
+    mov     ax, 10h
+    mov     ds, ax                  ; Load DS and ES with the selector value
+    mov     es, ax                  
+	pop		eax
+
+	push	ebp						; Not a parameter, just avoiding to
+									; modify it unintentionally
+
+	push	edi						; Call syscall handler with parameters
+	push	esi
+	push 	edx
+	push	ecx
+	push	ebx
+	push	eax
+	call    syscall_handler
+	pop		ebx						; Discard EAX push. It's used as retval
+	pop		ebx
+	pop		ecx
+	pop		edx
+	pop		esi
+	pop		edi
+
+	pop		ebp
+
+	push	eax
+    mov     al, 20h                 ; Send generic EOI to PIC
+    out     20h, al
+	pop		eax
+
+    pop     es
+    pop     ds
+    iret
+
 _syscall:
     push    ebp
     mov     ebp, esp
-    pusha
+
+	push	edi						; Manually save registers
+	push 	esi						; Note: EAX is used for return value
+	push	edx
+	push	ecx
+	push	ebx
     pushf
-    mov     eax, [ss:ebp+28]
-    mov     ebx, [ss:ebp+24]
-    mov     ecx, [ss:ebp+20]
-    mov     edx, [ss:ebp+16]
-    mov     esi, [ss:ebp+12]
-    mov     edi, [ss:ebp+8]
+
+    mov     edi, [ss:ebp+28]
+    mov     esi, [ss:ebp+24]
+    mov     edx, [ss:ebp+20]
+    mov     ecx, [ss:ebp+16]
+    mov     ebx, [ss:ebp+12]
+    mov     eax, [ss:ebp+8]
+
     int     80h
+
     popf
-    popa
+    pop		ebx
+	pop		ecx
+	pop		edx
+	pop		esi
+	pop		edi
+
     mov     esp, ebp
     pop     ebp
     ret
