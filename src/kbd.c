@@ -283,7 +283,7 @@ void keyboard_handler(void)
     unsigned int scancode = _inb(0x60);
     char key = 0;
 
-	kbd_status[scancode & 0x7F] = !(scancode & 0x80);
+	kbd_status[scancode & ~SCANCODE_EXT] = !(scancode & SCANCODE_EXT);
 
     if ((scancode & ~SCANCODE_EXT) == SCANCODE_CHAR_LSHIFT)
     {

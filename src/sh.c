@@ -6,6 +6,20 @@
 int exec_laws(int argc, char **argv);
 int exec_fortune(int argc, char **argv);
 int exec_echo(int argc, char **argv);
+int exec_help(int argc, char **argv);
+
+typedef struct {
+    char *name;
+    int (*exec)(int argc, char **argv);
+} command_t;
+
+command_t commands[] = {
+    { "laws",       exec_laws },
+    { "fortune",    exec_fortune },
+    { "echo",       exec_echo },
+    { "help",       exec_help },
+    { NULL, NULL }
+};
 
 #define PROMPT "fedux # "
 
@@ -20,18 +34,15 @@ sh_show_prompt()
 {
     int i = 0;
     char datum = 0;
-    char buf[255];
+    char buf[256];
 
     while (1)
     {
         printf("%s", PROMPT);
         datum = 0;
 
-        while (datum != '\n')
-        {
-            if (read(STDIN_FILENO, (void *)&datum, 1))
-                 buf[i++] = datum;
-        }
+        while ((datum = getchar()) != '\n')
+                buf[i++] = datum;
 
         buf[i] = 0;
         buf_trim(buf);
@@ -43,20 +54,11 @@ sh_show_prompt()
     }
 }
 
-void
-sh_read_command(char buf[])
-{
-    /* TODO: Code */
-    return;
-}
-
 int
 sh_do_command(char buf[])
 {
-    /* Do argument parsing */
     int argc = 0;
-    char *argv[255];
-
+    char *argv[256];
     sh_tokenize(buf, &argc, argv);
 
     return exec(argc, argv);
@@ -65,12 +67,15 @@ sh_do_command(char buf[])
 int
 exec(int argc, char **argv)
 {
-    if (strcmp(argv[0], "laws") == 0)
-        return exec_laws(argc, (char **)argv);
-    if (strcmp(argv[0], "fortune") == 0)
-        return exec_fortune(argc, (char **)argv);
-    if (strcmp(argv[0], "echo") == 0)
-        return exec_echo(argc, (char **)argv);
+    int i = 0;
+
+    while (commands[i].name != NULL)
+    {
+        if (strcmp(argv[0], commands[i].name) == 0)
+            return commands[i].exec(argc, argv);
+
+        i++;
+    }
 
     printf("%s: command not found\n", argv[0]);
     return 127;

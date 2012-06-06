@@ -21,6 +21,8 @@ FILE *stderr = &_stderr;
 int
 putc(int ch, FILE *stream)
 {
+    /* TODO: This should block while it cannot write, but there isn't anyone to
+     * unblock it, so we leave it as is */
     if (write(stream->fd, (void *)&ch, 1) == -1)
         return EOF;
     return ch;
@@ -29,11 +31,11 @@ putc(int ch, FILE *stream)
 int
 getc(FILE *stream)
 {
-    /* TODO: Fix */
-    int ch;
-    if (read(stream->fd, (void *)&ch, 1) == -1)
-        return EOF;
-    return ch;
+    /* TODO: Handle -1 error value */
+    char ch;
+    while (!read(stream->fd, (void *)&ch, 1))
+        _hlt();
+    return (int)ch;
 }
 
 int
@@ -63,7 +65,6 @@ putchar(int ch)
 int
 getchar(void)
 {
-    /* TODO: Fix */
     return getc(stdin);
 }
 
@@ -92,13 +93,39 @@ int
 printf(const char *fmt, ...)
 {
     va_list ap;
-    int res;
+    int retval;
 
     va_start(ap, fmt);
-    res = vprintf(fmt, ap);
+    retval = vprintf(fmt, ap);
     va_end(ap);
 
-    return res;
+    return retval;
+}
+
+int
+sprintf(char *s, const char *fmt, ...)
+{
+    va_list ap;
+    int retval;
+
+    va_start(ap, fmt);
+    retval = vsprintf(s, fmt, ap);
+    va_end(ap);
+
+    return retval;
+}
+
+int
+fprintf(FILE *f, const char *fmt, ...)
+{
+    va_list ap;
+    int retval;
+
+    va_start(ap, fmt);
+    retval = vfprintf(f, fmt, ap);
+    va_end(ap);
+
+    return retval;
 }
 
 int
@@ -154,22 +181,62 @@ vprintf(const char *fmt, va_list ap)
         else
         {
             putchar(fmt[i]);
+            acum++;
         }
-        acum++;
         i++;
     }
     return acum;
 }
 
 int
-scanf(const char *fmt, ...)
+vsprintf(char *str, const char *fmt, va_list ap)
 {
     /* TODO: Code */
     return 0;
 }
 
 int
-sscanf(char *buf, const char *fmt, ...) {
+vfprintf(FILE *f, const char *fmt, va_list ap)
+{
+    /* TODO: Code */
+    return 0;
+}
+
+int
+scanf(const char *fmt, ...)
+{
+    va_list ap;
+    int retval;
+
+    va_start(ap, fmt);
+    retval = vscanf(fmt, ap);
+    va_end(ap);
+
+    return retval;
+}
+
+int
+sscanf(char *str, const char *fmt, ...) {
+    va_list ap;
+    int retval;
+
+    va_start(ap, fmt);
+    retval = vsscanf(str, fmt, ap);
+    va_end(ap);
+
+    return retval;
+}
+
+int
+vscanf(const char *fmt, va_list ap)
+{
+    /* TODO: Code */
+    return 0;
+}
+
+int
+vsscanf(char *str, const char *fmt, va_list ap)
+{
     /* TODO: Code */
     return 0;
 }
