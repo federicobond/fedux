@@ -66,6 +66,13 @@ char *
 itoa(int value, char *s, int base)
 {
 	int numeral, i = 0;
+    char *sb = s;
+
+    if (base == 10 && value < 0)
+    {
+        *s++ = '-';
+        value = -value;
+    }
 
 	if (base >= 2 && base <= 36)
 	{
@@ -83,6 +90,8 @@ itoa(int value, char *s, int base)
 	}
 
 	s[i] = '\0';
+
+    strrev(s);
 	
-    return strrev(s);
+    return sb;
 }

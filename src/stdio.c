@@ -23,15 +23,15 @@ putc(int ch, FILE *stream)
 {
     if (write(stream->fd, (void *)&ch, 1) == -1)
         return EOF;
-
     return ch;
 }
 
 int
 getc(FILE *stream)
 {
+    /* TODO: Fix */
     int ch;
-    if (read(stream->fd, &ch, 1) == -1)
+    if (read(stream->fd, (void *)&ch, 1) == -1)
         return EOF;
     return ch;
 }
@@ -41,13 +41,14 @@ puts(const char *str)
 {
     int res;
     char nl = '\n';
-    while (*str++ != '\0')
+    while (*str != '\0')
     {
-        res = write(STDIN_FILENO, (void *)str, 1);
+        res = putchar(*str);
         if (res == -1)
             return EOF;
+        str++;
     }
-    res = write(STDIN_FILENO, (void *)&nl, 1);
+    res = putchar('\n');
     if (res == -1)
         return EOF;
     /* Return a non-negative number on success. */
@@ -63,6 +64,7 @@ putchar(int ch)
 int
 getchar(void)
 {
+    /* TODO: Fix */
     return getc(stdin);
 }
 
@@ -75,6 +77,7 @@ char *gets(char *s, int size)
 char *
 fgets(char *s, int size, FILE *stream)
 {
+    /* TODO: Fix */
     char c = getc(stream);
     int i = 0; 
     while ((c != '\n' || c != EOF) && i < size)
