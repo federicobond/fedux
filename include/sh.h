@@ -7,10 +7,13 @@ void sh_read_command(char buf[]);
 int sh_do_command(char buf[]);
 void sh_tokenize(char buf[], int *argc, char *argv[]);
 
+int exec(int argc, char **argv);
+
 int exec_laws(int argc, char **argv);
 int exec_fortune(int argc, char **argv);
 int exec_echo(int argc, char **argv);
 
 void buf_trim(char buf[]);
+int args_shift(int n, int *argc, char ***argv);
 
 #endif

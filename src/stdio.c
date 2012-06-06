@@ -1,6 +1,8 @@
+#include "../include/syscall.h"
 #include "../include/stdlib.h"
 #include "../include/stdio.h"
 #include "../include/string.h"
+#include "../include/kasm.h"
 #include <stdarg.h>
 
 /*
@@ -29,7 +31,8 @@ int
 getc(FILE *stream)
 {
     int ch;
-    read(stream->fd, &ch, 1);
+    if (read(stream->fd, &ch, 1) == -1)
+        return EOF;
     return ch;
 }
 
@@ -172,13 +175,11 @@ sscanf(char *buf, const char *fmt, ...) {
 ssize_t
 read(int fd, void *buf, size_t count)
 {
-    /* TODO: Code */
-    return 0;
+    return _syscall(SYSCALL_READ, fd, (int)buf, count, 0, 0);
 }
 
 ssize_t
 write(int fd, const void *buf, size_t count)
 {
-    /* TODO: Code */
-    return 0;
+    return _syscall(SYSCALL_WRITE, fd, (int)buf, count, 0, 0);
 }
