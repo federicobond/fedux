@@ -14,6 +14,8 @@
 #include "../include/ttyman.h"
 #include "../include/ttybox.h"
 
+#include "../include/serialman.h"
+
 #include "../include/syscall.h"
 
 #include "../include/critical.h"
@@ -119,6 +121,10 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 
 	ttyman_init(0, 8, 80, 17);
 
+/* Initialize serial port manager */
+
+	serialman_init();
+
 /* Initialize basic ttybox output */
 
 	firstbox = ttybox_create(0, 9, 80, 17);
@@ -132,6 +138,8 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
  |_|  \___|\__,_|\__,_/_/\_\
 
 */
+
+	serialman_write(0, "HOLA", 4);
 
 	vgatext_format_set(0x70);
 	vgatext_charfill(0, 0, 80, 1, (char)205);
