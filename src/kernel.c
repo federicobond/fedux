@@ -139,8 +139,6 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 
 */
 
-	serialman_write(0, "HOLA", 4);
-
 	vgatext_format_set(0x70);
 	vgatext_charfill(0, 0, 80, 1, (char)205);
 	vgatext_charfill(0, 7, 80, 1, (char)205);

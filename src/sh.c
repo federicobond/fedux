@@ -7,6 +7,7 @@ int exec_laws(int argc, char **argv);
 int exec_fortune(int argc, char **argv);
 int exec_echo(int argc, char **argv);
 int exec_help(int argc, char **argv);
+int exec_chat(int argc, char **argv);
 
 typedef struct {
     char *name;
@@ -18,6 +19,7 @@ command_t commands[] = {
     { "fortune",    exec_fortune },
     { "echo",       exec_echo },
     { "help",       exec_help },
+    { "chat",       exec_chat },
     { NULL, NULL }
 };
 
@@ -110,11 +112,15 @@ sh_tokenize(char buf[], int *argc, char *argv[])
                 }
                 break;
             case QUOTED_START:
-                argv[(*argc)++] = buf;
                 if (ch == '"')
+                {
                     state = SPACE;
+                }
                 else
+                {
+                    argv[(*argc)++] = buf;
                     state = QUOTED;
+                }
                 break;
             case QUOTED:
                 if (ch == '"')
