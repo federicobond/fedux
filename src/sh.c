@@ -45,7 +45,7 @@ sh_show_prompt()
                 buf[i++] = datum;
 
         buf[i] = 0;
-        buf_trim(buf);
+        trim(buf);
 
         if (strlen(buf) > 0)
             sh_do_command(buf);

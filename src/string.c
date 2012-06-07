@@ -1,3 +1,4 @@
+#include "../include/ctype.h"
 #include "../include/string.h"
 
 char *
@@ -96,6 +97,30 @@ strrev(char *str)
       return str;
 }
 
+char *
+strchr(const char *s, int c)
+{
+    while (*s != 0)
+    {
+        if (*s == c)
+            return (char *)s;
+        s++;
+    }
+    return NULL;
+}
+
+char *
+strrchr(const char *s, int c)
+{
+    char *last = NULL;
+    while (*s != 0)
+    {
+        if (*s == c)
+            last = (char *)s;
+        s++;
+    }
+    return last;
+}
 
 void *
 memcpy(void *dest, const void *src, size_t n)
@@ -131,4 +156,19 @@ memset(void *s, int c, size_t n)
         *p++ = c;
     }
     return s;
+}
+
+void
+trim(char *str)
+{
+    int i = 0, j = 0;
+    while (isspace(str[i]))
+    {
+        i++;
+    }
+    while (str[i] != '\0')
+    {
+        str[j++] = str[i++];
+    }
+    str[j] = '\0';
 }
