@@ -97,7 +97,7 @@ printf(const char *fmt, ...)
     int retval;
 
     va_start(ap, fmt);
-    retval = vprintf(fmt, ap);
+    return vfprintf(stdout, fmt, ap);
     va_end(ap);
 
     return retval;
@@ -130,63 +130,22 @@ fprintf(FILE *f, const char *fmt, ...)
 }
 
 int
-print_string(char *str)
+printf_s(char *str, FILE *f)
 {
     int i = 0;
     while (str[i] != '\0')
     {
-        putchar(str[i++]);
+        putc(str[i++], f);
     }
     return i;
 }
 
 int
-print_int(int i)
+printf_d(int i, FILE *f)
 {
     char buf[32];
     itoa(i, buf, 10);
-    return print_string(buf);
-}
-
-int
-vprintf(const char *fmt, va_list ap)
-{
-    int i = 0;
-    int acum = 0;
-
-    while (fmt[i] != '\0')
-    {
-        if (fmt[i] == '%')
-        {
-            i++;
-            switch (fmt[i])
-            {
-                case 's':
-                    acum += print_string(va_arg(ap, char *));
-                    break;
-                case 'd':
-                    acum += print_int(va_arg(ap, int));
-                    break;
-                case 'c':
-                    putchar(va_arg(ap, int));
-                    acum++;
-                    break;
-                case '%':
-                    putchar('%');
-                    acum++;
-                    break;
-                default:
-                    return -1;
-            }
-        }
-        else
-        {
-            putchar(fmt[i]);
-            acum++;
-        }
-        i++;
-    }
-    return acum;
+    return printf_s(buf, f);
 }
 
 int
@@ -199,8 +158,42 @@ vsprintf(char *str, const char *fmt, va_list ap)
 int
 vfprintf(FILE *f, const char *fmt, va_list ap)
 {
-    /* TODO: Code */
-    return 0;
+    int i = 0;
+    int acum = 0;
+
+    while (fmt[i] != '\0')
+    {
+        if (fmt[i] == '%')
+        {
+            i++;
+            switch (fmt[i])
+            {
+                case 's':
+                    acum += printf_s(va_arg(ap, char *), f);
+                    break;
+                case 'd':
+                    acum += printf_d(va_arg(ap, int), f);
+                    break;
+                case 'c':
+                    putc(va_arg(ap, int), f);
+                    acum++;
+                    break;
+                case '%':
+                    putc('%', f);
+                    acum++;
+                    break;
+                default:
+                    return -1;
+            }
+        }
+        else
+        {
+            putc(fmt[i], f);
+            acum++;
+        }
+        i++;
+    }
+    return acum;
 }
 
 int
@@ -210,7 +203,20 @@ scanf(const char *fmt, ...)
     int retval;
 
     va_start(ap, fmt);
-    retval = vscanf(fmt, ap);
+    retval = vfscanf(stdin, fmt, ap);
+    va_end(ap);
+
+    return retval;
+}
+
+int
+fscanf(FILE *f, const char *fmt, ...)
+{
+    va_list ap;
+    int retval;
+
+    va_start(ap, fmt);
+    retval = vfscanf(f, fmt, ap);
     va_end(ap);
 
     return retval;
@@ -229,7 +235,7 @@ sscanf(char *str, const char *fmt, ...) {
 }
 
 int
-vscanf(const char *fmt, va_list ap)
+vfscanf(FILE *f, const char *fmt, va_list ap)
 {
     /* TODO: Code */
     return 0;

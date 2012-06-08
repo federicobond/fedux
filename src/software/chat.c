@@ -1,6 +1,7 @@
 #include "../../include/kasm.h"
 #include "../../include/stdio.h"
 #include "../../include/string.h"
+#include "../../include/ctype.h"
 #include "../../include/software/commons.h"
 #include "../../include/serialman.h"
 
@@ -60,19 +61,22 @@ chat_exit(char *args)
     exit = true;
 }
 
-int
+bool
 chat_command(char *s)
 {
     int i;
+    int length;
     for (i = 0; chat_commands[i].name != NULL; i++)
     {
-        if (strcmp(s, chat_commands[i].name) == 0)
+        length = strlen(chat_commands[i].name);
+        if (strncmp(s, chat_commands[i].name, length) == 0
+            && isspace(s[length]))
         {
             chat_commands[i].exec(s);
-            return 1;
+            return true;
         }
     }
-    return 0;
+    return false;
 }
 
 int
@@ -106,7 +110,8 @@ read_from_local(char *buffer, int *idx)
         if (ch == '\n')
         {
             buffer[*idx] = 0;
-            write(TTYS0, buffer, *idx);
+            if (!chat_command(buffer))
+                write(TTYS0, buffer, *idx);
             *idx = 0;
         }
         return true;
@@ -120,8 +125,6 @@ read_from_remote(char *buffer, int *idx)
     char ch;
     if (read(TTYS0, &ch, sizeof(char)))
     {
-
-        /*printf("Read!\n"); */
         buffer[(*idx)++] = ch; 
         if (ch == '\n') 
         { 
@@ -129,15 +132,6 @@ read_from_remote(char *buffer, int *idx)
            printf("%s\n", buffer); 
            *idx = 0; 
         } 
-
-        /* printf("Read!\n"); */
-        /* buffer[(*idx)++] = ch; */
-        /* if (ch == '\n') */
-        /* { */
-            /* buffer[*idx] = 0; */
-            /* printf("%s\n", buffer); */
-            /* *idx = 0; */
-        /* } */
         return true;
     }
     return false;
@@ -158,6 +152,8 @@ chat_init()
         vread = read_from_local(out, &out_idx);
         if (!vread)
             vread = read_from_remote(in, &in_idx);
+        if (exit)
+            return;
     }
 }
 

@@ -38,14 +38,13 @@ int     printf(const char *fmt, ...);
 int     sprintf(char *s, const char *fmt, ...);
 int     fprintf(FILE *f, const char *fmt, ...);
 
-int     vprintf(const char *fmt, va_list ap);
 int     vsprintf(char *str, const char *fmt, va_list ap);
 int     vfprintf(FILE *f, const char *fmt, va_list ap);
 
 int     scanf(const char *fmt, ...);
 int     sscanf(char *str, const char *fmt, ...);
 
-int     vscanf(const char *fmt, va_list ap);
+int     vfscanf(FILE *f, const char *fmt, va_list ap);
 int     vsscanf(char *str, const char *fmt, va_list ap);
 
 ssize_t write(int fd, const void *buf, size_t count);
