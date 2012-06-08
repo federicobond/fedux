@@ -1,3 +1,9 @@
+/**
+ * Fedux Keyboard Driver
+ *
+ * TODO: Handle arrows. Either ignore them or add support for reading raw
+ * scancodes
+ */
 #ifndef _KBD_H
 #define _KBD_H
 
