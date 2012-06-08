@@ -1,5 +1,3 @@
-
-
 #include "../include/serial.h"
 
 #define PORT_COUNT 4

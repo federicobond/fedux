@@ -78,15 +78,16 @@ char *
 fgets(char *s, int size, FILE *stream)
 {
     /* TODO: Fix */
-    char c = getc(stream);
+    /* TODO: Return NULL when getc fails */
+    char c;
     int i = 0; 
-    while ((c != '\n' || c != EOF) && i < size)
-    {
-        *s++ = c;
-        i++;
-        c = getc(stream);
-    }
-    return (i != 0) ? s : NULL;
+
+    while ((c = getchar()) != '\n' && c != EOF)
+        s[i++] = c;
+
+    s[i] = 0;
+    return s;
+    /* return (i != 0) ? s : NULL; */
 }
 
 int
