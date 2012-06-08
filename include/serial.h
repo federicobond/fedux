@@ -29,7 +29,8 @@
 
 #define SERIAL_SCR	SERIAL_BASE_ADDR+7
 
-#define DLAB_MASK	0x80
+#define LCR_DLAB_MASK	(1 << 7)
+#define LCR_BREAK_MASK  (1 << 6)
 
 #define FIFO_ENABLE_MASK (1 << 3)
 #define FIFO_TLEVEL_MASK (3 << 6)
@@ -45,19 +46,40 @@
 
 #define DEFAULT_BUFFSIZE 512
 
+#define LCR_SETUP_MASK 0x3F
+
+#define MSR_CLEAR_SEND (1 << 4)
+#define MSR_DATA_SET_READY (1 << 5)
+#define MSR_RING_INDICATOR (1 << 6)
+#define MSR_CARRIER_DETECT (1 << 7)
+
+#define LSR_DATA_AVAIL (1 << 0)
+#define LSR_OVERRUN	   (1 << 1)
+#define LSR_PARITY	   (1 << 2)
+#define LSR_FRAMING	   (1 << 3)
+#define LSR_BREAK	   (1 << 4)
+#define LSR_THR		   (1 << 5)
+#define LSR_THR_LINE   (1 << 6)
+#define LSR_FIFOERR	   (1 << 7)
+
+#define MCR_DATA_TERM  (1 << 0)
+#define MCR_SEND_REQ   (1 << 1)
+
+#define IER_DATA_AVAIL (1 << 0)
+#define IER_THR		   (1 << 1)
+#define IER_LSR		   (1 << 2)
+#define IER_MSR		   (1 << 3)
+
+#define IER_DEFAULT (IER_DATA_AVAIL | IER_THR | IER_LSR | IER_MSR)
 
 typedef enum { 
-    B110 = 0x00,
-    B150 = 0x20,
-    B300 = 0x40,
-    B600 = 0x60,
-    B1200 = 0x80,
-    B2400 = 0xA0,
-    B4800 = 0xC0,
-    B9600 = 0xE0
+    B4800 = 0x18,
+    B9600 = 0x0C
 } baud_t;
 
 typedef enum {
+	CS5 = 0x00,
+	CS6 = 0x01,
     CS7 = 0x02,
     CS8 = 0x03
 } data_bits_t;
@@ -72,7 +94,6 @@ typedef enum {
     PARODD = 0x08,
     PAREVEN = 0x18
 } parity_t;
-
 
 typedef struct portdesc_t
 {
