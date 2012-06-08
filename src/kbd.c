@@ -5,7 +5,6 @@
 
 static char kbd_status[KEYCOUNT];
 
-
 static unsigned int kbd_EN[][2] = { { NPRTBL, NPRTBL },/*000*/
     { NPRTBL, NPRTBL },/*001 ESCAPE*/
     { '1', '!' }, /*002*/

@@ -1,13 +1,8 @@
 #include "../include/serial.h"
 #include "../include/stdio.h"
 #include "../include/kpanic.h"
-
 #include "../include/serial.h"
-
-
-
-
-
+#include "../include/mm.h"
 
 void serial_flush(portdesc_t * pd)
 {
@@ -31,7 +26,6 @@ void serial_flush(portdesc_t * pd)
 			serial_break_set(1);
 	
 }
-
 
 void serial_requestsend(portdesc_t * pd)
 {
@@ -175,5 +169,4 @@ void port_set_bitrange(int port, char datum, char mask)
 
 	_outb(value, port);
 }
-
 
