@@ -120,6 +120,16 @@ read_from_remote(char *buffer, int *idx)
     char ch;
     if (read(TTYS0, &ch, sizeof(char)))
     {
+
+        /*printf("Read!\n"); */
+        buffer[(*idx)++] = ch; 
+        if (ch == '\n') 
+        { 
+           buffer[*idx] = 0; 
+           printf("%s\n", buffer); 
+           *idx = 0; 
+        } 
+
         /* printf("Read!\n"); */
         /* buffer[(*idx)++] = ch; */
         /* if (ch == '\n') */
