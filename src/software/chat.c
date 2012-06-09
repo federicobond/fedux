@@ -140,6 +140,8 @@ read_from_remote(char *buffer, int *idx)
 void
 chat_init()
 {
+    exit = false;
+
     char in[256];
     char out[256];
     char ch;
@@ -154,6 +156,8 @@ chat_init()
             vread = read_from_remote(in, &in_idx);
         if (exit)
             return;
+        if (!vread)
+            _hlt();
     }
 }
 
