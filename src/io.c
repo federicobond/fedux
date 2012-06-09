@@ -29,8 +29,7 @@ int io_write(int fd, char * data, unsigned int size)
 int io_read(int fd, char * data, unsigned int size)
 {
 	int retval = 0;
-	char buffer[64];
-	static linear = 0;
+
 	switch (fd)
 	{
 	case STDIN_FILENO:

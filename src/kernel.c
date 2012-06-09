@@ -154,14 +154,14 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 	vgatext_charfill(0, 0, 1, 1, (char)201);
 	vgatext_charfill(79, 7, 1, 1, (char)188);
 
-	vgatext_format_set(0x9F);
+	vgatext_format_set(0x1F);
 	vgatext_charfill(1, 1, 78, 6, 0);
 	vgatext_print(vgatext_poslinear(1, 1), "  ______       _ ");
 	vgatext_print(vgatext_poslinear(1, 2), " |  ____|     | |           ");
 	vgatext_print(vgatext_poslinear(1, 3), " | |__ ___  __| |_   ___  __");
 	vgatext_print(vgatext_poslinear(1, 4), " |  __/ _ \\/ _` | | | \\ \\/ /");
 	vgatext_print(vgatext_poslinear(1, 5), " | | |  __/ (_| | |_| |>  < ");
-	vgatext_print(vgatext_poslinear(1, 6), " |_|  \\___|\\__,_|\\__,_/_/\\_\\       Welcome to Fedux Kernel 0.0.1!");
+	vgatext_print(vgatext_poslinear(1, 6), " |_|  \\___|\\__,_|\\__,_/_/\\_\\       Welcome to Fedux Kernel 0.0.2!");
 	vgatext_format_set(0x0F);
 	
 	

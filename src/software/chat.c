@@ -125,11 +125,12 @@ read_from_remote(char *buffer, int *idx)
     char ch;
     if (read(TTYS0, &ch, sizeof(char)))
     {
-        buffer[(*idx)++] = ch; 
+        buffer[(*idx)++] = ch;
+		
         if (ch == '\n') 
         { 
            buffer[*idx] = 0; 
-           printf("%s\n", buffer); 
+           printf("%s", buffer); 
            *idx = 0; 
         } 
         return true;
@@ -144,7 +145,7 @@ chat_init()
 
     char in[256];
     char out[256];
-    char ch;
+    //char ch; // unused
 
     int in_idx = 0, out_idx = 0;
     bool vread;

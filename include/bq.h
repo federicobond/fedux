@@ -86,8 +86,8 @@ int bq_rread(byte_queue *queue, char *data, unsigned int size);
 int bq_rpeek(byte_queue *queue, char *data, unsigned int size);
 
 
-int bq_move(byte_queue *src, byte_queue *dest, unsigned int count);
-int bq_copy(byte_queue *src, byte_queue *dest, unsigned int count);
+void bq_move(byte_queue *src, byte_queue *dest, unsigned int count);
+void bq_copy(byte_queue *src, byte_queue *dest, unsigned int count);
 
 
 #endif

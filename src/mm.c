@@ -20,12 +20,12 @@ void mm_setup(multiboot_info_t * mbi)
 	#define MINIMUM_LEN   (1024*1024)
 
 	unsigned long int largest_len = 0;
-	void * largest_addr;
-	void * safe_addr = (unsigned long int)kmain + SAFE_DISTANCE + 1;
+	unsigned long int largest_addr;
+	unsigned long int safe_addr = (unsigned long int)kmain + SAFE_DISTANCE + 1;
 
-	multiboot_memory_map_t* mmap = mbi->mmap_addr;
+	multiboot_memory_map_t *mmap = (multiboot_memory_map_t *)mbi->mmap_addr;
 
-	while(mmap < mbi->mmap_addr + mbi->mmap_length)
+	while(mmap < (multiboot_memory_map_t *)(mbi->mmap_addr + mbi->mmap_length))
 	{
 		if (mmap->len > largest_len)
 		{
@@ -51,7 +51,7 @@ void mm_setup(multiboot_info_t * mbi)
 		kpanic("mm_setup - Could not find any suitable memory map");
 
 
-	mm_init(largest_addr, largest_len);
+	mm_init((void *)largest_addr, largest_len);
 
 }
 

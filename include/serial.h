@@ -112,6 +112,7 @@ typedef struct portdesc_t
 int serial_write(portdesc_t * pd, char * data, int size);
 int serial_read(portdesc_t * pd, char * data, int size);
 void serial_interrupt_reset(portdesc_t * pd);
+void serial_flush(portdesc_t * pd);
 
 portdesc_t * serial_create(int base_addr);
 

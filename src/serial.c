@@ -1,8 +1,11 @@
 #include "../include/serial.h"
 #include "../include/stdio.h"
 #include "../include/kpanic.h"
+#include "../include/kasm.h"
 #include "../include/serial.h"
 #include "../include/mm.h"
+
+#include "../include/ttyman.h"
 
 int serial_maysend(portdesc_t * pd);
 int serial_mayrecv(portdesc_t * pd);
@@ -26,6 +29,8 @@ void serial_interrupt_reset(portdesc_t * pd)
 void serial_flush(portdesc_t * pd)
 {
 	char datum;
+
+
 
 	while (serial_maysend(pd) && bq_used(pd->send_queue))
 	{
@@ -113,7 +118,7 @@ void serial_fcr_setup(portdesc_t * pd)
 int serial_write(portdesc_t * pd, char * data, int size)
 {
 	int retval;
-	serial_flush(pd);
+	//serial_flush(pd);
 	retval = bq_write(pd->send_queue, data, size);
 	serial_flush(pd);
 	return retval;
@@ -122,9 +127,9 @@ int serial_write(portdesc_t * pd, char * data, int size)
 int serial_read(portdesc_t * pd, char * data, int size)
 {
 	int retval;
-	serial_flush(pd);
+	//serial_flush(pd);
 	retval = bq_read(pd->recv_queue, data, size);
-	serial_flush(pd);
+	//serial_flush(pd);
 	return retval;
 }
 

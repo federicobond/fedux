@@ -88,7 +88,7 @@ int bq_write(byte_queue *queue, const char *data, unsigned int size)
 	return size;
 }
 
-int bq_move(byte_queue *src, byte_queue *dest, unsigned int count)
+void bq_move(byte_queue *src, byte_queue *dest, unsigned int count)
 {
 	char datum;
 
@@ -99,7 +99,7 @@ int bq_move(byte_queue *src, byte_queue *dest, unsigned int count)
 	}
 }
 
-int bq_copy(byte_queue *src, byte_queue *dest, unsigned int count)
+void bq_copy(byte_queue *src, byte_queue *dest, unsigned int count)
 {
 	byte_queue tmp_src = *src;
 	bq_move(&tmp_src, dest, count);
