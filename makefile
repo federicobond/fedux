@@ -14,7 +14,7 @@ LDFLAGS = -T src/link.ld -m elf_i386
 .PHONY: tests clean
 
 all: tpe-asm tpe-c tpe-link
-	sudo mount img/tpe.img /mnt/tpe
+	sudo mount img/tpe.img /mnt/tpe -o loop 
 	sudo cp bin/kernel.bin /mnt/tpe/boot
 	sudo umount /mnt/tpe
 

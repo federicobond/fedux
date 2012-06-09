@@ -4,6 +4,25 @@
 #include "../include/serial.h"
 #include "../include/mm.h"
 
+int serial_maysend(portdesc_t * pd);
+int serial_mayrecv(portdesc_t * pd);
+void serial_interrupt_reset(portdesc_t * pd);
+void serial_flush(portdesc_t * pd);
+void serial_baud_set(portdesc_t * pd, baud_t baud);
+void serial_lcr_setup(portdesc_t * pd,
+					  data_bits_t data_bits, stop_bits_t stop_bits,
+					  parity_t parity);
+void serial_ier_setup(portdesc_t * pd);
+void serial_mcr_setup(portdesc_t * pd);
+void serial_fcr_setup(portdesc_t * pd);
+
+
+
+void serial_interrupt_reset(portdesc_t * pd)
+{
+	_inb(pd->base_addr + SERIAL_IIR);
+}
+
 void serial_flush(portdesc_t * pd)
 {
 	char datum;
@@ -11,7 +30,6 @@ void serial_flush(portdesc_t * pd)
 	while (serial_maysend(pd) && bq_used(pd->send_queue))
 	{
 		bq_read(pd->send_queue, &datum, sizeof(datum));
-
 		_outb(datum, pd->base_addr + SERIAL_THR);
 	}
 
@@ -21,37 +39,19 @@ void serial_flush(portdesc_t * pd)
 		if (datum == 0x0D) datum = 0x0A;
 		bq_write_lossless(pd->recv_queue, &datum, sizeof(datum));	
 	}
-
-	if (!bq_avail(pd->recv_queue))
-			serial_break_set(1);
 	
-}
-
-void serial_requestsend(portdesc_t * pd)
-{
-	int mcr = _inb(pd->base_addr + SERIAL_MCR);
 }
 
 int serial_maysend(portdesc_t * pd)
 {
 	char lsr = _inb(pd->base_addr + SERIAL_LSR);
-	char msr = _inb(pd->base_addr + SERIAL_MSR);
-	
-	return ((lsr & LSR_THR) && 
-			(msr & MSR_CLEAR_SEND) &&
-			(msr & MSR_CARRIER_DETECT) &&
-			(msr & MSR_DATA_SET_READY));
+	return (lsr & LSR_THR);
 }
 
 int serial_mayrecv(portdesc_t * pd)
 {
 	char lsr = _inb(pd->base_addr + SERIAL_LSR);
-	char msr = _inb(pd->base_addr + SERIAL_MSR);
-
-	return ((lsr & LSR_DATA_AVAIL) && 
-			(msr & MSR_CLEAR_SEND) &&
-			(msr & MSR_CARRIER_DETECT) &&
-			(msr & MSR_DATA_SET_READY));
+	return (lsr & LSR_DATA_AVAIL);
 }
 
 
@@ -90,6 +90,7 @@ void serial_lcr_setup(portdesc_t * pd,
 
 }
 
+
 void serial_ier_setup(portdesc_t * pd)
 {
 	char ier = _inb(pd->base_addr + SERIAL_IER);
@@ -97,20 +98,16 @@ void serial_ier_setup(portdesc_t * pd)
 	_outb(ier, pd->base_addr + SERIAL_IER);
 }
 
-
-void serial_break_set(portdesc_t * pd, char enable)
-{
-	char lcr = _inb(pd->base_addr + SERIAL_LCR);
-
-	
-}
-
-
-void serial_dtr(portdesc_t * pd)
+void serial_mcr_setup(portdesc_t * pd)
 {
 	char mcr = _inb(pd->base_addr + SERIAL_MCR);
-	mcr |= MCR_DATA_TERM;
+	mcr |= MCR_DEFAULT;
 	_outb(mcr, pd->base_addr + SERIAL_MCR);
+}
+
+void serial_fcr_setup(portdesc_t * pd)
+{
+	_outb(FCR_DEFAULT, pd->base_addr + SERIAL_FCR);
 }
 
 int serial_write(portdesc_t * pd, char * data, int size)
@@ -140,10 +137,15 @@ portdesc_t * serial_create(int base_addr)
 	pd->recv_queue = bq_create(DEFAULT_BUFFSIZE);
 	pd->send_queue = bq_create(DEFAULT_BUFFSIZE);
 
-	serial_dtr(pd);
+	serial_mcr_setup(pd);
 	serial_baud_set(pd, B9600);
 	serial_lcr_setup(pd, CS8, STOPB1, PAREVEN);	
 	serial_ier_setup(pd);
+	serial_fcr_setup(pd);
+
+	/* FIFO CTRL REG */
+	//_outb(pd->base_addr + 2, 0xC7);
+
 
 	return pd;
 }

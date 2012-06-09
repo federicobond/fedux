@@ -9,25 +9,24 @@
 #define SERIAL_PARITY_M 3
 #define SERIAL_PARITY_S 4
 
-#define SERIAL_BASE_ADDR 0
-#define SERIAL_RBR	SERIAL_BASE_ADDR
-#define SERIAL_THR	SERIAL_BASE_ADDR
+#define SERIAL_RBR	0
+#define SERIAL_THR	0
 
-#define SERIAL_IER	SERIAL_BASE_ADDR+1
+#define SERIAL_IER	1
 
-#define SERIAL_DLL	SERIAL_BASE_ADDR
-#define SERIAL_DLM	SERIAL_BASE_ADDR+1
+#define SERIAL_DLL	0
+#define SERIAL_DLM	1
 
-#define SERIAL_IIR	SERIAL_BASE_ADDR+2
-#define SERIAL_FCR	SERIAL_BASE_ADDR+2
+#define SERIAL_IIR	2
+#define SERIAL_FCR	2
 
-#define SERIAL_LCR	SERIAL_BASE_ADDR+3
-#define SERIAL_MCR	SERIAL_BASE_ADDR+4
+#define SERIAL_LCR	3
+#define SERIAL_MCR	4
 
-#define SERIAL_LSR	SERIAL_BASE_ADDR+5
-#define SERIAL_MSR	SERIAL_BASE_ADDR+6
+#define SERIAL_LSR	5
+#define SERIAL_MSR	6
 
-#define SERIAL_SCR	SERIAL_BASE_ADDR+7
+#define SERIAL_SCR	7
 
 #define LCR_DLAB_MASK	(1 << 7)
 #define LCR_BREAK_MASK  (1 << 6)
@@ -53,7 +52,7 @@
 #define MSR_RING_INDICATOR (1 << 6)
 #define MSR_CARRIER_DETECT (1 << 7)
 
-#define LSR_DATA_AVAIL (1 << 0)
+#define LSR_DATA_AVAIL 		(1)
 #define LSR_OVERRUN	   (1 << 1)
 #define LSR_PARITY	   (1 << 2)
 #define LSR_FRAMING	   (1 << 3)
@@ -71,6 +70,8 @@
 #define IER_MSR		   (1 << 3)
 
 #define IER_DEFAULT (IER_DATA_AVAIL | IER_THR | IER_LSR | IER_MSR)
+#define MCR_DEFAULT 0x0B
+#define FCR_DEFAULT 0x07
 
 typedef enum { 
     B4800 = 0x18,
@@ -110,6 +111,7 @@ typedef struct portdesc_t
 
 int serial_write(portdesc_t * pd, char * data, int size);
 int serial_read(portdesc_t * pd, char * data, int size);
+void serial_interrupt_reset(portdesc_t * pd);
 
 portdesc_t * serial_create(int base_addr);
 
