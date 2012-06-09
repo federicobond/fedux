@@ -7,6 +7,8 @@
 
 #include "../include/ttyman.h"
 
+
+
 int serial_maysend(portdesc_t * pd);
 int serial_mayrecv(portdesc_t * pd);
 void serial_interrupt_reset(portdesc_t * pd);
@@ -14,7 +16,8 @@ void serial_flush(portdesc_t * pd);
 void serial_baud_set(portdesc_t * pd, baud_t baud);
 void serial_lcr_setup(portdesc_t * pd,
 					  data_bits_t data_bits, stop_bits_t stop_bits,
-					  parity_t parity);
+					  parity_t parity,
+					  break_signal_t break_signal);
 void serial_ier_setup(portdesc_t * pd);
 void serial_mcr_setup(portdesc_t * pd);
 void serial_fcr_setup(portdesc_t * pd);
@@ -23,26 +26,42 @@ void serial_fcr_setup(portdesc_t * pd);
 
 void serial_interrupt_reset(portdesc_t * pd)
 {
+#ifdef DEBUG_SERIAL
+	ttyman_write("(R)", 3);
+#endif
 	_inb(pd->base_addr + SERIAL_IIR);
+	_inb(pd->base_addr + SERIAL_MSR);
+	_inb(pd->base_addr + SERIAL_LSR);
 }
 
 void serial_flush(portdesc_t * pd)
 {
 	char datum;
 
-
+#ifdef DEBUG_SERIAL
+	ttyman_write("F",1);
+#endif
 
 	while (serial_maysend(pd) && bq_used(pd->send_queue))
 	{
+
+#ifdef DEBUG_SERIAL
+		ttyman_write("W",1);
+#endif
 		bq_read(pd->send_queue, &datum, sizeof(datum));
 		_outb(datum, pd->base_addr + SERIAL_THR);
 	}
 
+
+
 	while (serial_mayrecv(pd) && bq_avail(pd->recv_queue))
 	{
+#ifdef DEBUG_SERIAL
+		ttyman_write("R",1);
+#endif
 		datum = _inb(pd->base_addr + SERIAL_RBR);
 		if (datum == 0x0D) datum = 0x0A;
-		bq_write_lossless(pd->recv_queue, &datum, sizeof(datum));	
+		bq_write_lossless(pd->recv_queue, &datum, sizeof(datum));
 	}
 	
 }
@@ -78,36 +97,31 @@ void serial_baud_set(portdesc_t * pd, baud_t baud)
 
 void serial_lcr_setup(portdesc_t * pd,
 					  data_bits_t data_bits, stop_bits_t stop_bits,
-					  parity_t parity)
+					  parity_t parity,
+					  break_signal_t break_signal)
 {
 	pd->data_bits = data_bits;
 	pd->stop_bits = stop_bits;
 	pd->parity = parity;
+	pd->break_signal = break_signal;
 
-	char lcr = _inb(pd->base_addr + SERIAL_LCR);
-
-	lcr &= ~LCR_SETUP_MASK;
-	lcr |= pd->data_bits;
-	lcr |= pd->stop_bits;
-	lcr |= pd->parity;	
-
-	_outb(lcr, pd->base_addr + SERIAL_LCR);
+	_outb(pd->data_bits |
+		  pd->stop_bits |
+		  pd->parity	|
+		  pd->break_signal,
+		  pd->base_addr + SERIAL_LCR);
 
 }
 
 
 void serial_ier_setup(portdesc_t * pd)
 {
-	char ier = _inb(pd->base_addr + SERIAL_IER);
-	ier |= IER_DEFAULT;
-	_outb(ier, pd->base_addr + SERIAL_IER);
+	_outb(IER_DEFAULT, pd->base_addr + SERIAL_IER);
 }
 
 void serial_mcr_setup(portdesc_t * pd)
 {
-	char mcr = _inb(pd->base_addr + SERIAL_MCR);
-	mcr |= MCR_DEFAULT;
-	_outb(mcr, pd->base_addr + SERIAL_MCR);
+	_outb(MCR_DEFAULT, pd->base_addr + SERIAL_MCR);
 }
 
 void serial_fcr_setup(portdesc_t * pd)
@@ -144,9 +158,14 @@ portdesc_t * serial_create(int base_addr)
 
 	serial_mcr_setup(pd);
 	serial_baud_set(pd, B9600);
-	serial_lcr_setup(pd, CS8, STOPB1, PAREVEN);	
+	serial_lcr_setup(pd, CS8, STOPB1, PAREVEN, NOBREAKSIGNAL);	
 	serial_ier_setup(pd);
 	serial_fcr_setup(pd);
+
+
+	serial_interrupt_reset(pd);
+
+	serial_flush(pd);
 
 	/* FIFO CTRL REG */
 	//_outb(pd->base_addr + 2, 0xC7);

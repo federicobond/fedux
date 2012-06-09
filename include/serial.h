@@ -96,12 +96,18 @@ typedef enum {
     PAREVEN = 0x18
 } parity_t;
 
+typedef enum {
+    BREAKSIGNAL = 0x40,
+    NOBREAKSIGNAL = 0x00,
+} break_signal_t;
+
 typedef struct portdesc_t
 {
 	baud_t baud;
 	data_bits_t data_bits;
 	stop_bits_t stop_bits;
 	parity_t parity;
+	break_signal_t break_signal;
 	int base_addr;
 	byte_queue * send_queue;
 	byte_queue * recv_queue;
