@@ -37,16 +37,13 @@ sh_init(void)
 void
 sh_show_prompt()
 {
-    char datum = 0;
     char buf[MAX_ARGS];
 
     while (1)
     {
         printf("%s", PROMPT);
-        datum = 0;
 
         gets(buf, sizeof(buf));
-
         trim(buf);
 
         if (strlen(buf) > 0)
