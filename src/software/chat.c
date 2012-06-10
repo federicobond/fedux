@@ -28,6 +28,7 @@ static chat_command_t chat_commands[] = {
     { "/name", chat_name },
     { "/setname", chat_setname },
     { "/exit", chat_exit },
+    { "/quit", chat_exit },
     { NULL, NULL }
 };
 
@@ -37,7 +38,7 @@ chat_help(char *args)
     printf("Type /help to show this message again.\n");
     printf("Type /name to show your current nickname.\n");
     printf("Type /setname to change your nickname.\n");
-    printf("Type /exit to leave the chat.\n");
+    printf("Type /exit or /quit to leave the chat.\n");
 }
 
 void
