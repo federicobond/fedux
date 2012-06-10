@@ -52,6 +52,7 @@ void tty_input_write(TTY *tty, char *data, int size)
 	int i, written;
 	for (i = 0; i < size; i++)
 	{
+        /* TODO: Add support for ANSI escape codes for moving cursor, changing format, etc. */
 		if (data[i] == '\b')
 			bq_rread(tty->input_display_queue, NULL, 1);
 		else
