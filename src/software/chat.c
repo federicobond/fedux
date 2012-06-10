@@ -152,7 +152,6 @@ chat_init()
 
     char in[256];
     char out[256];
-    //char ch; // unused
 
     int in_idx = 0, out_idx = 0;
     bool vread;
