@@ -150,13 +150,11 @@ chat_init()
     int in_idx = 0, out_idx = 0;
     bool vread;
 
-    while (true)
+    while (!exit)
     {
         vread = read_from_local(out, &out_idx);
         if (!vread)
             vread = read_from_remote(in, &in_idx);
-        if (exit)
-            return;
         if (!vread)
             _hlt();
     }
