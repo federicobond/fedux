@@ -6,21 +6,17 @@
 #include "../include/kbd.h"
 #include "../include/multiboot.h"
 #include "../include/kpanic.h"
-
 #include "../include/stdlib.h"
 #include "../include/mm.h"
-
 #include "../include/tty.h"
 #include "../include/ttyman.h"
 #include "../include/ttybox.h"
-
 #include "../include/serialman.h"
-
 #include "../include/syscall.h"
-
 #include "../include/critical.h"
-
 #include "../include/stdio.h"
+
+#define KERNEL_RELEASE "Final"
 
 
 DESCR_INT idt[0x100];	/* IDT de 256 entradas*/
@@ -123,7 +119,7 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 
 /* Initialize TTY manager */
 
-	ttyman_init(0, 8, 80, 17);
+	ttyman_init(0, 1, 80, 24);
 
 /* Initialize serial port manager */
 
@@ -133,38 +129,12 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 
 	firstbox = ttybox_create(0, 9, 80, 17);
 	
-/*
-  ______       _            
- |  ____|     | |           
- | |__ ___  __| |_   ___  __
- |  __/ _ \/ _` | | | \ \/ /
- | | |  __/ (_| | |_| |>  < 
- |_|  \___|\__,_|\__,_/_/\_\
-
-*/
-
+/* Initialize first row of text */
 	vgatext_format_set(0x70);
-	vgatext_charfill(0, 0, 80, 1, (char)205);
-	vgatext_charfill(0, 7, 80, 1, (char)205);
-	vgatext_charfill(0, 0, 1, 7, (char)186);
-	vgatext_charfill(79, 0, 1, 7, (char)186);
-
-	vgatext_charfill(79, 0, 1, 1, (char)187);
-	vgatext_charfill(0, 7, 1, 1, (char)200);
-	vgatext_charfill(0, 0, 1, 1, (char)201);
-	vgatext_charfill(79, 7, 1, 1, (char)188);
-
-	vgatext_format_set(0x1F);
-	vgatext_charfill(1, 1, 78, 6, 0);
-	vgatext_print(vgatext_poslinear(1, 1), "  ______       _ ");
-	vgatext_print(vgatext_poslinear(1, 2), " |  ____|     | |           ");
-	vgatext_print(vgatext_poslinear(1, 3), " | |__ ___  __| |_   ___  __");
-	vgatext_print(vgatext_poslinear(1, 4), " |  __/ _ \\/ _` | | | \\ \\/ /");
-	vgatext_print(vgatext_poslinear(1, 5), " | | |  __/ (_| | |_| |>  < ");
-	vgatext_print(vgatext_poslinear(1, 6), " |_|  \\___|\\__,_|\\__,_/_/\\_\\       Welcome to Fedux Kernel 0.0.2!");
+	vgatext_charfill(0, 0, 80, 1, '\0');
+	vgatext_print(vgatext_poslinear(0, 0), "Fedux 1.0");
+	vgatext_print(vgatext_poslinear(10, 0), KERNEL_RELEASE);
 	vgatext_format_set(0x0F);
-	
-	
 	
 
 /* End of critical initializations: Re-enable interrupts */
