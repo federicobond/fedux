@@ -21,6 +21,9 @@ all: tpe-asm tpe-c tpe-link
 start-vm:
 	qemu -fda img/tpe.img
 
+unetbootin:
+	unetbootin method=diskimage imgfile="img/tpe.img" installtype=USB
+
 tpe-asm:
 	$(NASM) src/libasm.asm -o bin/libasm.o
 	$(NASM) src/kstart.asm -o bin/kstart.o
