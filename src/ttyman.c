@@ -22,6 +22,7 @@ void ttyman_keyboard_callback(char key_ascii, const char * keyboard_status)
 		
 	if (keyboard_status[SCANCODE_CHAR_LALT])
 	{
+        /* TODO: Add tty lock to prevent tty change while a process is running */
 		if (key_ascii >= '1' && key_ascii <= '9')
 			ttyman_switch(key_ascii - '1');
 		else if (keyboard_status[SCANCODE_CHAR_E])

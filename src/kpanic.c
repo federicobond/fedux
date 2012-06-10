@@ -2,6 +2,7 @@
 #include "../include/vgatext.h"
 #include "../include/kasm.h"
 
+/* TODO: Improve debug information shown to user */
 void kpanic(void * panic_info)
 {
     char * panic_msg = (char *) panic_info;
