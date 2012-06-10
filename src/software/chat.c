@@ -5,6 +5,8 @@
 #include "../../include/software/commons.h"
 #include "../../include/serialman.h"
 
+#define MAX_NAME 64
+
 void chat_help(char *args);
 void chat_setname(char *args);
 void chat_exit(char *args);
@@ -12,7 +14,7 @@ void chat_init(void);
 
 static bool exit = false;
 
-static char name[64];
+static char name[MAX_NAME];
 
 typedef struct {
     char *name;
@@ -38,18 +40,13 @@ chat_help(char *args)
 void
 chat_setname(char *args)
 {
-    int length = 0;
-    name[0] = 0;
-
     do
     {
         printf("Please enter your nickname: ");
-        gets(name, 64);
+        gets(name, MAX_NAME);
         trim(name);
-
-        length = strlen(name);
     }
-    while (length == 0);
+    while (strlen(name) == 0);
 
     printf("Great! your nickname is now %s\n", name);
 }
