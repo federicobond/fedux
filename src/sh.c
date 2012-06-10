@@ -3,6 +3,11 @@
 #include "../include/string.h"
 #include "../include/sh.h"
 
+#define MAX_ARGS 1024
+#define MAX_ARGC 256
+
+#define PROMPT "fedux # "
+
 int exec_laws(int argc, char **argv);
 int exec_fortune(int argc, char **argv);
 int exec_echo(int argc, char **argv);
@@ -23,8 +28,6 @@ command_t commands[] = {
     { NULL, NULL }
 };
 
-#define PROMPT "fedux # "
-
 void
 sh_init(void)
 {
@@ -35,7 +38,7 @@ void
 sh_show_prompt()
 {
     char datum = 0;
-    char buf[1024];
+    char buf[MAX_ARGS];
 
     while (1)
     {
@@ -55,7 +58,7 @@ int
 sh_do_command(char buf[])
 {
     int argc = 0;
-    char *argv[256];
+    char *argv[MAX_ARGC];
     sh_tokenize(buf, &argc, argv);
 
     return exec(argc, argv);
@@ -95,6 +98,9 @@ sh_tokenize(char buf[], int *argc, char *argv[])
                 }
                 else if (!isspace(ch))
                 {
+                    /* TODO: Print error: Max arguments limit reached */
+                    if (*argc == MAX_ARGC)
+                        return;
                     state = TOKEN;
                     argv[(*argc)++] = buf;
                 }
@@ -113,6 +119,9 @@ sh_tokenize(char buf[], int *argc, char *argv[])
                 }
                 else
                 {
+                    /* TODO: Print error: Max arguments limit reached */
+                    if (*argc == MAX_ARGC)
+                        return;
                     argv[(*argc)++] = buf;
                     state = QUOTED;
                 }
