@@ -8,6 +8,7 @@
 #define MAX_NAME 64
 
 void chat_help(char *args);
+void chat_name(char *args);
 void chat_setname(char *args);
 void chat_exit(char *args);
 void chat_init(void);
@@ -24,6 +25,7 @@ typedef struct {
 
 static chat_command_t chat_commands[] = {
     { "/help", chat_help },
+    { "/name", chat_name },
     { "/setname", chat_setname },
     { "/exit", chat_exit },
     { NULL, NULL }
@@ -33,6 +35,7 @@ void
 chat_help(char *args)
 {
     printf("Type /help to show this message again.\n");
+    printf("Type /name to show your current nickname.\n");
     printf("Type /setname to change your nickname.\n");
     printf("Type /exit to leave the chat.\n");
 }
@@ -48,7 +51,13 @@ chat_setname(char *args)
     }
     while (strlen(name) == 0);
 
-    printf("Great! your nickname is now %s\n", name);
+    printf("Great! your nickname is now %s.\n", name);
+}
+
+void
+chat_name(char *args)
+{
+    printf("Your nickname is %s.\n", name);
 }
 
 void
@@ -150,6 +159,8 @@ chat_init()
     while (!exit)
     {
         vread = read_from_local(out, &out_idx);
+        /* TODO: Could this lead to a race condition where it just reads from
+         * local and not from remote? */
         if (!vread)
             vread = read_from_remote(in, &in_idx);
         if (!vread)
