@@ -4,13 +4,14 @@
 #include "../include/ctype.h"
 
 int errno;
-unsigned int rand_seed = 4;
+/* Chosen by fair dice roll. Guaranteed to be rand */
+unsigned long rand_seed = 4;
 
 int
-rand()
+rand(void)
 {
-    /* Chosen by fair dice roll. Guaranteed to be random */
-    return rand_seed;
+    rand_seed = rand_seed * 1103515245 + 12345;
+    return (unsigned int)(rand_seed / 65536) % 32768;
 }
 
 void

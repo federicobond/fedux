@@ -11,6 +11,10 @@ typedef struct {
     long rem;
 } ldiv_t;
 
+
+int     rand(void);
+void    srand(unsigned int seed);
+
 int     atof(const char *nptr);
 int     atoi(const char *nptr);
 long    atol(const char *nptr);
