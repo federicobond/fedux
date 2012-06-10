@@ -34,25 +34,20 @@ sh_init(void)
 void
 sh_show_prompt()
 {
-    int i = 0;
     char datum = 0;
-    char buf[256];
+    char buf[1024];
 
     while (1)
     {
         printf("%s", PROMPT);
         datum = 0;
 
-        while ((datum = getchar()) != '\n')
-                buf[i++] = datum;
+        gets(buf, sizeof(buf));
 
-        buf[i] = 0;
         trim(buf);
 
         if (strlen(buf) > 0)
             sh_do_command(buf);
-
-        i = 0;
     }
 }
 
