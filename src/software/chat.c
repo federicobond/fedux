@@ -132,10 +132,7 @@ chat_init()
     while (!exit)
     {
         vread = read_from_local(out, &out_idx);
-        /* TODO: Could this lead to a race condition where it just reads from
-         * local and not from remote? */
-        if (!vread)
-            vread = read_from_remote(in, &in_idx);
+        vread |= read_from_remote(in, &in_idx);
         if (!vread)
             _hlt();
     }
