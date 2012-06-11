@@ -68,7 +68,7 @@ void ttyman_update_info_text(void)
 	
 	strcpy(info_string, "TTY ");
 
-	itoa(_active_tty_idx, temp_string, 10);	
+	itoa(_active_tty_idx + 1, temp_string, 10);
 	strcat(info_string, temp_string);
 
 	strcat(info_string, " - Layout: ");
