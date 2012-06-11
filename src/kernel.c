@@ -15,7 +15,7 @@
 #include "../include/critical.h"
 #include "../include/stdio.h"
 
-#define KERNEL_RELEASE "Final"
+#define KERNEL_RELEASE "1.0 (Clumsy Padawan)"
 
 
 DESCR_INT idt[0x100];	/* IDT de 256 entradas*/
@@ -131,8 +131,8 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 /* Initialize first row of text */
 	vgatext_format_set(0x70);
 	vgatext_charfill(0, 0, 80, 1, '\0');
-	vgatext_print(vgatext_poslinear(0, 0), "Fedux 1.0");
-	vgatext_print(vgatext_poslinear(10, 0), KERNEL_RELEASE);
+	vgatext_print(vgatext_poslinear(0, 0), "Fedux");
+	vgatext_print(vgatext_poslinear(6, 0), KERNEL_RELEASE);
 	vgatext_format_set(0x0F);
 	
 
