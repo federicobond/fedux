@@ -20,6 +20,7 @@ int     atoi(const char *nptr);
 long    atol(const char *nptr);
 
 char	*itoa(int value, char *str, int base);
+char	*utoa(unsigned int value, char *str, int base);
 
 int     abs(int x);
 long    labs(long x);

@@ -148,6 +148,31 @@ printf_d(int i, FILE *f)
 }
 
 int
+printf_u(unsigned int i, FILE *f)
+{
+    char buf[32];
+    utoa(i, buf, 10);
+    return printf_s(buf, f);
+}
+
+int
+printf_x(unsigned int i, FILE *f)
+{
+    char buf[32];
+    utoa(i, buf, 16);
+    strtolower(buf);
+    return printf_s(buf, f);
+}
+
+int
+printf_X(unsigned int i, FILE *f)
+{
+    char buf[32];
+    utoa(i, buf, 16);
+    return printf_s(buf, f);
+}
+
+int
 vsprintf(char *str, const char *fmt, va_list ap)
 {
     /* TODO: Code */
@@ -172,6 +197,15 @@ vfprintf(FILE *f, const char *fmt, va_list ap)
                     break;
                 case 'd':
                     acum += printf_d(va_arg(ap, int), f);
+                    break;
+                case 'u':
+                    acum += printf_u(va_arg(ap, unsigned int), f);
+                    break;
+                case 'x':
+                    acum += printf_x(va_arg(ap, unsigned int), f);
+                    break;
+                case 'X':
+                    acum += printf_X(va_arg(ap, unsigned int), f);
                     break;
                 case 'c':
                     putc(va_arg(ap, int), f);
