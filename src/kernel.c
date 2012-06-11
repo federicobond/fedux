@@ -1,6 +1,5 @@
 #include "../include/kasm.h"
 #include "../include/defs.h"
-#include "../include/kc.h"
 #include "../include/sh.h"
 #include "../include/vgatext.h"
 #include "../include/kbd.h"

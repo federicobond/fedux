@@ -77,8 +77,6 @@ char *gets(char *s, int size)
 char *
 fgets(char *s, int size, FILE *stream)
 {
-    /* TODO: Fix */
-    /* TODO: Return NULL when getc fails */
     char c;
     int i = 0; 
 

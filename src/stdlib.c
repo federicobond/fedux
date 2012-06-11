@@ -34,19 +34,6 @@ labs(long number)
     return (number < 0) ? -number : number;
 }
 
-div_t
-div(int numerator, int denominator)
-{
-    /* TODO: Handle 0 as denominator. Check POSIX standard */
-    /* TODO: Handle negative numbers.
-     * Remember that result must satify quot * denominator + rem = numerator */
-    div_t result = {0, 0};
-    result.quot = numerator / denominator;
-    result.rem = numerator % denominator;
-
-    return result;
-}
-
 int
 atoi(const char *str)
 {

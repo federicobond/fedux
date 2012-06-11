@@ -15,8 +15,6 @@ void chat_init(void);
 
 static bool exit = false;
 
-static char name[MAX_NAME];
-
 typedef struct {
     char *name;
     void (*exec)(char *args);
@@ -25,8 +23,6 @@ typedef struct {
 
 static chat_command_t chat_commands[] = {
     { "/help", chat_help },
-    { "/name", chat_name },
-    { "/setname", chat_setname },
     { "/exit", chat_exit },
     { "/quit", chat_exit },
     { NULL, NULL }
@@ -36,29 +32,7 @@ void
 chat_help(char *args)
 {
     printf("Type /help to show this message again.\n");
-    printf("Type /name to show your current nickname.\n");
-    printf("Type /setname to change your nickname.\n");
     printf("Type /exit or /quit to leave the chat.\n");
-}
-
-void
-chat_setname(char *args)
-{
-    do
-    {
-        printf("Please enter your nickname: ");
-        gets(name, MAX_NAME);
-        trim(name);
-    }
-    while (strlen(name) == 0);
-
-    printf("Great! your nickname is now %s.\n", name);
-}
-
-void
-chat_name(char *args)
-{
-    printf("Your nickname is %s.\n", name);
 }
 
 void
@@ -101,7 +75,6 @@ exec_chat(int argc, char **argv)
     printf("Welcome to fedux-chat!\n");
 
     chat_help(NULL);
-    chat_setname(NULL);
     chat_init();
 
     return 0;
