@@ -320,6 +320,14 @@ void keyboard_handler(void)
         }
         return;
     }
+    /* Mask arrows */
+    if ((scancode & ~SCANCODE_EXT) == 0x48
+        || (scancode & ~SCANCODE_EXT) == 0x4d
+        || (scancode & ~SCANCODE_EXT) == 0x50
+        || (scancode & ~SCANCODE_EXT) == 0x4b)
+    {
+        return;
+    }
 
     if (!(scancode & 0x80))
     {
