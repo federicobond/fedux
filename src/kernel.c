@@ -135,6 +135,7 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 	vgatext_print(vgatext_poslinear(6, 0), KERNEL_RELEASE);
 	vgatext_format_set(0x0F);
 	
+	vgatext_cursor_enable();
 
 /* End of critical initializations: Re-enable interrupts */
 	critical_leave();
