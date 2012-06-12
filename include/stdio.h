@@ -15,6 +15,7 @@
 
 typedef struct {
     int fd;
+    char lastc;
 } FILE;
 
 extern FILE *stdin, *stdout, *stderr;
@@ -44,6 +45,7 @@ int     vfprintf(FILE *f, const char *fmt, va_list ap);
 int     scanf(const char *fmt, ...);
 int     sscanf(char *str, const char *fmt, ...);
 
+int     vscanf(const char *fmt, va_list ap);
 int     vfscanf(FILE *f, const char *fmt, va_list ap);
 int     vsscanf(char *str, const char *fmt, va_list ap);
 

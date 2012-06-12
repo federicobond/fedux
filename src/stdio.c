@@ -1,14 +1,10 @@
 #include "../include/syscall.h"
 #include "../include/stdlib.h"
 #include "../include/stdio.h"
+#include "../include/ctype.h"
 #include "../include/string.h"
 #include "../include/kasm.h"
 #include <stdarg.h>
-
-/*
-#include "../include/kbd.h"
-#include "../include/vgatext.h"
-*/
 
 FILE _stdin = { STDIN_FILENO };
 FILE _stdout = { STDOUT_FILENO };
@@ -31,11 +27,22 @@ putc(int ch, FILE *stream)
 int
 getc(FILE *stream)
 {
-    /* TODO: Handle -1 error value */
     char ch;
+    if (stream->lastc)
+    {
+        ch = stream->lastc;
+        stream->lastc = 0;
+        return (int)ch;
+    }
     while (!read(stream->fd, (void *)&ch, 1))
         _hlt();
     return (int)ch;
+}
+
+void
+ungetc(int ch, FILE *stream)
+{
+    stream->lastc = ch;
 }
 
 int
@@ -234,7 +241,7 @@ scanf(const char *fmt, ...)
     int retval;
 
     va_start(ap, fmt);
-    retval = vfscanf(stdin, fmt, ap);
+    retval = vscanf(fmt, ap);
     va_end(ap);
 
     return retval;
@@ -263,6 +270,92 @@ sscanf(char *str, const char *fmt, ...) {
     va_end(ap);
 
     return retval;
+}
+
+int
+vscanf(const char *fmt, va_list ap)
+{
+    /* TODO: current implementation is not fully tested and may contain some
+     * bugs. */
+    int ch = 0;
+    void *ptr;
+    int matches = 0;
+    bool negative = false;
+    while ((ch = getchar()) != '\n')
+    {
+        if (*fmt == '%')
+        {
+            fmt++;
+            switch (*fmt)
+            {
+            case 'd':
+                ptr = va_arg(ap, int *);
+                if (ch == '-')
+                {
+                    ch = getchar();
+                    negative = true;
+                }
+                if (isdigit(ch))
+                {
+                    matches++;
+                    *(int *)ptr = ch - '0';
+                }
+                else
+                {
+                    /* ERROR: String is not number */
+                    return matches;
+                }
+                while (isdigit(ch = getchar()))
+                {
+                    *(int *)ptr *= 10;
+                    *(int *)ptr += ch - '0';
+                }
+                if (negative)
+                {
+                    *(int *)ptr = -(*(int *)ptr);
+                    negative = false;
+                }
+                ungetc(ch, stdin);
+                break;
+            case 's':
+                ptr = va_arg(ap, char *);
+                if (!isspace(ch))
+                {
+                    matches++;
+                    *(char *)ptr++ = ch;
+                }
+                while (!isspace(ch = getchar()))
+                {
+                    *(char *)ptr++ = ch;
+                }
+                *(char *)ptr = '\0';
+                ungetc(ch, stdin);
+                break;
+            case '%':
+                /* Matching error */
+                if (ch == '%')
+                    matches++;
+                else
+                    return matches;
+                break;
+            case 'c':
+                ptr = va_arg(ap, char *);
+                *(char *)ptr = ch;
+                matches++;
+                break;
+            default:
+                /* Error: invalid format specifier */
+                return -1;
+            }
+        }
+        else if (ch != *fmt)
+        {
+            /* Error: stream does not match format */
+            return matches;
+        }
+        fmt++;
+    }
+    return matches;
 }
 
 int
