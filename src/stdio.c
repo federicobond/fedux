@@ -278,6 +278,7 @@ vscanf(const char *fmt, va_list ap)
     int ch = 0;
     void *ptr;
     int matches = 0;
+    bool negative = false;
     while ((ch = getchar()) != '\n')
     {
         if (*fmt == '%')
@@ -287,18 +288,32 @@ vscanf(const char *fmt, va_list ap)
             {
             case 'd':
                 ptr = va_arg(ap, int *);
+                if (ch == '-')
+                {
+                    ch = getchar();
+                    negative = true;
+                }
                 if (isdigit(ch))
                 {
                     matches++;
                     *(int *)ptr = ch - '0';
+                }
+                else
+                {
+                    /* ERROR: String is not number */
+                    return matches;
                 }
                 while (isdigit(ch = getchar()))
                 {
                     *(int *)ptr *= 10;
                     *(int *)ptr += ch - '0';
                 }
-                if (ch != '\n')
-                    ungetc(ch, stdin);
+                if (negative)
+                {
+                    *(int *)ptr = -(*(int *)ptr);
+                    negative = false;
+                }
+                ungetc(ch, stdin);
                 break;
             case 's':
                 ptr = va_arg(ap, char *);
@@ -311,8 +326,20 @@ vscanf(const char *fmt, va_list ap)
                 {
                     *(char *)ptr++ = ch;
                 }
-                if (ch != '\n')
-                    ungetc(ch, stdin);
+                *(char *)ptr = '\0';
+                ungetc(ch, stdin);
+                break;
+            case '%':
+                /* Matching error */
+                if (ch == '%')
+                    matches++;
+                else
+                    return matches;
+                break;
+            case 'c':
+                ptr = va_arg(ap, char *);
+                *(char *)ptr = ch;
+                matches++;
                 break;
             default:
                 /* Error: invalid format specifier */
