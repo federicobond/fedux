@@ -13,6 +13,7 @@ int exec_fortune(int argc, char **argv);
 int exec_echo(int argc, char **argv);
 int exec_help(int argc, char **argv);
 int exec_chat(int argc, char **argv);
+int exec_cowsay(int argc, char **argv);
 
 typedef struct {
     char *name;
@@ -25,6 +26,7 @@ command_t commands[] = {
     { "echo",       exec_echo },
     { "help",       exec_help },
     { "chat",       exec_chat },
+    { "cowsay",     exec_cowsay },
     { NULL, NULL }
 };
 

@@ -14,11 +14,12 @@ exec_help(int argc, char **argv)
         return 0;
     }
 
-    printf("chat    [--version]      initiates a chat session by serial port\n");
-    printf("echo    [-n] [--version] prints the arguments to stdout\n");
-    printf("fortune [--version]      print a fortune cookie\n");
-    printf("help    [--version]      print this message\n");
-    printf("laws    [--version]      print the three laws of robotics\n");
+    printf("chat    [--version]             initiates a chat session by serial port\n");
+    printf("cowsay  [-bgpstwy] [--version]  prints a cute cow with the given message\n");
+    printf("echo    [-n] [--version]        prints the arguments to stdout\n");
+    printf("fortune [--version]             print a fortune cookie\n");
+    printf("help    [--version]             print this message\n");
+    printf("laws    [--version]             print the three laws of robotics\n");
 
     return 0;
 }
