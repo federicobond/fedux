@@ -275,6 +275,8 @@ sscanf(char *str, const char *fmt, ...) {
 int
 vscanf(const char *fmt, va_list ap)
 {
+    /* TODO: current implementation is not fully tested and may contain some
+     * bugs. */
     int ch = 0;
     void *ptr;
     int matches = 0;
