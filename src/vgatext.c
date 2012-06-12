@@ -5,6 +5,8 @@
 #include "../include/bq.h"
 
 
+#define CURSOR_DISABLE_MASK (1 << 5)
+
 
 static int _width, _height;
 static char _current_format;
@@ -221,10 +223,22 @@ int vgatext_format_get()
 
 void vgatext_cursor_enable()
 {
+	char csr;
+
+	_outb(0x0A, 0x03D4);
+	csr = _inb(0x3D5);
+	csr &= ~CURSOR_DISABLE_MASK;
+	_outb(csr, 0x03D5);
 }
 
 void vgatext_cursor_disable()
 {
+	char csr;
+
+	_outb(0x0A, 0x03D4);
+	csr = _inb(0x3D5);
+	csr |= CURSOR_DISABLE_MASK;
+	_outb(csr, 0x03D5);
 }
 
 

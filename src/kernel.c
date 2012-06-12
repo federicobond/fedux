@@ -164,6 +164,7 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 	vgatext_print(vgatext_poslinear(1, 6), " |_|  \\___|\\__,_|\\__,_/_/\\_\\       Welcome to Fedux Kernel 0.0.2!");
 	vgatext_format_set(0x0F);
 	
+	vgatext_cursor_disable();
 	
 	
 
