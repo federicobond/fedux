@@ -5,7 +5,7 @@
 \textclass article
 \use_default_options true
 \maintain_unincluded_children false
-\language english
+\language spanish
 \language_package default
 \inputencoding auto
 \fontencoding global
@@ -25,9 +25,10 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing single
 \use_hyperref false
-\papersize default
-\use_geometry false
+\papersize a4paper
+\use_geometry true
 \use_amsmath 1
 \use_esint 1
 \use_mhchem 1
@@ -42,6 +43,10 @@
 \shortcut idx
 \color #008000
 \end_index
+\leftmargin 1.5cm
+\topmargin 1.5cm
+\rightmargin 1.5cm
+\bottommargin 1.5cm
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
@@ -60,15 +65,59 @@
 \begin_body
 
 \begin_layout Title
-Fedux
-\end_layout
-
-\begin_layout Author
-Manual de Usuario
+Fedux - Manual de Usuario
 \end_layout
 
 \begin_layout Part
-Linea de comandos
+Arranque
+\end_layout
+
+\begin_layout Standard
+Arranque Una vez cargado la imagen de disco en un emulador o iniciado el
+ sistema de forma nativa, aparecerá la pantalla del GRUB solicitando la
+ elección de un kernel a bootear.
+ En este caso la única opción es “Fedux Kernel” que permite continuar el
+ arranque del TPE.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename bootloader.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+GRand Unified Bootloader - Bootloader predilecto de los desarrolladores
+ de Fedux
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Línea de comandos
 \end_layout
 
 \begin_layout Standard
@@ -80,8 +129,43 @@ dad para dos conjuntos de atajos del teclado.
  con Fedux.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename term.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Terminal de Fedux
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
-Distribución de telcado
+Distribución de teclado
 \end_layout
 
 \begin_layout Standard
@@ -97,6 +181,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Tabular
 <lyxtabular version="3" rows="3" columns="2">
 <features tabularvalignment="middle">
@@ -191,34 +276,6 @@ La distribución seleccionada puede visualizarse en la parte superior de
  la pantalla.
 \end_layout
 
-\begin_layout Standard
-\begin_inset Float figure
-placement H
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-Poner aca la foto
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-Distribucion de teclas en uso
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Section
 Múltiples terminales
 \end_layout
@@ -262,6 +319,41 @@ Opciones
 --version (opcional) Imprime la versión del programa.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename help.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Salida sin argumentos del programa help
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 echo
 \end_layout
@@ -284,6 +376,41 @@ Opciones
 
 \begin_layout Itemize
 --version (opcional) Imprime la versión del programa
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename echo.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+echo
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -310,7 +437,14 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-Poner aca una foto del chat
+\align center
+\begin_inset Graphics
+	filename chat.png
+	scale 50
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Plain Layout
@@ -322,10 +456,6 @@ Fedux chat
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -352,6 +482,41 @@ Opciones
 --version (opcional) Imprime la versión del programa.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename laws.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Asimov aprueba el uso del kernel en cerebros positronicos
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 fortune
 \end_layout
@@ -366,6 +531,41 @@ Opciones
 
 \begin_layout Itemize
 --version (opcional) Imprime la versión del programa.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename fortune.png
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Fortune cookies en Fedux
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -429,15 +629,22 @@ wide false
 sideways false
 status open
 
-\begin_layout Standard
-Poner aca una foto de la vaca loca.
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename cowsay.png
+	scale 50
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Plain Layout
 \begin_inset Caption
 
 \begin_layout Plain Layout
-cowsay
+Eso no era pasto...
 \end_layout
 
 \end_inset
