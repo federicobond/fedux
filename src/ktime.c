@@ -21,14 +21,16 @@ get_update_in_progress_flag(void)
 
 unsigned long int ktime_mktime()
 {
-    /* TODO: check update flag, fix overflow * */
+    /* TODO: check validity of time. Right now it is only useful as random
+     * number seed */
+    /* TODO: check update flag before reading * */
     unsigned char sec  = read_cmos_register(0x00);
     unsigned char min  = read_cmos_register(0x02);
     unsigned char hour = read_cmos_register(0x04);
     unsigned char day  = read_cmos_register(0x04);
     unsigned char mon  = read_cmos_register(0x04);
     unsigned char year = read_cmos_register(0x04);
-    /* the century register may not be available*/
+    /* the century register may not be available */
     unsigned char century = read_cmos_register(0x04);
     
     year = year + (century - 1) * 100;
