@@ -127,11 +127,10 @@ void ttybox_putchar(TTYBOX *ttybox, char chr, char owner)
 	{
 	case '\n':
 		ttybox_pos_set(ttybox, ttybox_pos_get(ttybox) + ttybox->width, owner);
-
+        /* Fallthrough */
 	case '\r':
 		ttybox_pos_set(ttybox, (ttybox_pos_get(ttybox)/ttybox->width)*ttybox->width, owner);
 		break;
-
 	case '\b':
 		if (ttybox_erasable(ttybox, ttybox_pos_get(ttybox), owner))
 		{
@@ -140,6 +139,9 @@ void ttybox_putchar(TTYBOX *ttybox, char chr, char owner)
 				posptr[0] = '\0';
 		}
 		break;
+    case '\t':
+        /* Do nothing on tab, reserved for autocomplete */
+        break;
 	default:
 
 		if ((posptr = ttybox_linearaddr(ttybox, ttybox_pos_get(ttybox))))

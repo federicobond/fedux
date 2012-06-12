@@ -73,6 +73,27 @@ strncmp(const char *s1, const char *s2, size_t n)
     return *s1 - *s2;
 }
 
+char *
+strtoupper(char *str)
+{
+    while (*str != '\0')
+    {
+        *str = toupper(*str);
+        str++;
+    }
+    return str;
+}
+
+char *
+strtolower(char *str)
+{
+    while (*str != '\0')
+    {
+        *str = tolower(*str);
+        str++;
+    }
+    return str;
+}
 
 char *
 strrev(char *str)

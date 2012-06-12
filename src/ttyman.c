@@ -22,6 +22,7 @@ void ttyman_keyboard_callback(char key_ascii, const char * keyboard_status)
 		
 	if (keyboard_status[SCANCODE_CHAR_LALT])
 	{
+        /* TODO: Add tty lock to prevent tty change while a process is running */
 		if (key_ascii >= '1' && key_ascii <= '9')
 			ttyman_switch(key_ascii - '1');
 		else if (keyboard_status[SCANCODE_CHAR_E])
@@ -67,7 +68,7 @@ void ttyman_update_info_text(void)
 	
 	strcpy(info_string, "TTY ");
 
-	itoa(_active_tty_idx, temp_string, 10);	
+	itoa(_active_tty_idx + 1, temp_string, 10);
 	strcat(info_string, temp_string);
 
 	strcat(info_string, " - Layout: ");

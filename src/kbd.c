@@ -262,15 +262,15 @@ char kbd_keymap_get(unsigned int scancode)
         /* TODO: May need to disable for english keyboard */
         /* TODO: Driver is sending wrong char for second acute press */
         if (key == 'a')
-            key = 160; /* á */
+            key = (char)160; /* á */
         else if (key == 'e')
-            key = 130; /* é */
+            key = (char)130; /* é */
         else if (key == 'i')
-            key = 161; /* í */
+            key = (char)161; /* í */
         else if (key == 'o')
-            key = 162; /* ó */
+            key = (char)162; /* ó */
         else if (key == 'u')
-            key = 163; /* ú */
+            key = (char)163; /* ú */
 
         acute = false;
     }
@@ -318,6 +318,14 @@ void keyboard_handler(void)
         {
             acute = true;
         }
+        return;
+    }
+    /* Mask arrows */
+    if ((scancode & ~SCANCODE_EXT) == 0x48
+        || (scancode & ~SCANCODE_EXT) == 0x4d
+        || (scancode & ~SCANCODE_EXT) == 0x50
+        || (scancode & ~SCANCODE_EXT) == 0x4b)
+    {
         return;
     }
 

@@ -5,14 +5,15 @@
 #include "../../include/software/commons.h"
 #include "../../include/serialman.h"
 
+#define MAX_NAME 64
+
 void chat_help(char *args);
+void chat_name(char *args);
 void chat_setname(char *args);
 void chat_exit(char *args);
 void chat_init(void);
 
 static bool exit = false;
-
-static char name[64];
 
 typedef struct {
     char *name;
@@ -22,8 +23,8 @@ typedef struct {
 
 static chat_command_t chat_commands[] = {
     { "/help", chat_help },
-    { "/setname", chat_setname },
     { "/exit", chat_exit },
+    { "/quit", chat_exit },
     { NULL, NULL }
 };
 
@@ -31,27 +32,7 @@ void
 chat_help(char *args)
 {
     printf("Type /help to show this message again.\n");
-    printf("Type /setname to change your nickname.\n");
-    printf("Type /exit to leave the chat.\n");
-}
-
-void
-chat_setname(char *args)
-{
-    int length = 0;
-    name[0] = 0;
-
-    do
-    {
-        printf("Please enter your nickname: ");
-        gets(name, 64);
-        trim(name);
-
-        length = strlen(name);
-    }
-    while (length == 0);
-
-    printf("Great! your nickname is now %s\n", name);
+    printf("Type /exit or /quit to leave the chat.\n");
 }
 
 void
@@ -94,7 +75,6 @@ exec_chat(int argc, char **argv)
     printf("Welcome to fedux-chat!\n");
 
     chat_help(NULL);
-    chat_setname(NULL);
     chat_init();
 
     return 0;
@@ -145,18 +125,14 @@ chat_init()
 
     char in[256];
     char out[256];
-    //char ch; // unused
 
     int in_idx = 0, out_idx = 0;
     bool vread;
 
-    while (true)
+    while (!exit)
     {
         vread = read_from_local(out, &out_idx);
-        if (!vread)
-            vread = read_from_remote(in, &in_idx);
-        if (exit)
-            return;
+        vread |= read_from_remote(in, &in_idx);
         if (!vread)
             _hlt();
     }

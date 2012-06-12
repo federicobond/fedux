@@ -21,6 +21,7 @@ int syscall_handler(int number,
 		retval = io_read((int)param1, (char*)param2, (unsigned int)param3);
 		break;
 	default:
+        /* TODO: Print error explanation */
 		retval = SYSCALL_ERROR;
 		break;
 	}
