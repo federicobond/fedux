@@ -4,9 +4,7 @@
 #include "../include/kasm.h"
 #include "../include/bq.h"
 
-
 #define CURSOR_DISABLE_MASK (1 << 5)
-
 
 static int _width, _height;
 static char _current_format;
@@ -17,14 +15,16 @@ static char * _memory_start;
 static char * _memory_end;
 
 
-int vgatext_poslinear(int x, int y)
+int
+vgatext_poslinear(int x, int y)
 {
 	return (x >= 0 && y >= 0 && x < _width && y < _height ?
 			  y*_width + x : INVALID_POSITION);
 }
 
 
-void vgatext_linearpos(int linear, int *x, int *y)
+void
+vgatext_linearpos(int linear, int *x, int *y)
 {
 	if (linear >= 0 && linear < _width*_height)
 	{
@@ -39,28 +39,31 @@ void vgatext_linearpos(int linear, int *x, int *y)
 			
 }
 
-char * vgatext_linearaddr(int linear)
+char *
+vgatext_linearaddr(int linear)
 {
 	return ((linear >= 0 && linear < _width*_height) ?
 			_memory_start + linear*2 : NULL);
 }
 
 
-int vgatext_addrlinear(char * addr)
+int
+vgatext_addrlinear(char * addr)
 {
 	return ((addr >= _memory_start && addr <= _memory_end) ?
 			(addr - _memory_start)/2 : INVALID_POSITION);
 }
 
 
-char * vgatext_posaddr(int x, int y)
+char *
+vgatext_posaddr(int x, int y)
 {
 	return (x >= 0 && y >= 0 && x < _width && y < _height ?
 			  _memory_start + (y*_width + x)*2 : NULL);
 }
 
-
-void vgatext_addrpos(char * addr, int *x, int *y)
+void
+vgatext_addrpos(char * addr, int *x, int *y)
 {
 	if (addr >= _memory_start && addr <= _memory_end)
 	{
@@ -74,7 +77,8 @@ void vgatext_addrpos(char * addr, int *x, int *y)
 	}
 }
 
-bool vgatext_init(int width, int height, char * memory_start)
+bool
+vgatext_init(int width, int height, char * memory_start)
 {
 	_width = width;
 	_height = height;
@@ -83,8 +87,8 @@ bool vgatext_init(int width, int height, char * memory_start)
 	return true;
 }
 
-
-int vgatext_print(int linear, char * text)
+int
+vgatext_print(int linear, char * text)
 {
 
 	while (*text && vgatext_putcharl(linear, *text))
@@ -96,8 +100,8 @@ int vgatext_print(int linear, char * text)
 	return linear; 		/* Return final linear address */
 }
 
-
-void vgatext_clear()
+void
+vgatext_clear()
 {
 	int format = vgatext_format_get();
 	vgatext_format_set(DEFAULT_FORMAT);
@@ -105,7 +109,8 @@ void vgatext_clear()
 	vgatext_format_set(format);
 }
 
-int vgatext_putcharxy(int x, int y, char chr)
+int
+vgatext_putcharxy(int x, int y, char chr)
 {
 	char * posaddr = vgatext_posaddr(x, y);
 	
@@ -118,7 +123,8 @@ int vgatext_putcharxy(int x, int y, char chr)
 	return (posaddr != NULL);
 }
 
-int vgatext_putcharl(int linear, char chr)
+int
+vgatext_putcharl(int linear, char chr)
 {
 	char * posaddr = vgatext_linearaddr(linear);
 	
@@ -131,8 +137,8 @@ int vgatext_putcharl(int linear, char chr)
 	return (posaddr != NULL);
 }
 
-
-void vgatext_charfill(int start_x, int start_y, int width, int height, char fillchar)
+void
+vgatext_charfill(int start_x, int start_y, int width, int height, char fillchar)
 {
 	int x, y;
 	int end_x, end_y;
@@ -144,8 +150,8 @@ void vgatext_charfill(int start_x, int start_y, int width, int height, char fill
 			vgatext_putcharxy(x, y, fillchar);
 }
 
-
-void vgatext_strfill(int start_x, int start_y, int width, int height, char * str)
+void
+vgatext_strfill(int start_x, int start_y, int width, int height, char * str)
 {
 
 	int x, y;
@@ -167,10 +173,10 @@ void vgatext_strfill(int start_x, int start_y, int width, int height, char * str
 			if (*str)
 				str++;
 		}	
-	
 }
 
-void vgatext_writebq(byte_queue *bq, int dest_x, int dest_y, int width)
+void
+vgatext_writebq(byte_queue *bq, int dest_x, int dest_y, int width)
 {
 	byte_queue tmp_bq = *bq;
 
@@ -192,7 +198,8 @@ void vgatext_writebq(byte_queue *bq, int dest_x, int dest_y, int width)
 	
 }
 
-void vgatext_write(char * buffer, int dest_x, int dest_y, int width, int height)
+void
+vgatext_write(char * buffer, int dest_x, int dest_y, int width, int height)
 {
 	int x, y;
 	char * posaddr;
@@ -210,12 +217,14 @@ void vgatext_write(char * buffer, int dest_x, int dest_y, int width, int height)
 		}
 }
 
-void vgatext_format_set(int format)
+void
+vgatext_format_set(int format)
 {
 	_current_format = format;
 }
 
-int vgatext_format_get()
+int
+vgatext_format_get()
 {
 	return _current_format;
 }

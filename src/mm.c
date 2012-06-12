@@ -12,7 +12,8 @@ static void * _memory_start;
 static unsigned long int _memory_length;
 static void * _next_alloc;
 
-void mm_setup(multiboot_info_t * mbi)
+void
+mm_setup(multiboot_info_t * mbi)
 {
 
 	/* 1 MB Safe distance */
@@ -55,7 +56,8 @@ void mm_setup(multiboot_info_t * mbi)
 
 }
 
-void mm_init(void * memory_start, unsigned long int memory_length)
+void
+mm_init(void * memory_start, unsigned long int memory_length)
 {
 	_memory_start = memory_start;
 	_memory_length = memory_length;
@@ -63,18 +65,21 @@ void mm_init(void * memory_start, unsigned long int memory_length)
 }
 
 
-void * mm_get_start()
+void *
+mm_get_start()
 {
 	return _memory_start;
 }
 
-void mm_free(void * ptr)
+void
+mm_free(void * ptr)
 {
 	/* Do nothing! */
 }
 
 
-void * mm_malloc(size_t size)
+void *
+mm_malloc(size_t size)
 {
 	_next_alloc = ((char *)_next_alloc) + size;
 
@@ -83,3 +88,4 @@ void * mm_malloc(size_t size)
 
 	return (((char *)_next_alloc) - size);
 }
+

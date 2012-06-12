@@ -19,7 +19,8 @@ get_update_in_progress_flag(void)
     return _inb(CMOS_DATA) & 0x80;
 }
 
-unsigned long int ktime_mktime()
+unsigned long int
+ktime_mktime(void)
 {
     /* TODO: check validity of time. Right now it is only useful as random
      * number seed */

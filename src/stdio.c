@@ -75,7 +75,8 @@ getchar(void)
     return getc(stdin);
 }
 
-char *gets(char *s, int size)
+char *
+gets(char *s, int size)
 {
     return fgets(s, size, stdin);
 }

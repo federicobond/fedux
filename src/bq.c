@@ -2,7 +2,8 @@
 #include "../include/bq.h"
 #include "../include/mm.h"
 
-byte_queue * bq_create(unsigned int size)
+byte_queue *
+bq_create(unsigned int size)
 {
 	byte_queue * newbq = mm_malloc(sizeof(byte_queue));
 	char *buff = mm_malloc(size*sizeof(char));
@@ -10,13 +11,15 @@ byte_queue * bq_create(unsigned int size)
 	return newbq;
 }
 
-void bq_destroy(byte_queue * bq)
+void
+bq_destroy(byte_queue * bq)
 {
 	mm_free(bq->buff);
 	mm_free(bq);
 }
 
-void bq_init(byte_queue *queue, char *buff, unsigned int size)
+void
+bq_init(byte_queue *queue, char *buff, unsigned int size)
 {
 	queue->buff = buff;
 	queue->size = size;
@@ -25,7 +28,8 @@ void bq_init(byte_queue *queue, char *buff, unsigned int size)
 	queue->full = false;
 }
 
-int bq_used(byte_queue *queue)
+int
+bq_used(byte_queue *queue)
 {
 	int used;
 
@@ -41,12 +45,14 @@ int bq_used(byte_queue *queue)
 	return used;
 }
 
-int bq_avail(byte_queue *queue)
+int
+bq_avail(byte_queue *queue)
 {
 	return queue->size - bq_used(queue);
 }
 
-int bq_write_lossless(byte_queue *queue, const char *data, unsigned int size)
+int
+bq_write_lossless(byte_queue *queue, const char *data, unsigned int size)
 {
 	int i, written = 0;
 
@@ -67,7 +73,8 @@ int bq_write_lossless(byte_queue *queue, const char *data, unsigned int size)
 	return written;
 }
 
-int bq_write(byte_queue *queue, const char *data, unsigned int size)
+int
+bq_write(byte_queue *queue, const char *data, unsigned int size)
 {
 	int i;
 
@@ -88,7 +95,8 @@ int bq_write(byte_queue *queue, const char *data, unsigned int size)
 	return size;
 }
 
-void bq_move(byte_queue *src, byte_queue *dest, unsigned int count)
+void
+bq_move(byte_queue *src, byte_queue *dest, unsigned int count)
 {
 	char datum;
 
@@ -99,13 +107,15 @@ void bq_move(byte_queue *src, byte_queue *dest, unsigned int count)
 	}
 }
 
-void bq_copy(byte_queue *src, byte_queue *dest, unsigned int count)
+void
+bq_copy(byte_queue *src, byte_queue *dest, unsigned int count)
 {
 	byte_queue tmp_src = *src;
 	bq_move(&tmp_src, dest, count);
 }
 
-int bq_read(byte_queue *queue, char *data, unsigned int size)
+int
+bq_read(byte_queue *queue, char *data, unsigned int size)
 {
 	int read;
 
@@ -122,7 +132,8 @@ int bq_read(byte_queue *queue, char *data, unsigned int size)
 }
 
 
-int bq_peek(byte_queue *queue, char *data, unsigned int size)
+int
+bq_peek(byte_queue *queue, char *data, unsigned int size)
 {
 	int i;
 
@@ -137,18 +148,21 @@ int bq_peek(byte_queue *queue, char *data, unsigned int size)
 	return size;
 }
 
-int bq_get_write(byte_queue *queue)
+int
+bq_get_write(byte_queue *queue)
 {
 	return queue->write;
 }
 
-int bq_get_read(byte_queue *queue)
+int
+bq_get_read(byte_queue *queue)
 {
 	return queue->read;
 }
 
 
-int bq_rpeek(byte_queue *queue, char *data, unsigned int size)
+int
+bq_rpeek(byte_queue *queue, char *data, unsigned int size)
 {
 	int i;
 
@@ -163,7 +177,8 @@ int bq_rpeek(byte_queue *queue, char *data, unsigned int size)
 	return size;
 }
 
-int bq_rread(byte_queue *queue, char *data, unsigned int size)
+int
+bq_rread(byte_queue *queue, char *data, unsigned int size)
 {
 	int read;
 
@@ -178,5 +193,4 @@ int bq_rread(byte_queue *queue, char *data, unsigned int size)
 	return read; 
 
 }
-
 

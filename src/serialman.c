@@ -8,7 +8,8 @@ static portdesc_t * _serial_pds[PORT_COUNT];
 static int _serial_base_addr[PORT_COUNT] = { 0x03F8 };
 static int _initialized = 0;
 
-int serialman_write(int serialfd, char * data, int size)
+int
+serialman_write(int serialfd, char * data, int size)
 {
 	int retval = 0;
 
@@ -25,7 +26,8 @@ int serialman_write(int serialfd, char * data, int size)
 }
 
 
-int serialman_read(int serialfd, char * data, int size)
+int
+serialman_read(int serialfd, char * data, int size)
 {
 	int retval = 0;
 
@@ -41,7 +43,8 @@ int serialman_read(int serialfd, char * data, int size)
 	return retval;
 }
 
-void serialman_init()
+void
+serialman_init()
 {
 	int i;
 	for (i = 0; i < PORT_COUNT; i++)
@@ -50,7 +53,8 @@ void serialman_init()
 }
 
 
-void serial_handler()
+void
+serial_handler()
 {
 #ifdef DEBUG_SERIAL
 	ttyman_write("I",1);
@@ -67,3 +71,4 @@ void serial_handler()
 	}
 	critical_leave();
 }
+

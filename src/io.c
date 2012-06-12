@@ -2,7 +2,8 @@
 #include "../include/stdio.h"
 #include "../include/serialman.h"
 
-int io_write(int fd, char * data, unsigned int size)
+int
+io_write(int fd, char * data, unsigned int size)
 {
 	int retval = 0;
 
@@ -26,7 +27,8 @@ int io_write(int fd, char * data, unsigned int size)
     return retval;
 }
 
-int io_read(int fd, char * data, unsigned int size)
+int
+io_read(int fd, char * data, unsigned int size)
 {
 	int retval = 0;
 
@@ -49,3 +51,4 @@ int io_read(int fd, char * data, unsigned int size)
 
     return retval;
 }
+

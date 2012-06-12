@@ -16,7 +16,8 @@ static int _active_tty_idx = 0;
 static int _x, _y, _width, _height;
 
 
-void ttyman_keyboard_callback(char key_ascii, const char * keyboard_status)
+void
+ttyman_keyboard_callback(char key_ascii, const char * keyboard_status)
 {
 	critical_enter();
 		
@@ -42,7 +43,8 @@ void ttyman_keyboard_callback(char key_ascii, const char * keyboard_status)
 }
 
 
-void ttyman_switch(int tty_idx)
+void
+ttyman_switch(int tty_idx)
 {
 
 	critical_enter();
@@ -59,7 +61,8 @@ void ttyman_switch(int tty_idx)
 }
 
 
-void ttyman_update_info_text(void)
+void
+ttyman_update_info_text(void)
 {
 	critical_enter();
 
@@ -81,7 +84,8 @@ void ttyman_update_info_text(void)
 	critical_leave();
 }
 
-void ttyman_init(int x, int y, int width, int height)
+void
+ttyman_init(int x, int y, int width, int height)
 {
 	int i;
 	char print_buffer[64];
@@ -114,8 +118,8 @@ void ttyman_init(int x, int y, int width, int height)
 	
 }
 
-
-int ttyman_write(char * data, int size)
+int
+ttyman_write(char * data, int size)
 {
 	int written;
 
@@ -129,7 +133,8 @@ int ttyman_write(char * data, int size)
 	return written;
 }
 
-int ttyman_read(char * data, int size)
+int
+ttyman_read(char * data, int size)
 {
 
 	int retval;

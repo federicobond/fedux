@@ -2,14 +2,16 @@
 #include "../include/stdio.h"
 #include "../include/mm.h"
 
-char * ttybox_linearaddr(TTYBOX *ttybox, int linear)
+char *
+ttybox_linearaddr(TTYBOX *ttybox, int linear)
 {
 	return ((linear >= 0 && linear < ttybox->length) ?
 			ttybox->buffer + linear*2 : NULL);
 }
 
 
-void ttybox_newline(TTYBOX *ttybox)
+void
+ttybox_newline(TTYBOX *ttybox)
 {
 	int i;
 	char * posptr;
@@ -31,7 +33,8 @@ void ttybox_newline(TTYBOX *ttybox)
 
 }
 
-TTYBOX * ttybox_create(int x, int y, int width, int height)
+TTYBOX *
+ttybox_create(int x, int y, int width, int height)
 {
 	char *buffer = mm_malloc(width*height*2);
 	TTYBOX *ttybox = mm_malloc(sizeof(TTYBOX));
@@ -39,13 +42,15 @@ TTYBOX * ttybox_create(int x, int y, int width, int height)
 	return ttybox;
 }
 
-void ttybox_destroy(TTYBOX *ttybox)
+void
+ttybox_destroy(TTYBOX *ttybox)
 {
 	mm_free(ttybox->buffer);
 	mm_free(ttybox);
 }
 
-void ttybox_init(TTYBOX *ttybox, int x, int y, int width, int height, char * buffer)
+void
+ttybox_init(TTYBOX *ttybox, int x, int y, int width, int height, char * buffer)
 {
 	ttybox->x = x;
 	ttybox->y = y;
@@ -58,8 +63,8 @@ void ttybox_init(TTYBOX *ttybox, int x, int y, int width, int height, char * buf
 	ttybox_clear(ttybox);
 }
 
-
-void ttybox_clear(TTYBOX *ttybox)
+void
+ttybox_clear(TTYBOX *ttybox)
 {
 	int i; 
 	char * posptr;
@@ -75,7 +80,8 @@ void ttybox_clear(TTYBOX *ttybox)
 		}
 }
 
-void ttybox_pos_set(TTYBOX *ttybox, int pos, char owner)
+void
+ttybox_pos_set(TTYBOX *ttybox, int pos, char owner)
 {
 	if (pos >= ttybox->length)
 	{
@@ -88,30 +94,34 @@ void ttybox_pos_set(TTYBOX *ttybox, int pos, char owner)
 		ttybox->client_pos = pos;
 }
 
-int ttybox_pos_get(TTYBOX *ttybox)
+int
+ttybox_pos_get(TTYBOX *ttybox)
 {
 	return ttybox->pos;
 }
 
-void ttybox_format_set(TTYBOX *ttybox, char format)
+void
+ttybox_format_set(TTYBOX *ttybox, char format)
 {
 	ttybox->format = format;
 }
 
-void ttybox_puts(TTYBOX *ttybox, char * str, char owner)
+void
+ttybox_puts(TTYBOX *ttybox, char * str, char owner)
 {
 	while (*str)
 		ttybox_putchar(ttybox, *(str++), owner);
 }
 
-void ttybox_write(TTYBOX *ttybox, char * data, int size, char owner)
+void
+ttybox_write(TTYBOX *ttybox, char * data, int size, char owner)
 {
 	while (size--)
 		ttybox_putchar(ttybox, *(data++), owner);
 }
 
-
-int ttybox_erasable(TTYBOX *ttybox, int pos, char owner)
+int
+ttybox_erasable(TTYBOX *ttybox, int pos, char owner)
 {
 	return (pos > 0 &&
 			pos < ttybox->length &&
@@ -119,7 +129,8 @@ int ttybox_erasable(TTYBOX *ttybox, int pos, char owner)
 			(owner == OWNER_SERVER && pos > ttybox->client_pos)));
 }
 
-void ttybox_putchar(TTYBOX *ttybox, char chr, char owner)
+void
+ttybox_putchar(TTYBOX *ttybox, char chr, char owner)
 {
 	char * posptr;
 
@@ -154,13 +165,16 @@ void ttybox_putchar(TTYBOX *ttybox, char chr, char owner)
 	}
 }
 
-void ttybox_update_cursor(TTYBOX *ttybox)
+void
+ttybox_update_cursor(TTYBOX *ttybox)
 {
 	vgatext_cursor_setxy(ttybox->x + (ttybox->pos % ttybox->width),
 						 ttybox->y + (ttybox->pos / ttybox->width));
 }
 
-void ttybox_display(TTYBOX *ttybox)
+void
+ttybox_display(TTYBOX *ttybox)
 {
 	vgatext_write(ttybox->buffer, ttybox->x, ttybox->y, ttybox->width, ttybox->height);
 }
+

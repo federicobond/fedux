@@ -24,7 +24,8 @@ void serial_fcr_setup(portdesc_t * pd);
 
 
 
-void serial_interrupt_reset(portdesc_t * pd)
+void
+serial_interrupt_reset(portdesc_t * pd)
 {
 #ifdef DEBUG_SERIAL
 	ttyman_write("(R)", 3);
@@ -34,7 +35,8 @@ void serial_interrupt_reset(portdesc_t * pd)
 	_inb(pd->base_addr + SERIAL_LSR);
 }
 
-void serial_flush(portdesc_t * pd)
+void
+serial_flush(portdesc_t * pd)
 {
 	char datum;
 
@@ -53,7 +55,6 @@ void serial_flush(portdesc_t * pd)
 	}
 
 
-
 	while (serial_mayrecv(pd) && bq_avail(pd->recv_queue))
 	{
 #ifdef DEBUG_SERIAL
@@ -66,20 +67,23 @@ void serial_flush(portdesc_t * pd)
 	
 }
 
-int serial_maysend(portdesc_t * pd)
+int
+serial_maysend(portdesc_t * pd)
 {
 	char lsr = _inb(pd->base_addr + SERIAL_LSR);
 	return (lsr & LSR_THR);
 }
 
-int serial_mayrecv(portdesc_t * pd)
+int
+serial_mayrecv(portdesc_t * pd)
 {
 	char lsr = _inb(pd->base_addr + SERIAL_LSR);
 	return (lsr & LSR_DATA_AVAIL);
 }
 
 
-void serial_baud_set(portdesc_t * pd, baud_t baud)
+void
+serial_baud_set(portdesc_t * pd, baud_t baud)
 {
 	char lcr = _inb(pd->base_addr + SERIAL_LCR);
 	
@@ -95,7 +99,8 @@ void serial_baud_set(portdesc_t * pd, baud_t baud)
 	
 }
 
-void serial_lcr_setup(portdesc_t * pd,
+void
+serial_lcr_setup(portdesc_t * pd,
 					  data_bits_t data_bits, stop_bits_t stop_bits,
 					  parity_t parity,
 					  break_signal_t break_signal)
@@ -114,22 +119,26 @@ void serial_lcr_setup(portdesc_t * pd,
 }
 
 
-void serial_ier_setup(portdesc_t * pd)
+void
+serial_ier_setup(portdesc_t * pd)
 {
 	_outb(IER_DEFAULT, pd->base_addr + SERIAL_IER);
 }
 
-void serial_mcr_setup(portdesc_t * pd)
+void
+serial_mcr_setup(portdesc_t * pd)
 {
 	_outb(MCR_DEFAULT, pd->base_addr + SERIAL_MCR);
 }
 
-void serial_fcr_setup(portdesc_t * pd)
+void
+serial_fcr_setup(portdesc_t * pd)
 {
 	_outb(FCR_DEFAULT, pd->base_addr + SERIAL_FCR);
 }
 
-int serial_write(portdesc_t * pd, char * data, int size)
+int
+serial_write(portdesc_t * pd, char * data, int size)
 {
 	int retval;
 	//serial_flush(pd);
@@ -138,7 +147,8 @@ int serial_write(portdesc_t * pd, char * data, int size)
 	return retval;
 }
 
-int serial_read(portdesc_t * pd, char * data, int size)
+int
+serial_read(portdesc_t * pd, char * data, int size)
 {
 	int retval;
 	//serial_flush(pd);
@@ -148,7 +158,8 @@ int serial_read(portdesc_t * pd, char * data, int size)
 }
 
 
-portdesc_t * serial_create(int base_addr)
+portdesc_t *
+serial_create(int base_addr)
 {
 	portdesc_t * pd = (portdesc_t *)mm_malloc(sizeof(portdesc_t));
 	
@@ -174,7 +185,8 @@ portdesc_t * serial_create(int base_addr)
 	return pd;
 }
 
-void serial_destroy(portdesc_t * pd)
+void
+serial_destroy(portdesc_t * pd)
 {
 	mm_free(pd);
 }

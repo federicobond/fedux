@@ -3,7 +3,8 @@
 #include "../include/ktime.h"
 #include "../include/kasm.h"
 
-int syscall_handler(int number,
+int
+syscall_handler(int number,
 					int param1,
 					int param2,
 					int param3,

@@ -37,7 +37,8 @@ TTYBOX * firstbox = NULL;
 *	 Repudio a "libc.c"
 ****************************************************************/
 
-void setup_idt_entry (DESCR_INT *item, byte selector, dword offset, byte access,
+void
+setup_idt_entry (DESCR_INT *item, byte selector, dword offset, byte access,
 			 byte cero) {
   item->selector = selector;
   item->offset_l = offset & 0xFFFF;
@@ -46,11 +47,13 @@ void setup_idt_entry (DESCR_INT *item, byte selector, dword offset, byte access,
   item->cero = cero;
 }
 
-void timertick_handler() 
+void
+timertick_handler() 
 {
 }
 
-void keyboard_callback(char ascii, char * keyboard_status)
+void
+keyboard_callback(char ascii, char * keyboard_status)
 {
 	static int linear = 0;
 	char str[16];
@@ -68,7 +71,8 @@ void keyboard_callback(char ascii, char * keyboard_status)
 kmain() 
 Punto de entrada de cóo C.
 *************************************************/
-int kmain(multiboot_info_t *mbi, unsigned long int magic)
+int
+kmain(multiboot_info_t *mbi, unsigned long int magic)
 {
 
 	critical_enter();
@@ -148,8 +152,8 @@ int kmain(multiboot_info_t *mbi, unsigned long int magic)
 	
 }
 
-
-void print_memory_map(int linear, multiboot_info_t *mbi)
+void
+print_memory_map(int linear, multiboot_info_t *mbi)
 {
 	int i = 0;
 	char print_buffer[64];	
@@ -195,6 +199,5 @@ void print_memory_map(int linear, multiboot_info_t *mbi)
 
 	ttybox_display(firstbox);
 	ttybox_update_cursor(firstbox);
-	
 }
 

@@ -11,7 +11,8 @@
 
 #define DEFAULT_MULTIPLIER 1
 
-TTY * tty_create(int x, int y, int width, int height)
+TTY *
+tty_create(int x, int y, int width, int height)
 {
 	TTY * newtty = mm_malloc(sizeof(TTY));
 	byte_queue * input_queue  = bq_create(width*height*DEFAULT_MULTIPLIER);
@@ -23,7 +24,8 @@ TTY * tty_create(int x, int y, int width, int height)
 	return newtty;
 }
 
-void tty_destroy(TTY *tty)
+void
+tty_destroy(TTY *tty)
 {
 	ttybox_destroy(tty->ttybox);
 	bq_destroy(tty->input_display_queue);
@@ -31,7 +33,8 @@ void tty_destroy(TTY *tty)
 	mm_free(tty);
 }
 
-void tty_init(TTY *tty,  
+void
+tty_init(TTY *tty,  
 			  byte_queue *input_queue, 
 			  byte_queue *input_display_queue,
 			  TTYBOX *ttybox,
@@ -47,7 +50,8 @@ void tty_init(TTY *tty,
 	tty->height = height;
 }
 
-void tty_input_write(TTY *tty, char *data, int size)
+void
+tty_input_write(TTY *tty, char *data, int size)
 {
 	int i, written;
 	for (i = 0; i < size; i++)
@@ -66,21 +70,23 @@ void tty_input_write(TTY *tty, char *data, int size)
 	}
 }
 
-int tty_input_read(TTY *tty, char *data, int size)
+int
+tty_input_read(TTY *tty, char *data, int size)
 {
 	return bq_read(tty->input_queue, data, size);
 }
 
-int tty_output_write(TTY *tty, char *data, int size)
+int
+tty_output_write(TTY *tty, char *data, int size)
 {
 	ttybox_write(tty->ttybox, data, size, OWNER_CLIENT);
 	return size;
 }
 
-void tty_display(TTY *tty)
+void
+tty_display(TTY *tty)
 {
-
 	ttybox_display(tty->ttybox);
 	ttybox_update_cursor(tty->ttybox);
-	
 }
+
