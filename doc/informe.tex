@@ -60,7 +60,7 @@ La idea detrás del diseño implementado fue la de observar al kernel como un ge
     \item El servicio que provee el tiempo (\texttt{ktime.c})
 \end{itemize}
 
-Estos módulos intentan ser independientes uno de otro y finalmente se encuentran vinculados por el módulo principal del kernel (kernel.c) que gestiona el arranque, inicializa los dispositivos y luego delega la ejecución a lo que sería, dentro de un esquema verdaderamente dividido, la aplicación de usuario.
+Estos módulos intentan ser independientes uno de otro y finalmente se encuentran vinculados por el módulo principal del kernel (\texttt{kernel.c}) que gestiona el arranque, inicializa los dispositivos y luego delega la ejecución a lo que sería, dentro de un esquema verdaderamente dividido, la aplicación de usuario.
 
 En las secciones subsiguientes se dan detalles sobre el funcionamiento de cada uno de los módulos.
 
@@ -74,6 +74,13 @@ El método utilizado para gestionar el espacio de direcciones es extremadamente 
 
 El driver de video en modo texto provee funciones básicas para escribir y dibujar en pantalla. Abstrae a los demás módulos del espacio de memoria de video brindando direccionamiento tanto lineal como bidimensional (xy). También provee funciones para manejar el cursor de video, lo que es una tarea engorrosa, si se intentara realizar directamente. En vgatext.h pueden verse todos los modos de escritura en video diferentes que ofrece.
 
+Es interesante detallar el procedimiento para cambiar de posición, activar, o desactivar el cursor de video, dado que existe un espacio de direccionamiento interno de la controladora VGA, que debe accederse a través de un registro que permite indicar la dirección deseada. Los pasos son:
+
+\begin{itemize}
+    \item Apuntar el registro dirección hacia el registro deseado
+    \item Modificarlo a través de otro puerto de entrada y salida.
+\end{itemize}
+
 \subsection{Driver de teclado}
 
 El driver de teclado provee fundamentalmente dos funcionalidades importantes para la interfaz con el usuario. Éstas son las de informar a su usuario de la ocurrencia de un cambio de estado del teclado, mediante un callback que es llamado por una interrupción. Así como también un mapa de teclas configurable desde el exterior del módulo. 
@@ -85,18 +92,20 @@ Es importante notar lo siguiente:
 Luego de cada interrupción, debe leerse el scancode generado, o de lo contrario el controlador de teclado no seguirá interrumpiendo al microprocesador.
 Luego de obtener un cambio de estado, se informa al suscriptor a través de un callback que debe encargarse de encolar la información según sea necesario. 
 
-Driver de puerto serie
+\subsection{Driver de puerto serie}
 
 El driver de puerto serie está modularizado por puerto (serial.c). Luego, cada puerto está controlado por un gestor (serialman.c) que maneja los puertos disponibles y realiza la interfaz entre éstos y el resto del kernel.
 Con respecto a cada puerto, tuvieron que ser tomados ciertos recaudos, deviniendo en el siguiente procedimiento para manejarlo.
 
 Cuando se inicia el kernel se configura cada uno de los puertos que estén configurados en el gestor de esta manera:
 
-Se configura la velocidad en 9600 baudios, paridad par, 1 stop bit y 8 bits de datos.
-Se configuran las interrupciones para ocurrir en el cambio de cualquiera de los registros de estado del puerto, así como la llegada de datos o disponibilidad de buffer de salida.
-Se activan por default las lineas de \texttt{DTR} (Data terminal ready) y \texttt{RTS} (Request to send).
-Se activa el uso del buffer FIFO y se configura el puerto para que la interrupción ocurra al haber un solo byte en él.
-Se leen los registros de estado de modem, linea e interrupción para responder a cualquier interrupción que hubiera ocurrido antes de estar configurado el puerto.
+\begin{itemize}
+    \item Se configura la velocidad en 9600 baudios, paridad par, 1 stop bit y 8 bits de datos.
+    \item Se configuran las interrupciones para ocurrir en el cambio de cualquiera de los registros de estado del puerto, así como la llegada de datos o disponibilidad de buffer de salida.
+    \item Se activan por default las lineas de \texttt{DTR} (Data terminal ready) y \texttt{RTS} (Request to send).
+    \item Se activa el uso del buffer FIFO y se configura el puerto para que la interrupción ocurra al haber un solo byte en él.
+    \item Se leen los registros de estado de modem, linea e interrupción para responder a cualquier interrupción que hubiera ocurrido antes de estar configurado el puerto.
+\end{itemize}
 
 Al ocurrir una interrupción generada por el puerto, se leen todos los registros de estado y se verifica tanto la llegada de nueva información como la disponibilidad del buffer de salida, enviándose o recibiéndose los datos de las colas de salida y entrada (en memoria RAM) de cada puerto, según corresponda. 
 
@@ -108,7 +117,6 @@ Para esto simplemente se leen los registros de estado del RTC, sin importar si e
 \subsection{Terminal (\texttt{ttyman.c} y \texttt{tty.c})}
 
 La terminal (\texttt{tty}) es una abstracción que se encuentra entre los drivers de entrada/salida (\texttt{vgatext.c} y \texttt{kbd.c}) y la shell. Permite el ingreso y salida de manera independiente del programa que esté ejecutando como shell, asi como el manejo de buffers e impresión a pantalla.
-
 
 \section{Espacio de usuario}
 
@@ -165,6 +173,7 @@ long    labs(long x);
 \end{lstlisting}
 
 Las semilla de srand se define inicialmente de manera estática, pero se puede usar la función time para obtener una semilla aleatoria con la hora de sistema.
+
 
 \subsubsection{ctype.h}
 
@@ -263,6 +272,6 @@ Este fue un requisito necesario para mantener sencilla la implementación del pr
 
 \section{Conclusiones}
 
-El Trabajo Práctico Especial permitió reforzar los conceptos aprendidos durante la materia y ganar una visión global de los componentes involucrados en la creación de un sistema booteable bajo la arquitectura Intel.
+El Trabajo Práctico Especial permitió reforzar los conceptos aprendidos durante la materia y ganar una visión más global acerca de los componentes involucrados en la creación de un sistema booteable bajo la arquitectura Intel.
 
 \end{document}
