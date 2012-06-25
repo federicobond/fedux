@@ -1,0 +1,9 @@
+Fedux is a bootable 32-bit single-task OS
+
+To compile it, type:
+
+$ make
+
+To run it on QEMU, type:
+
+$ make start-vm
